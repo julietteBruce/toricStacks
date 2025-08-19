@@ -1,6 +1,6 @@
 -- -*- coding: utf-8 -*-
 --------------------------------------------------------------------------------
--- Copyright 2025  Juliette Bruce, Maya Banks, Boyana Martinova, Christin Sum
+-- Copyright 2025  Juliette Bruce, ADD YOUR NAME
 --
 -- This program is free software: you can redistribute it and/or modify it under
 -- the terms of the GNU General Public License as published by the Free Software
@@ -19,7 +19,7 @@
 -- PURPOSE : A package for working with toric stacks
 --
 --
--- PROGRAMMERS : Juliette Bruce, Maya Banks, Boyana Martinova, Christin Sum
+-- PROGRAMMERS : Juliette Bruce, ADD YOUR NAMES
 --
 --
 -- UPDATE HISTORY #0 - 
@@ -47,17 +47,16 @@ newPackage("ToricStacks",
             HomePage => "https://juliettebruce.github.io"
         },
         {
-            Name => "Maya Banks",
-            Email => "mayadb@uic.edu"
+            Name => "first last",
+            Email => " "
         },
         {
-            Name => "Boyana Martinova",
-            Email => "martinova@wisc.edu"
-	    HomePage => "https://sites.google.com/view/bmartinova/home"
+            Name => "first last",
+            Email => " "
         },	     
         {
-            Name => "Christin Sum",          
-            Email => "csum@hawaii.edu"
+            Name => "first last",          
+            Email => " "
     }},
   PackageExports => {"NormalToricVarieties","SpechtModule"},
   DebuggingMode => true,
@@ -144,8 +143,8 @@ toricStackDatum (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> 
     	symbol cache => new CacheTable
 	};
    -- if opts.WeilToClass =!= null then D.cache.fromWDivToCl = opts.WeilToClass;
-    D.cache.CoefficientRing = opts.CoefficientRing;
-    D.cache.Variable = opts.Variable;
+    --D.cache.CoefficientRing = opts.CoefficientRing;
+    --D.cache.Variable = opts.Variable;
     D
     )
 
@@ -159,8 +158,8 @@ toricStackDatum (Matrix, NormalToricVariety) := opts -> (betaMap,toricVar) -> (
     	symbol cache => new CacheTable
 	};
    -- if opts.WeilToClass =!= null then D.cache.fromWDivToCl = opts.WeilToClass;
-    D.cache.CoefficientRing = opts.CoefficientRing;
-    D.cache.Variable = opts.Variable;
+   --D.cache.CoefficientRing = opts.CoefficientRing;
+    --D.cache.Variable = opts.Variable;
     D
     )
 
