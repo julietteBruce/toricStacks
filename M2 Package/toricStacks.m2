@@ -1,6 +1,6 @@
 -- -*- coding: utf-8 -*-
 --------------------------------------------------------------------------------
--- Copyright 2021  Juliette Bruce, ADD YOUR NAME
+-- Copyright 2025  Juliette Bruce, ADD YOUR NAME
 --
 -- This program is free software: you can redistribute it and/or modify it under
 -- the terms of the GNU General Public License as published by the Free Software
@@ -25,9 +25,7 @@
 -- UPDATE HISTORY #0 - 
 --
 --
--- UPDATE HISTORY #1 - August 2023 - Bailee Zacovic: Began preparing
--- package for eventual publication. Adding tests, comments, documentation,
--- cleaning up code, etc.
+-- UPDATE HISTORY #1 -
 --
 --
 -- UPDATE HISTORY #2 - 
@@ -38,9 +36,9 @@
 
 
 
-newPackage("MatroidComplexes",
+newPackage("ToricStacks",
     Version => "1.0",
-    Date => "01 August 2023",
+    Date => "19 August 2025",
     Headline => "Tools for computing the matroid chain complex",
     Authors => {
         {
@@ -49,16 +47,16 @@ newPackage("MatroidComplexes",
             HomePage => "https://juliettebruce.github.io"
         },
         {
-            Name => "Benjamin Ashlock",
-            Email => "bak6t@missouri.edu"
+            Name => "first last",
+            Email => " "
         },
         {
-            Name => "Jacob Bucciarelli",
-            Email => "jbucciarelli@ksu.edu"
+            Name => "first last",
+            Email => " "
         },	     
         {
-            Name => "Bailee Zacovic",          
-            Email => "bzacovic@umich.edu"
+            Name => "first last",          
+            Email => " "
     }},
   PackageExports => {"Matroids","SpechtModule"},
   DebuggingMode => true,
