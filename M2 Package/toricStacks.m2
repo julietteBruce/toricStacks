@@ -1,6 +1,6 @@
 -- -*- coding: utf-8 -*-
 --------------------------------------------------------------------------------
--- Copyright 2021  Juliette Bruce, Benjamin Ashlock, Jacob Bucciarelli, Bailee Zacovic
+-- Copyright 2021  Juliette Bruce, ADD YOUR NAME
 --
 -- This program is free software: you can redistribute it and/or modify it under
 -- the terms of the GNU General Public License as published by the Free Software
@@ -16,10 +16,10 @@
 -- this program.  If not, see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
--- PURPOSE : Tools for computing the matroid chain complex
+-- PURPOSE : A package for working with toric stacks
 --
 --
--- PROGRAMMERS : Juliette Bruce, Benjamin Ashlock, Jacob Bucciarelli, Bailee Zacovic
+-- PROGRAMMERS : Juliette Bruce, ADD YOUR NAMES
 --
 --
 -- UPDATE HISTORY #0 - 
@@ -112,61 +112,6 @@ withoutOddAut(Matroid) := (M) -> (
 rankedBasis = method();
 rankedBasis(Number,Number) := (n,r) -> (
     select(allMatroids(n,r), withoutOddAut)
-)
-
--------------------------- diffMatrixColumn ------------------------
---------------------------------------------------------------------
------ INPUT: Matroid, List
------
------ OUTPUT: List
------
------ DESCRIPTION: Given a matroid representing a basis element of (a
------ subspace of) C_n, return the corresponding column vector of the
------ matrix representing the deletion differential from C_n to C_{n-1}
------ with respect to the standard bases on Q^{dim C_n} and 
------ Q^{dim C_{n-1}}.
---------------------------------------------------------------------
--------------------------------------------------------------------- 
-
-diffMatrixColumn = method();
-diffMatrixColumn (Matroid, List) := (M,targetBasis)-> (
-    
-    ---- Initialize zero column vector {0,...,0} as mutable list
-    column := new MutableList from apply(#targetBasis, i -> 0);
-
-    noncoloops := toList(groundSet M - coloops M);
-
-    -- Rewrite alternating sum of deletion matroid classes in C_{n-1} 
-    -- to the corresponding sum in QQ^{dim C_{n-1}} wrt the std basis
-    scan(noncoloops, e -> (
-        scan(#targetBasis, j -> (
-            if areIsomorphic(deletion(M, set {e}),targetBasis#j) then (
-                column#j = column#j + (-1)^(e+1)
-                )
-        ))
-    ));
-    -- return immutable list
-    toList(column)
-)
-
------------------------------ diffMatrix ---------------------------
---------------------------------------------------------------------
------ INPUT: (List,List)
------
------ OUTPUT: Matrix
------
------ DESCRIPTION: Given the pair of a basis for a subspace V of C_n  
------ and a basis for a subspace W of C_{n-1} containing the image
------ of V under the deletion differential, return the matrix 
------ representing the standard bases on QQ^{dim V} and QQ^{dim W},
------ respectively. The first element of the first list will
------ correspond to the basis vector e_1 = (1,0,...,0), etc.
---------------------------------------------------------------------
--------------------------------------------------------------------- 
-
-diffMatrix = method();
-diffMatrix (List,List) := (sourceBasis, targetBasis) -> (
-    transpose matrix apply(sourceBasis, M -> diffMatrixColumn(M,targetBasis))
 )
 
 --------------------------------------------------------------------
