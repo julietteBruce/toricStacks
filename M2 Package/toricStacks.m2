@@ -1,6 +1,6 @@
 -- -*- coding: utf-8 -*-
 --------------------------------------------------------------------------------
--- Copyright 2025  Juliette Bruce, ADD YOUR NAME
+-- Copyright 2025  Juliette Bruce, Maya Banks, Boyana Martinova, Christin Sum
 --
 -- This program is free software: you can redistribute it and/or modify it under
 -- the terms of the GNU General Public License as published by the Free Software
@@ -19,7 +19,7 @@
 -- PURPOSE : A package for working with toric stacks
 --
 --
--- PROGRAMMERS : Juliette Bruce, ADD YOUR NAMES
+-- PROGRAMMERS : Juliette Bruce, Maya Banks, Boyana Martinova, Christin Sum
 --
 --
 -- UPDATE HISTORY #0 - 
@@ -47,16 +47,17 @@ newPackage("ToricStacks",
             HomePage => "https://juliettebruce.github.io"
         },
         {
-            Name => "first last",
-            Email => " "
+            Name => "Maya Banks",
+            Email => "mayadb@uic.edu"
         },
         {
-            Name => "first last",
-            Email => " "
+            Name => "Boyana Martinova",
+            Email => "martinova@wisc.edu"
+	    HomePage => "https://sites.google.com/view/bmartinova/home"
         },	     
         {
-            Name => "first last",          
-            Email => " "
+            Name => "Christin Sum",          
+            Email => "csum@hawaii.edu"
     }},
   PackageExports => {"NormalToricVarieties","SpechtModule"},
   DebuggingMode => true,
