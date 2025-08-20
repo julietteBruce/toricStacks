@@ -47,8 +47,8 @@ newPackage("ToricStacks",
             HomePage => "https://www.juliettebruce.xyz"
         },
         {
-            Name => "first last",
-            Email => " "
+            Name => "Maya Banks",
+            Email => "mayadb@uic.edu"
         },
         {
             Name => "first last",
