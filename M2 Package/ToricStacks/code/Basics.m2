@@ -45,3 +45,7 @@ linearTransform(Fan, Matrix) := (F, A) -> (
    };
    internalFanConstructor result
 )
+
+fan(List, List) := Fan => (V,F) -> (
+    fan(apply(F, C -> transpose matrix apply(C, idx -> V_idx)) / coneFromVData)
+)
