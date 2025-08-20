@@ -1,6 +1,6 @@
 -- -*- coding: utf-8 -*-
 --------------------------------------------------------------------------------
--- Copyright 2025  Juliette Bruce, ADD YOUR NAME
+-- Copyright 2025  Juliette Bruce, Maya Banks
 --
 -- This program is free software: you can redistribute it and/or modify it under
 -- the terms of the GNU General Public License as published by the Free Software
@@ -19,7 +19,7 @@
 -- PURPOSE : A package for working with toric stacks
 --
 --
--- PROGRAMMERS : Juliette Bruce, ADD YOUR NAMES
+-- PROGRAMMERS : Juliette Bruce, Maya Banks, 
 --
 --
 -- UPDATE HISTORY #0 - 
@@ -37,14 +37,14 @@
 
 
 newPackage("ToricStacks",
-    Version => "1.0",
+    Version => "0.0",
     Date => "19 August 2025",
-    Headline => "Tools for computing the matroid chain complex",
+    Headline => "Working with toric stacks and related objects",
     Authors => {
         {
             Name => "Juliette Bruce",
-            Email => "juliette.bruce@berkeley.edu",
-            HomePage => "https://juliettebruce.github.io"
+            Email => "juliette.bruce@dartmouth.edu",
+            HomePage => "https://www.juliettebruce.xyz"
         },
         {
             Name => "first last",
@@ -58,16 +58,12 @@ newPackage("ToricStacks",
             Name => "first last",          
             Email => " "
     }},
-  PackageExports => {"NormalToricVarieties","SpechtModule"},
+  PackageExports => {"NormalToricVarieties"},
   DebuggingMode => true,
   AuxiliaryFiles => true
   )
 
 export {
-  "withoutOddAut", 
-  "rankedBasis", 
-  "diffMatrixColumn", 
-  "diffMatrix", 
 
   }
 
@@ -90,7 +86,7 @@ needsPackage "NormalToricVarieties"
 --------------------------------------------------------------------
 KK = QQ  -- global base ring
 
---- kludge to access parts of the 'Core' -- NO IDEA ??
+--- kludge to access parts of the 'Core'
 hasAttribute = value Core#"private dictionary"#"hasAttribute";
 getAttribute = value Core#"private dictionary"#"getAttribute";
 ReverseDictionary = value Core#"private dictionary"#"ReverseDictionary";
@@ -246,9 +242,9 @@ isWellDefined ToricStackDatum := Boolean => D -> (
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 
-load ("./MatroidComplexes/tests.m2")
+load ("./ToricStacks/tests.m2")
 beginDocumentation()
-load ("./MatroidComplexes/doc.m2")
+load ("./ToricStacks/doc.m2")
 
 end
 
@@ -262,9 +258,9 @@ end
 ---
 ---
 restart
-uninstallPackage "MatroidComplexes"
+uninstallPackage "ToricStacks"
 restart
-installPackage "MatroidComplexes"
-check "MatroidComplexes"
-installPackage "MatroidComplexes"
+installPackage "ToricStacks"
+check "ToricStacks"
+installPackage "ToricStacks"
 viewHelp SchurVeronese
