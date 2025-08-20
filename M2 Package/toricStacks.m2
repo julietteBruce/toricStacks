@@ -64,7 +64,11 @@ newPackage("ToricStacks",
   )
 
 export {
-
+    --Types
+    --Methods
+    --Functions
+    --Symbols
+    --
   }
 
 --------------------------------------------------------------------
@@ -92,16 +96,21 @@ getAttribute = value Core#"private dictionary"#"getAttribute";
 ReverseDictionary = value Core#"private dictionary"#"ReverseDictionary";
 
 
---------------------------- ToricStackDatum ------------------------
---------------------------------------------------------------------
------ INPUT: 
------
------ OUTPUT: 
------
------ DESCRIPTION: 
---------------------------------------------------------------------
--------------------------------------------------------------------- 
-ToricStackDatum = new Type of Variety
+-----------------------------------------------------------------------------
+-- STACK TYPE DECLERATION
+-----------------------------------------------------------------------------
+
+Stack = new Type of MutableHashTable
+Stack.synonym = "stack"
+Stack.GlobalAssignHook = globalAssignFunction
+Stack
+.GlobalReleaseHook = globalReleaseFunction
+
+-----------------------------------------------------------------------------
+-- TORIC STACK TYPE DECLERATION
+-----------------------------------------------------------------------------
+
+ToricStackDatum = new Type of Stack
 ToricStackDatum.synonym = "toric stack datum"
 ToricStackDatum.GlobalAssignHook = globalAssignFunction
 ToricStackDatum.GlobalReleaseHook = globalReleaseFunction
