@@ -163,7 +163,7 @@ toricStackDatum(X)
 
 -----------------------------------------------------------------------------
 ---- Realizes a toric variety (given as a Fan)
----- as a toricStackDatum by taking betaMap to be the identiy on the
+---- as a toricStackDatum by taking betaMap to be the identity on the
 ---- lattice of the toric variety.
 -----------------------------------------------------------------------------
 toricStackDatum (Fan) := opts -> (F) -> (
