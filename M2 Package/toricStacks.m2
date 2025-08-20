@@ -80,11 +80,14 @@ export {
 needsPackage "NormalToricVarieties"
 importFrom("SpechtModule", {"permutationSign"})
 *-
+needsPackage "NormalToricVarieties"
 
 
-------------------------------------------------------------------------------
--- Toric Stacks
-------------------------------------------------------------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+------------------------- CREATE TYPE ------------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
 KK = QQ  -- global base ring
 
 --- kludge to access parts of the 'Core' -- NO IDEA ??
@@ -108,9 +111,29 @@ ToricStackDatum.GlobalAssignHook = globalAssignFunction
 ToricStackDatum.GlobalReleaseHook = globalReleaseFunction
 expression ToricStackDatum := D -> if hasAttribute (D, ReverseDictionary) 
     then expression getAttribute (D, ReverseDictionary) else 
-    (describe D)#0
+   (describe D)#0
 describe ToricStackDatum := D -> Describe (expression toricStackDatum) (
-    expression map D, expression rays D, expression max D)
+    expression D.map, expression D.rays, expression D.max)
+
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+------------------------- BASIC FUNCTIONS --------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+
+--------------------------- Basic ------------------------
+--------------------------------------------------------------------
+----- INPUT: 
+-----
+----- OUTPUT: 
+-----
+----- DESCRIPTION: 
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+map ToricStackDatum := Matrix => D -> D.map
+rays ToricStackDatum := List => {} >> o -> D -> D.rays
+max  ToricStackDatum := List => D -> D.max
+dim NormalToricVariety := ZZ => (cacheValue symbol dim) (X -> #(rays X)#0)
 
 
 --------------------------- toricStackDatum ------------------------
@@ -135,16 +158,16 @@ toricStackDatum = method (
  
 toricStackDatum (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> (
     -- sorting cones creates a weak normal form (a.k.a. consistent output) -- from Greg
-    coneList' := sort apply(coneList, sigma -> sort sigma); 
+    coneList' := sort apply(coneList, sigma -> sort sigma);
     D := new ToricStackDatum from {
 	symbol map => betaMap,
     	symbol rays  => rayList,
     	symbol max   => coneList',
     	symbol cache => new CacheTable
 	};
-   -- if opts.WeilToClass =!= null then D.cache.fromWDivToCl = opts.WeilToClass;
-    --D.cache.CoefficientRing = opts.CoefficientRing;
-    --D.cache.Variable = opts.Variable;
+    if opts.WeilToClass =!= null then D.cache.fromWDivToCl = opts.WeilToClass;
+    D.cache.CoefficientRing = opts.CoefficientRing;
+    D.cache.Variable = opts.Variable;
     D
     )
 
@@ -157,11 +180,16 @@ toricStackDatum (Matrix, NormalToricVariety) := opts -> (betaMap,toricVar) -> (
     	symbol max   => coneList',
     	symbol cache => new CacheTable
 	};
-   -- if opts.WeilToClass =!= null then D.cache.fromWDivToCl = opts.WeilToClass;
-   --D.cache.CoefficientRing = opts.CoefficientRing;
-    --D.cache.Variable = opts.Variable;
-    D
+   if opts.WeilToClass =!= null then D.cache.fromWDivToCl = opts.WeilToClass;
+   D.cache.CoefficientRing = opts.CoefficientRing;
+   D.cache.Variable = opts.Variable;
+   D
     )
+
+B = matrix{{1,0},{1,2}}
+rL = {{1,0},{0,1}}
+cL = {{0,1}}
+toricStackDatum(B,rL,cL)
 
 --------------------------- isWellDefined ------------------------
 --------------------------------------------------------------------
