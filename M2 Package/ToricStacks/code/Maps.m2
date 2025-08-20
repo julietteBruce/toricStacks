@@ -1,11 +1,96 @@
 needsPackage "NormalToricVarieties"
 needsPackage "Polyhedra"
 
+
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+------------------------- CREATE TYPE ------------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+--- kludge to access parts of the 'Core'
+hasAttribute = value Core#"private dictionary"#"hasAttribute";
+getAttribute = value Core#"private dictionary"#"getAttribute";
+ReverseDictionary = value Core#"private dictionary"#"ReverseDictionary";
+
+
+-----------------------------------------------------------------------------
+---- Stack  TYPE DECLARATION
+-----------------------------------------------------------------------------
+
+Stack = new Type of MutableHashTable
+Stack.synonym = "stack"
+Stack.GlobalAssignHook = globalAssignFunction
+Stack.GlobalReleaseHook = globalReleaseFunction
+
+-----------------------------------------------------------------------------
+---- TORIC STACK TYPE DECLARATION
+-----------------------------------------------------------------------------
+
+ToricStackDatum = new Type of Stack
+ToricStackDatum.synonym = "toric stack datum"
+ToricStackDatum.GlobalAssignHook = globalAssignFunction
+ToricStackDatum.GlobalReleaseHook = globalReleaseFunction
+expression ToricStackDatum := D -> if hasAttribute (D, ReverseDictionary) 
+    then expression getAttribute (D, ReverseDictionary) else 
+   (describe D)#0
+describe ToricStackDatum := D -> Describe (expression toricStackDatum) (
+    expression D.map, expression D.rays, expression D.max)
+
+
+
+-----------------------------------------------------------------------------
+----- toricStackDatum
+-----------------------------------------------------------------------------
+----- INPUT: 
+-----
+----- OUTPUT: 
+-----
+----- DESCRIPTION: 
+-----------------------------------------------------------------------------
+----------------------------------------------------------------------------- 
+toricStackDatum = method (
+    TypicalValue => ToricStackDatum, 
+    Options => {
+    	CoefficientRing   => QQ,
+    	Variable          => getSymbol "x",
+	NonStrict         => false
+	}
+    )
+
+
+-----------------------------------------------------------------------------
+---- Main Constructor: Inputs betaMap as a matrix and toric variety in the 
+---- form of a list of rays and a list of maximal cones.
+----
+---- **ALL** other constructors should compute a betaMap, raysList, and
+---- coneList and then call this main version of toricStackDatum. This is
+---- for consistentcy and easy of debugging. 
+-----------------------------------------------------------------------------
+toricStackDatum (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> (
+   -- sorting rays/cones gives a slight more uniform output.
+    rayList' := sort rayList;
+    coneList' := sort apply(coneList, sigma -> sort sigma);
+    D := new ToricStackDatum from {
+	symbol map => betaMap,
+    	symbol rays  => rayList',
+    	symbol max   => coneList',
+    	symbol cache => new CacheTable
+	};
+    D.cache.CoefficientRing = opts.CoefficientRing;
+    D.cache.Variable = opts.Variable;
+    D.cache.NonStrict = opts.NonStrict;
+    D
+    )
+
 ToricStackDatumMap = new Type of HashTable
 ToricStackDatumMap.synonym = "toric stack datum map"
+
+
 source ToricStackDatumMap := ToricStackDatum => f -> f.source
 target ToricStackDatumMap := ToricStackDatum => f -> f.target
 map ToricStackDatumMap := List => opts -> f -> f.map
+
+
 
 map(ToricStackDatum, ToricStackDatum, List) := ToricStackDatumMap => opts -> (D2, D1, A) -> (
     bigPhi := A#0;
@@ -21,7 +106,6 @@ map(ToricStackDatum, ToricStackDatum, List) := ToricStackDatumMap => opts -> (D2
         error("-- expected target of littlePhi be the target lattice of D2");
     if (D2.map)*(bigPhi) != (D1.map)*(littlePhi) then
         error("-- expected maps to commute");
-    
     new ToricStackDatumMap from {
     	symbol source => D1,
     	symbol target => D2,
@@ -29,11 +113,58 @@ map(ToricStackDatum, ToricStackDatum, List) := ToricStackDatumMap => opts -> (D2
     	symbol cache => new CacheTable}
     )
 
+betaMap = matrix {{1,0},{1,2}}
+rayList = {{1,0},{0,1}}
+coneList = {{0,1}}
+D1 = toricStackDatum(betaMap, rayList, coneList)
+bigPhi = matrix {{2,0},{0,2}}
+littlePhi = matrix {{2,0},{0,2}}
+A = {bigPhi, littlePhi};
+map(D1,D1,A)
+
 map(ToricStackDatum, ToricStackDatum, Matrix, Matrix) := ToricStackDatumMap => opts -> (D2, D1, bigPhi, littlePhi) -> (
     A := {bigPhi, littlePhi};
     map(D2, D1, A)
     )
 
+betaMap = matrix {{1,0},{1,2}}
+rayList = {{1,0},{0,1}}
+coneList = {{0,1}}
+D1 = toricStackDatum(betaMap, rayList, coneList)
+bigPhi = matrix {{2,0},{0,2}}
+littlePhi = matrix {{2,0},{0,2}}
+map(D1,D1,bigPhi,littlePhi)
+
+map(ToricStackDatum, ToricStackDatum, ZZ) := ToricStackDatumMap => opts -> (D2, D1, m) -> (
+    rankSource := {rank source D1.map, rank target D2.map};
+    rankTarget := {rank source D2.map, rank target D2.map};
+    if m == 0 then (
+	littlePhi := map(ZZ^(rankTarget#0), ZZ^(rankSource#0), 0);
+	bigPhi := map(ZZ^(rankTarget#1), ZZ^(rankSource#1), 0);
+	A := {bigPhi, littlePhi};
+	return map(D2, D1, A)
+	)
+    else if rankSource == rankTarget then (
+	littlePhi = map(ZZ^(rankTarget#0), ZZ^(rankSource#0), m);
+	bigPhi = map(ZZ^(rankTarget#1), ZZ^(rankSource#1), m);
+	A = {bigPhi, littlePhi};
+	return map(D2, D1, A)
+	)
+    else error "source and target must have same rank or m=0"
+	)
+betaMap = matrix {{1,0},{1,2}}
+rayList = {{1,0},{0,1}}
+coneList = {{0,1}}
+D1 = toricStackDatum(betaMap, rayList, coneList)
+map(D1,D1,3)
+
+
+ToricStackDatum#id = D -> map(D,D,1)
+betaMap = matrix {{1,0},{1,2}}
+rayList = {{1,0},{0,1}}
+coneList = {{0,1}}
+D1 = toricStackDatum(betaMap, rayList, coneList)
+id_(D1)
 isWellDefined ToricMap := Boolean => f -> (
     -- CHECK DATA STRUCTURE
     -- check keys
@@ -102,16 +233,9 @@ isWellDefined ToricMap := Boolean => f -> (
     true
     )
 
-ToricMap * ToricMap := ToricMap => (g, f) -> (
-    if target f =!= source g then error "-- expected composable maps";
-    new ToricMap from {
-    	symbol source => source f,
-    	symbol target => target g,
-    	symbol matrix => (matrix g) * (matrix f),
-    	symbol cache => new CacheTable
-	}
-    )
+ToricStackDataum#id = D -> map(D,D,{1)
 
-ToricMap == ToricMap := Boolean => (f, g) -> (
-    source f === source g and target f === target g and matrix f == matrix g
+
+ToricStackDatumMap == ToricStackDatumMap := Boolean => (f, g) -> (
+    source f === source g and target f === target g and map f == map g
     )
