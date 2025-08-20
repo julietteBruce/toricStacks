@@ -372,3 +372,37 @@ A1 = {bigPhi1, littlePhi1};
 f1 = map(D1,D1,A)
 
 rankTarget f1
+
+
+-----------------------------------------------------------------------------
+---- Defines compostion for ToricStackDatumMap
+-----------------------------------------------------------------------------
+ToricStackDatumMap * ToricStackDatumMap := ToricMapToricStackDatumMap => (f1, f2) -> (
+    if target f1 =!= source f2 then error "-- expected composable maps";
+    -- defines source and target
+    D1 := source f1;
+    D2 := target f2;
+    -- composes maps
+    bigPhi := ((map f2)#0)*((map f1)#0);
+    littlePhi := ((map f2)#1)*((map f1)#1);
+    A := {bigPhi, littlePhi};
+    -- returns map
+    map(D2,D2,A)
+    )
+
+
+betaMap = matrix {{1,0},{1,2}}
+rayList = {{1,0},{0,1}}
+coneList = {{0,1}}
+D1 = toricStackDatum(betaMap, rayList, coneList)
+bigPhi1 = matrix {{2,0},{0,2}}
+littlePhi1 = matrix {{2,0},{0,2}}
+A1 = {bigPhi1, littlePhi1};
+f1 = map(D1,D1,A1)
+
+bigPhi2 = matrix {{4,0},{0,4}}
+littlePhi2 = matrix {{4,0},{0,4}}
+A2 = {bigPhi2, littlePhi2};
+f2 = map(D1,D1,A2)
+
+f2*f1
