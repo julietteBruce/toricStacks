@@ -100,17 +100,16 @@ ReverseDictionary = value Core#"private dictionary"#"ReverseDictionary";
 
 
 -----------------------------------------------------------------------------
--- STACK TYPE DECLERATION
+-- STACK TYPE DECLaRATION
 -----------------------------------------------------------------------------
 
 Stack = new Type of MutableHashTable
 Stack.synonym = "stack"
 Stack.GlobalAssignHook = globalAssignFunction
-Stack
-.GlobalReleaseHook = globalReleaseFunction
+Stack.GlobalReleaseHook = globalReleaseFunction
 
 -----------------------------------------------------------------------------
--- TORIC STACK TYPE DECLERATION
+-- TORIC STACK TYPE DECLaRATION
 -----------------------------------------------------------------------------
 
 ToricStackDatum = new Type of Stack
@@ -141,7 +140,6 @@ describe ToricStackDatum := D -> Describe (expression toricStackDatum) (
 map ToricStackDatum := Matrix => D -> D.map
 rays ToricStackDatum := List => {} >> o -> D -> D.rays
 max  ToricStackDatum := List => D -> D.max
-dim ToricStackDatum := ZZ => (cacheValue symbol dim) (X -> #(rays X)#0)
 
 
 --------------------------- toricStackDatum ------------------------
@@ -179,12 +177,12 @@ toricStackDatum (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> 
     D
     )
 
-toricStackDatum (Matrix, NormalToricVariety) := opts -> (betaMap,toricVar) -> (
+toricStackDatum (Matrix, NormalToricVariety) := opts -> (betaMap,X) -> (
     -- sorting cones creates a weak normal form (a.k.a. consistent output) -- from Greg
-    coneList' := sort apply(max toricVar, sigma -> sort sigma); 
+    coneList' := sort apply(max X, sigma -> sort sigma); 
     D := new ToricStackDatum from {
 	symbol map => betaMap,
-    	symbol rays  => rays toricVar,
+    	symbol rays  => rays X,
     	symbol max   => coneList',
     	symbol cache => new CacheTable
 	};
@@ -211,14 +209,14 @@ toricStackDatum (List, List) := opts -> (rayList, coneList) -> (
     D
     )
 
-toricStackDatum (NormalToricVariety) := opts -> (toricVar) -> (
+toricStackDatum (NormalToricVariety) := opts -> (X) -> (
     -- sorting cones creates a weak normal form (a.k.a. consistent output) -- from Greg
-    coneList' := sort apply(max toricVar, sigma -> sort sigma);
-    dimTorus := #((rays toricVar)#0);
-    betaMap := id_{ZZ^dimTorus};
+    coneList' := sort apply(max X, sigma -> sort sigma);
+    dimTorus := #((rays X)#0);
+    betaMap := id_{ZZ^dimTorusX};
     D := new ToricStackDatum from {
 	symbol map => betaMap,
-    	symbol rays  => rays toricVar,
+    	symbol rays  => rays X,
     	symbol max   => coneList',
     	symbol cache => new CacheTable
 	};
