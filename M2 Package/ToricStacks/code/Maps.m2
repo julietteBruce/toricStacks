@@ -38,6 +38,12 @@ describe ToricStackDatum := D -> Describe (expression toricStackDatum) (
 
 
 
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+------------------------- CONSTRUCTORS -----------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+
 -----------------------------------------------------------------------------
 ----- toricStackDatum
 -----------------------------------------------------------------------------
@@ -78,20 +84,36 @@ toricStackDatum (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> 
 	};
     D.cache.CoefficientRing = opts.CoefficientRing;
     D.cache.Variable = opts.Variable;
-    D.cache.NonStrict = opts.NonStrict;
-    D
+    D.cache.NonStrict = opts.NonStrict;    D
     )
 
+-----------------------------------------------------------------------------
+---- TORIC STACK MAP TYPE DECLARATION
+-----------------------------------------------------------------------------
 ToricStackDatumMap = new Type of HashTable
 ToricStackDatumMap.synonym = "toric stack datum map"
 
 
-source ToricStackDatumMap := ToricStackDatum => f -> f.source
-target ToricStackDatumMap := ToricStackDatum => f -> f.target
-map ToricStackDatumMap := List => opts -> f -> f.map
+-----------------------------------------------------------------------------
+----- map(ToricStackDatum,ToricStackDatum,-)
+-----------------------------------------------------------------------------
+----- INPUT: 
+-----
+----- OUTPUT: 
+-----
+----- DESCRIPTION: 
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 
 
-
+-----------------------------------------------------------------------------
+---- Main Constructor: Inputs betaMap as a matrix and toric variety in the 
+---- form of a list of rays and a list of maximal cones.
+----
+---- **ALL** other constructors should compute a D2, D1, and an A map
+---- then call this main version of map for ToricStackDatum. This is
+---- for consistentcy and easy of debugging. 
+-----------------------------------------------------------------------------
 map(ToricStackDatum, ToricStackDatum, List) := ToricStackDatumMap => opts -> (D2, D1, A) -> (
     bigPhi := A#0;
     littlePhi := A#1;
@@ -122,6 +144,9 @@ littlePhi = matrix {{2,0},{0,2}}
 A = {bigPhi, littlePhi};
 map(D1,D1,A)
 
+-----------------------------------------------------------------------------
+---- Contructs from two matrices instead of a list of matrices
+-----------------------------------------------------------------------------
 map(ToricStackDatum, ToricStackDatum, Matrix, Matrix) := ToricStackDatumMap => opts -> (D2, D1, bigPhi, littlePhi) -> (
     A := {bigPhi, littlePhi};
     map(D2, D1, A)
@@ -135,6 +160,10 @@ bigPhi = matrix {{2,0},{0,2}}
 littlePhi = matrix {{2,0},{0,2}}
 map(D1,D1,bigPhi,littlePhi)
 
+-----------------------------------------------------------------------------
+---- Contructs either the zero-map or the map given by m*Id.
+---- If m != 0 the source and target lattices must be the same.
+-----------------------------------------------------------------------------
 map(ToricStackDatum, ToricStackDatum, ZZ) := ToricStackDatumMap => opts -> (D2, D1, m) -> (
     rankSource := {rank source D1.map, rank target D2.map};
     rankTarget := {rank source D2.map, rank target D2.map};
@@ -158,13 +187,24 @@ coneList = {{0,1}}
 D1 = toricStackDatum(betaMap, rayList, coneList)
 map(D1,D1,3)
 
-
+-----------------------------------------------------------------------------
+---- Defines the id map on a ToricStackDatum
+-----------------------------------------------------------------------------
 ToricStackDatum#id = D -> map(D,D,1)
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
 D1 = toricStackDatum(betaMap, rayList, coneList)
 id_(D1)
+
+
+
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+------------------------- WELL-DEFINED -----------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+
 isWellDefined ToricMap := Boolean => f -> (
     -- CHECK DATA STRUCTURE
     -- check keys
@@ -233,9 +273,58 @@ isWellDefined ToricMap := Boolean => f -> (
     true
     )
 
-ToricStackDataum#id = D -> map(D,D,{1)
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+----------------------------- BASICS -------------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
 
+-----------------------------------------------------------------------------
+---- Defines source of ToricStackDatumMap
+-----------------------------------------------------------------------------
+source ToricStackDatumMap := ToricStackDatum => f -> f.source
 
-ToricStackDatumMap == ToricStackDatumMap := Boolean => (f, g) -> (
-    source f === source g and target f === target g and map f == map g
+-----------------------------------------------------------------------------
+---- Defines target of ToricStackDatumMap
+-----------------------------------------------------------------------------
+target ToricStackDatumMap := ToricStackDatum => f -> f.target
+
+-----------------------------------------------------------------------------
+---- Defines map of ToricStackDatumMap
+-----------------------------------------------------------------------------
+map ToricStackDatumMap := List => opts -> f -> f.map
+
+-----------------------------------------------------------------------------
+---- Defines == for ToricStackDatumMap
+-----------------------------------------------------------------------------
+ToricStackDatumMap == ToricStackDatumMap := Boolean => (f1, f2) -> (
+    source f1 === source f2 and target f1 === target f2 and map f1 == map f2
     )
+
+
+-----------------------------------------------------------------------------
+----- rankSource
+-----------------------------------------------------------------------------
+----- INPUT: 
+-----
+----- OUTPUT: 
+-----
+----- DESCRIPTION: 
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+rankSource = method ()
+rankSource (ToricStackDatumMap) := (f) -> ({rank source (f.source).map, rank target (f.source).map})
+
+
+-----------------------------------------------------------------------------
+----- rankSource
+-----------------------------------------------------------------------------
+----- INPUT: 
+-----
+----- OUTPUT: 
+-----
+----- DESCRIPTION: 
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+rankTarget = method ()
+rankTarget (ToricStackDatumMap) := (f) -> ({rank source (f.target).map, rank target (f.target).map})
