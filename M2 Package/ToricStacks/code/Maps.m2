@@ -280,19 +280,25 @@ isWellDefined ToricMap := Boolean => f -> (
 --------------------------------------------------------------------
 
 -----------------------------------------------------------------------------
----- Defines source of ToricStackDatumMap
+---- Defines source, target, and map of ToricStackDatumMap
 -----------------------------------------------------------------------------
 source ToricStackDatumMap := ToricStackDatum => f -> f.source
-
------------------------------------------------------------------------------
----- Defines target of ToricStackDatumMap
------------------------------------------------------------------------------
 target ToricStackDatumMap := ToricStackDatum => f -> f.target
-
------------------------------------------------------------------------------
----- Defines map of ToricStackDatumMap
------------------------------------------------------------------------------
 map ToricStackDatumMap := List => opts -> f -> f.map
+
+betaMap = matrix {{1,0},{1,2}}
+rayList = {{1,0},{0,1}}
+coneList = {{0,1}}
+D1 = toricStackDatum(betaMap, rayList, coneList)
+bigPhi = matrix {{2,0},{0,2}}
+littlePhi = matrix {{2,0},{0,2}}
+A = {bigPhi, littlePhi};
+f = map(D1,D1,A)
+
+source f
+target f
+map f
+
 
 -----------------------------------------------------------------------------
 ---- Defines == for ToricStackDatumMap
@@ -301,6 +307,23 @@ ToricStackDatumMap == ToricStackDatumMap := Boolean => (f1, f2) -> (
     source f1 === source f2 and target f1 === target f2 and map f1 == map f2
     )
 
+betaMap = matrix {{1,0},{1,2}}
+rayList = {{1,0},{0,1}}
+coneList = {{0,1}}
+D1 = toricStackDatum(betaMap, rayList, coneList)
+bigPhi1 = matrix {{2,0},{0,2}}
+littlePhi1 = matrix {{2,0},{0,2}}
+A1 = {bigPhi1, littlePhi1};
+f1 = map(D1,D1,A)
+
+bigPhi2 = matrix {{4,0},{0,4}}
+littlePhi2 = matrix {{4,0},{0,4}}
+A2 = {bigPhi2, littlePhi2};
+f2 = map(D1,D1,A2)
+
+f1 == f1
+f2 == f2
+f1 == f2
 
 -----------------------------------------------------------------------------
 ----- rankSource
@@ -315,6 +338,16 @@ ToricStackDatumMap == ToricStackDatumMap := Boolean => (f1, f2) -> (
 rankSource = method ()
 rankSource (ToricStackDatumMap) := (f) -> ({rank source (f.source).map, rank target (f.source).map})
 
+betaMap = matrix {{1,0},{1,2}}
+rayList = {{1,0},{0,1}}
+coneList = {{0,1}}
+D1 = toricStackDatum(betaMap, rayList, coneList)
+bigPhi1 = matrix {{2,0},{0,2}}
+littlePhi1 = matrix {{2,0},{0,2}}
+A1 = {bigPhi1, littlePhi1};
+f1 = map(D1,D1,A)
+
+rankSource f1
 
 -----------------------------------------------------------------------------
 ----- rankSource
@@ -328,3 +361,14 @@ rankSource (ToricStackDatumMap) := (f) -> ({rank source (f.source).map, rank tar
 -----------------------------------------------------------------------------
 rankTarget = method ()
 rankTarget (ToricStackDatumMap) := (f) -> ({rank source (f.target).map, rank target (f.target).map})
+
+betaMap = matrix {{1,0},{1,2}}
+rayList = {{1,0},{0,1}}
+coneList = {{0,1}}
+D1 = toricStackDatum(betaMap, rayList, coneList)
+bigPhi1 = matrix {{2,0},{0,2}}
+littlePhi1 = matrix {{2,0},{0,2}}
+A1 = {bigPhi1, littlePhi1};
+f1 = map(D1,D1,A)
+
+rankTarget f1
