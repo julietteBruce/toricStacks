@@ -1,6 +1,6 @@
 -- -*- coding: utf-8 -*-
 --------------------------------------------------------------------------------
--- Copyright 2025  Juliette Bruce, Maya Banks
+-- Copyright 2025  Juliette Bruce, Maya Banks, Boyana Martinova, Christin Sum
 --
 -- This program is free software: you can redistribute it and/or modify it under
 -- the terms of the GNU General Public License as published by the Free Software
@@ -53,14 +53,15 @@ newPackage("ToricStacks",
             Email => "mayadb@uic.edu"
         },
         {
-            Name => "first last",
-            Email => " "
+            Name => "Boyana Martinova",
+            Email => "martinova@wisc.edu",
+	    HomePage => "https://sites.google.com/view/bmartinova/home"
         },	     
         {
-            Name => "first last",          
-            Email => " "
+            Name => "Christin Sum",          
+            Email => "csum@hawaii.edu"
     }},
-  PackageExports => {"NormalToricVarieties"},
+  PackageExports => {"NormalToricVarieties", "Polyhedra"},
   DebuggingMode => true,
   AuxiliaryFiles => true
   )
