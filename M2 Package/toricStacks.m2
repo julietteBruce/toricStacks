@@ -65,7 +65,10 @@ newPackage("ToricStacks",
 
 export {
     --Types
+    "Stack", --docs, --test
+    "ToricStackDatum", --docs, --test
     --Methods
+    
     --Functions
     --Symbols
     --
@@ -138,7 +141,7 @@ describe ToricStackDatum := D -> Describe (expression toricStackDatum) (
 map ToricStackDatum := Matrix => D -> D.map
 rays ToricStackDatum := List => {} >> o -> D -> D.rays
 max  ToricStackDatum := List => D -> D.max
-dim NormalToricVariety := ZZ => (cacheValue symbol dim) (X -> #(rays X)#0)
+dim ToricStackDatum := ZZ => (cacheValue symbol dim) (X -> #(rays X)#0)
 
 
 --------------------------- toricStackDatum ------------------------
@@ -179,6 +182,40 @@ toricStackDatum (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> 
 toricStackDatum (Matrix, NormalToricVariety) := opts -> (betaMap,toricVar) -> (
     -- sorting cones creates a weak normal form (a.k.a. consistent output) -- from Greg
     coneList' := sort apply(max toricVar, sigma -> sort sigma); 
+    D := new ToricStackDatum from {
+	symbol map => betaMap,
+    	symbol rays  => rays toricVar,
+    	symbol max   => coneList',
+    	symbol cache => new CacheTable
+	};
+   if opts.WeilToClass =!= null then D.cache.fromWDivToCl = opts.WeilToClass;
+   D.cache.CoefficientRing = opts.CoefficientRing;
+   D.cache.Variable = opts.Variable;
+   D
+    )
+
+toricStackDatum (List, List) := opts -> (rayList, coneList) -> (
+    -- sorting cones creates a weak normal form (a.k.a. consistent output) -- from Greg
+    coneList' := sort apply(coneList, sigma -> sort sigma);
+    dimTorus := #(rayList#0);
+    betaMap := id_{ZZ^dimTorus};
+    D := new ToricStackDatum from {
+	symbol map => betaMap,
+    	symbol rays  => rayList,
+    	symbol max   => coneList',
+    	symbol cache => new CacheTable
+	};
+    if opts.WeilToClass =!= null then D.cache.fromWDivToCl = opts.WeilToClass;
+    D.cache.CoefficientRing = opts.CoefficientRing;
+    D.cache.Variable = opts.Variable;
+    D
+    )
+
+toricStackDatum (NormalToricVariety) := opts -> (toricVar) -> (
+    -- sorting cones creates a weak normal form (a.k.a. consistent output) -- from Greg
+    coneList' := sort apply(max toricVar, sigma -> sort sigma);
+    dimTorus := #((rays toricVar)#0);
+    betaMap := id_{ZZ^dimTorus};
     D := new ToricStackDatum from {
 	symbol map => betaMap,
     	symbol rays  => rays toricVar,
