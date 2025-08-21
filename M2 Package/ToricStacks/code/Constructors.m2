@@ -177,17 +177,6 @@ toricStack (Fan) := opts -> (F) -> (
 
 
 
-toricStack = method (
-    TypicalValue => ToricStack, 
-    Options => {
-    	CoefficientRing   => QQ,
-    	Variable          => getSymbol "x",
-	NonStrict        => false
-	}
-    )
-
-
-
 -----------------------------------------------------------------------------
 ----- weightProjectiveStack
 -----------------------------------------------------------------------------
