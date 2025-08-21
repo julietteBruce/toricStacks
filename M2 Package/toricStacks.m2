@@ -69,7 +69,7 @@ newPackage("ToricStacks",
 export {
     --Types
     "Stack", --docs, --test
-    "ToricStackDatum", --docs, --test
+    "ToricStack", --docs, --test
     --Methods
     "toricStackDatum" --docs, --test
     --Functions
