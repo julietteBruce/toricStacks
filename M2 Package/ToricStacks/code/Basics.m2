@@ -14,38 +14,31 @@ fan ToricStackDatum := Fan => D -> (
     fan(fanRaysMatrix, D.max)
     )
 
-
-fanFromGeneralizedFan = method ()
-fanFromGeneralizedFan (List, List) := opts -> (rayList, coneList) -> (
-    
-    )
-
-
-betaMap = matrix {{1,0},{1,2}}
-C1 = coneFromVData matrix {{1,0},{0,1}}
-F = fan C1
-toricStackDatum(betaMap, F)
-
-
-linearTransform = method()
-linearTransform(Fan, Matrix) := (F, A) -> (
-   newRays = rays F;
-   newRays = A * newRays
-   newLineality = linealitySpace F;
-   check = kernel A;
-   check = newLineality | (gens check);
-   if(rank check != rank newLineality) then << "Warning: Output fan may not be well defined. Check with 'isWellDefined'" << endl;
-   newLineality = A * newLineality;
-   newLineality = mingens image newLineality;
-   goodNewRays = makeRaysUniqueAndPrimitive(newRays, newLineality);
-   result := new HashTable from {
-      rays => newRays,
-      computedLinealityBasis => newLineality,
-      generatingObjects => maxCones F
-   };
-   internalFanConstructor result
-)
-
 fan(List, List) := Fan => (V,F) -> (
     fan(apply(F, C -> transpose matrix apply(C, idx -> V_idx)) / coneFromVData)
 )
+
+fanGensFromGeneralizedFan = method ()
+fanGensFromGeneralizedFan (List, List) := (rayList, coneList) -> (
+    F := fan(rayList,coneList);
+    L := dual gens kernel dual linealitySpace F;
+    rayList' := entries transpose (L*(rays F));
+    {rayList', maxCones F}
+    )
+
+toricVarietyGeneralizedFan = method ()
+toricVarietyGeneralizedFan (List, List) := (rayList, coneList) -> (
+    F := fan(rayList,coneList);
+    L := dual gens kernel dual linealitySpace F;
+    rayList' := entries transpose (L*(rays F));
+    normalToricVariety(rayList', maxCones F)
+    )
+
+rayList = {{0,0,1},{0,0,-1},{0,1,0},{1,0,0},{1,1,0}}
+coneList = {{0,1,2,3},{0,1,3,4},{0,1,2,4}}
+toricVarietyFromGeneralizedFan(rayList,coneList)
+
+
+rayList = {{1,1,1},{-1,-1,-1},{1,-1,0},{1,0,-1},{0,1,-1}}
+coneList = {{0,1,2,3},{0,1,2,4},{0,1,3,4}}
+toricVarietyFromGeneralizedFan(rayList,coneList)
