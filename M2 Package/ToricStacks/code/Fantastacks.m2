@@ -1,5 +1,6 @@
 --- We can come later and separate this out into separate files.
 load "./Constructors.m2"
+load "./ToricExtras.m2"
 topLevelMode = Standard
 
 Fantastack = new Type of ToricStack
@@ -60,8 +61,13 @@ canonicalStack = method(
 )
 canonicalStack(List, List) := Fantastack => opts -> (rayList, coneList) -> fantastack(rayList, coneList, opts)
 canonicalStack(Fan) := Fantastack => opts -> Sigma -> fantastack(Sigma, opts)
---- TODO: ADD canonicalStack(ToricStack)
+canonicalStack(NormalToricVariety) := Fantastack => opts -> X -> canonicalStack(fan X)
+--- TODO: ADD canonicalStack(ToricStack) 
+-*canonicalStack(ToricStack) := Fantastack => opts -> D -> (
 
+)*-
+
+-- TODO: Implement == of toricStacks using Theorem B.3 
 
 
 -- If we didn't save the input fan, we would need to compute some invariantRing stuff. 
@@ -86,6 +92,12 @@ isWellDefined Fantastack := Boolean => D -> (
     })
 )
 
+
+unstableCones = method()
+unstableCones(Fantastack) := List => D -> (
+    (beta, Sigma) := (map D, fan D);
+)
+
 ----- BASIC FUNCTIONS
 -*
 fan(List, List) := Fan => (V,F) -> (
@@ -99,29 +111,3 @@ maxFacesAsCones(Fan) := List => (Sigma) -> (
     (for maxCone in maxCones(Sigma) list (V_maxCone)) / transpose / matrix / coneFromVData
 )
 *-
-
-toricIdeal = method()
-toricIdeal(Matrix,Ring) := (A,R) -> (
-    m := product gens R;
-    saturate(sub(toBinomial(transpose(syz(A)),R),R),m)
-    )
-toricIdeal(Matrix) := A -> (
-    numcol := numColumns(A);
-    p := local p;
-    R := QQ[p_0..p_(numcol-1)];
-    toricIdeal(A,R)
-)
-toricIdeal(NormalToricVariety, Ring) := Ideal => (X,R) -> toricIdeal(transpose matrix rays X, R)
-toricIdeal(NormalToricVariety) := X -> toricIdeal(transpose matrix rays X, ring X)
-
-
-toBinomial = method()
-toBinomial(Matrix,Ring) := (M,S) -> (
-     toBinom := (b) -> (
-       pos := 1_S;
-       neg := 1_S;
-       scan(#b, i -> if b_i > 0 then pos = pos*S_i^(b_i)
-                   else if b_i < 0 then neg = neg*S_i^(-b_i));
-       pos - neg);
-     ideal apply(entries M, toBinom)
-     )
