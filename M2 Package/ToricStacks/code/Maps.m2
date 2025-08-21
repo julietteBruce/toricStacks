@@ -90,8 +90,8 @@ toricStack (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> (
 -----------------------------------------------------------------------------
 ---- TORIC STACK MAP TYPE DECLARATION
 -----------------------------------------------------------------------------
-ToricStackDatumMap = new Type of HashTable
-ToricStackDatumMap.synonym = "toric stack datum map"
+ToricStackMap = new Type of HashTable
+ToricStackMap.synonym = "toric stack map"
 
 
 -----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ ToricStackDatumMap.synonym = "toric stack datum map"
 ---- then call this main version of map for ToricStack. This is
 ---- for consistentcy and easy of debugging. 
 -----------------------------------------------------------------------------
-map(ToricStack, ToricStack, List) := ToricStackDatumMap => opts -> (D2, D1, A) -> (
+map(ToricStack, ToricStack, List) := ToricStackMap => opts -> (D2, D1, A) -> (
     bigPhi := A#0;
     littlePhi := A#1;
     if ring bigPhi =!= ZZ or ring littlePhi =!= ZZ then error "-- expected integer matrices";
@@ -128,7 +128,7 @@ map(ToricStack, ToricStack, List) := ToricStackDatumMap => opts -> (D2, D1, A) -
         error("-- expected target of littlePhi be the target lattice of D2");
     if (D2.map)*(bigPhi) != (D1.map)*(littlePhi) then
         error("-- expected maps to commute");
-    new ToricStackDatumMap from {
+    new ToricStackMap from {
     	symbol source => D1,
     	symbol target => D2,
     	symbol map => A,
@@ -147,7 +147,7 @@ map(D1,D1,A)
 -----------------------------------------------------------------------------
 ---- Contructs from two matrices instead of a list of matrices
 -----------------------------------------------------------------------------
-map(ToricStack, ToricStack, Matrix, Matrix) := ToricStackDatumMap => opts -> (D2, D1, bigPhi, littlePhi) -> (
+map(ToricStack, ToricStack, Matrix, Matrix) := ToricStackMap => opts -> (D2, D1, bigPhi, littlePhi) -> (
     A := {bigPhi, littlePhi};
     map(D2, D1, A)
     )
@@ -164,7 +164,7 @@ map(D1,D1,bigPhi,littlePhi)
 ---- Contructs either the zero-map or the map given by m*Id.
 ---- If m != 0 the source and target lattices must be the same.
 -----------------------------------------------------------------------------
-map(ToricStack, ToricStack, ZZ) := ToricStackDatumMap => opts -> (D2, D1, m) -> (
+map(ToricStack, ToricStack, ZZ) := ToricStackMap => opts -> (D2, D1, m) -> (
     rankSource := {rank source D1.map, rank target D2.map};
     rankTarget := {rank source D2.map, rank target D2.map};
     if m == 0 then (
@@ -282,9 +282,9 @@ isWellDefined ToricMap := Boolean => f -> (
 -----------------------------------------------------------------------------
 ---- Defines source, target, and map of ToricStackDatumMap
 -----------------------------------------------------------------------------
-source ToricStackDatumMap := ToricStack => f -> f.source
-target ToricStackDatumMap := ToricStack => f -> f.target
-map ToricStackDatumMap := List => opts -> f -> f.map
+source ToricStackMap := ToricStack => f -> f.source
+target ToricStackMap := ToricStack => f -> f.target
+map ToricStackMap := List => opts -> f -> f.map
 
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
@@ -303,7 +303,7 @@ map f
 -----------------------------------------------------------------------------
 ---- Defines == for ToricStackDatumMap
 -----------------------------------------------------------------------------
-ToricStackDatumMap == ToricStackDatumMap := Boolean => (f1, f2) -> (
+ToricStackMap == ToricStackMap := Boolean => (f1, f2) -> (
     source f1 === source f2 and target f1 === target f2 and map f1 == map f2
     )
 
@@ -336,7 +336,7 @@ f1 == f2
 -----------------------------------------------------------------------------
 -----------------------------------------------------------------------------
 rankSource = method ()
-rankSource (ToricStackDatumMap) := (f) -> ({rank source (f.source).map, rank target (f.source).map})
+rankSource (ToricStackMap) := (f) -> ({rank source (f.source).map, rank target (f.source).map})
 
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
@@ -360,7 +360,7 @@ rankSource f1
 -----------------------------------------------------------------------------
 -----------------------------------------------------------------------------
 rankTarget = method ()
-rankTarget (ToricStackDatumMap) := (f) -> ({rank source (f.target).map, rank target (f.target).map})
+rankTarget (ToricStackMap) := (f) -> ({rank source (f.target).map, rank target (f.target).map})
 
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
@@ -377,7 +377,7 @@ rankTarget f1
 -----------------------------------------------------------------------------
 ---- Defines compostion for ToricStackDatumMap
 -----------------------------------------------------------------------------
-ToricStackDatumMap * ToricStackDatumMap := ToricMapToricStackDatumMap => (f1, f2) -> (
+ToricStackMap * ToricStackMap := ToricStackMap => (f1, f2) -> (
     if target f1 =!= source f2 then error "-- expected composable maps";
     -- defines source and target
     D1 := source f1;
