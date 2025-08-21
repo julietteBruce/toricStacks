@@ -70,8 +70,12 @@ export {
     --Types
     "Stack", --docs, --test
     "ToricStack", --docs, --test
+    "ToricStackMap", --docs, --test
     --Methods
-    "toricStack" --docs, --test
+    "toricStack", --docs, --test
+    "toricStackMap", --docs, --test
+    "fanGensFromGeneralizedFan",  --docs, --test
+    "toricVarietyGeneralizedFan", --docs, --test
     --Functions
     --Symbols
     --

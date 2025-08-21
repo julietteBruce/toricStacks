@@ -175,6 +175,49 @@ toricStack (Fan) := opts -> (F) -> (
 	)
     )
 
+
+
+toricStack = method (
+    TypicalValue => ToricStack, 
+    Options => {
+    	CoefficientRing   => QQ,
+    	Variable          => getSymbol "x",
+	NonStrict        => false
+	}
+    )
+
+
+
+-----------------------------------------------------------------------------
+----- weightProjectiveStack
+-----------------------------------------------------------------------------
+----- INPUT: 
+-----
+----- OUTPUT: 
+-----
+----- DESCRIPTION: 
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+
+weightedProjcetiveStack = method (
+    TypicalValue => ToricStack, 
+    Options => {
+    	CoefficientRing   => QQ,
+    	Variable          => getSymbol "x",
+	NonStrict        => false
+	}
+    )
+
+weightedProjcetiveStack (List) := opts -> (betaMap,X) -> (
+    
+    toricStack(betaMap, rays X, max X,
+	CoefficientRing => opts.CoefficientRing,
+	Variable => opts.Variable,
+	NonStrict => opts.NonStrict
+	)
+    )
+
+
 C1 = coneFromVData matrix {{1,0},{0,1}}
 F = fan C1
 toricStack(betaMap, F)
