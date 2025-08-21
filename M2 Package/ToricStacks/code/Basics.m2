@@ -6,10 +6,10 @@ needsPackage "Polyhedra"
 ------------------------- BASIC FUNCTIONS --------------------------
 --------------------------------------------------------------------
 --------------------------------------------------------------------
-map ToricStackDatum := Matrix => D -> D.map
-rays ToricStackDatum := List => {} >> o -> D -> D.rays
-max  ToricStackDatum := List => D -> D.max
-fan ToricStackDatum := Fan => D -> (
+map ToricStack := Matrix => D -> D.map
+rays ToricStack := List => {} >> o -> D -> D.rays
+max  ToricStack := List => D -> D.max
+fan ToricStack := Fan => D -> (
     fanRaysMatrix := (transpose matrix D.rays)**QQ;
     fan(fanRaysMatrix, D.max)
     )
@@ -17,6 +17,10 @@ fan ToricStackDatum := Fan => D -> (
 fan(List, List) := Fan => (V,F) -> (
     fan(apply(F, C -> transpose matrix apply(C, idx -> V_idx)) / coneFromVData)
 )
+
+projectionMapSES := (A) -> (
+    transpose syz transpose A
+    )
 
 fanGensFromGeneralizedFan = method ()
 fanGensFromGeneralizedFan (List, List) := (rayList, coneList) -> (
