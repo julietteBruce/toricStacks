@@ -71,7 +71,7 @@ export {
     "Stack", --docs, --test
     "ToricStack", --docs, --test
     --Methods
-    "toricStackDatum" --docs, --test
+    "toricStack" --docs, --test
     --Functions
     --Symbols
     --

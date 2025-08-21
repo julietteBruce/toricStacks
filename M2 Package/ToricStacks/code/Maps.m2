@@ -33,7 +33,7 @@ ToricStack.GlobalReleaseHook = globalReleaseFunction
 expression ToricStack := D -> if hasAttribute (D, ReverseDictionary) 
     then expression getAttribute (D, ReverseDictionary) else 
    (describe D)#0
-describe ToricStack := D -> Describe (expression toricStackDatum) (
+describe ToricStack := D -> Describe (expression toricStack) (
     expression D.map, expression D.rays, expression D.max)
 
 
@@ -45,7 +45,7 @@ describe ToricStack := D -> Describe (expression toricStackDatum) (
 --------------------------------------------------------------------
 
 -----------------------------------------------------------------------------
------ toricStackDatum
+----- toricStack
 -----------------------------------------------------------------------------
 ----- INPUT: 
 -----
@@ -54,7 +54,7 @@ describe ToricStack := D -> Describe (expression toricStackDatum) (
 ----- DESCRIPTION: 
 -----------------------------------------------------------------------------
 ----------------------------------------------------------------------------- 
-toricStackDatum = method (
+toricStack = method (
     TypicalValue => ToricStack, 
     Options => {
     	CoefficientRing   => QQ,
@@ -69,10 +69,10 @@ toricStackDatum = method (
 ---- form of a list of rays and a list of maximal cones.
 ----
 ---- **ALL** other constructors should compute a betaMap, raysList, and
----- coneList and then call this main version of toricStackDatum. This is
+---- coneList and then call this main version of toricStack. This is
 ---- for consistentcy and easy of debugging. 
 -----------------------------------------------------------------------------
-toricStackDatum (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> (
+toricStack (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> (
    -- sorting rays/cones gives a slight more uniform output.
     rayList' := sort rayList;
     coneList' := sort apply(coneList, sigma -> sort sigma);
@@ -138,7 +138,7 @@ map(ToricStack, ToricStack, List) := ToricStackDatumMap => opts -> (D2, D1, A) -
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
-D1 = toricStackDatum(betaMap, rayList, coneList)
+D1 = toricStack(betaMap, rayList, coneList)
 bigPhi = matrix {{2,0},{0,2}}
 littlePhi = matrix {{2,0},{0,2}}
 A = {bigPhi, littlePhi};
@@ -155,7 +155,7 @@ map(ToricStack, ToricStack, Matrix, Matrix) := ToricStackDatumMap => opts -> (D2
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
-D1 = toricStackDatum(betaMap, rayList, coneList)
+D1 = toricStack(betaMap, rayList, coneList)
 bigPhi = matrix {{2,0},{0,2}}
 littlePhi = matrix {{2,0},{0,2}}
 map(D1,D1,bigPhi,littlePhi)
@@ -184,7 +184,7 @@ map(ToricStack, ToricStack, ZZ) := ToricStackDatumMap => opts -> (D2, D1, m) -> 
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
-D1 = toricStackDatum(betaMap, rayList, coneList)
+D1 = toricStack(betaMap, rayList, coneList)
 map(D1,D1,3)
 
 -----------------------------------------------------------------------------
@@ -194,7 +194,7 @@ ToricStack#id = D -> map(D,D,1)
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
-D1 = toricStackDatum(betaMap, rayList, coneList)
+D1 = toricStack(betaMap, rayList, coneList)
 id_(D1)
 
 
@@ -289,7 +289,7 @@ map ToricStackDatumMap := List => opts -> f -> f.map
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
-D1 = toricStackDatum(betaMap, rayList, coneList)
+D1 = toricStack(betaMap, rayList, coneList)
 bigPhi = matrix {{2,0},{0,2}}
 littlePhi = matrix {{2,0},{0,2}}
 A = {bigPhi, littlePhi};
@@ -310,7 +310,7 @@ ToricStackDatumMap == ToricStackDatumMap := Boolean => (f1, f2) -> (
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
-D1 = toricStackDatum(betaMap, rayList, coneList)
+D1 = toricStack(betaMap, rayList, coneList)
 bigPhi1 = matrix {{2,0},{0,2}}
 littlePhi1 = matrix {{2,0},{0,2}}
 A1 = {bigPhi1, littlePhi1};
@@ -341,7 +341,7 @@ rankSource (ToricStackDatumMap) := (f) -> ({rank source (f.source).map, rank tar
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
-D1 = toricStackDatum(betaMap, rayList, coneList)
+D1 = toricStack(betaMap, rayList, coneList)
 bigPhi1 = matrix {{2,0},{0,2}}
 littlePhi1 = matrix {{2,0},{0,2}}
 A1 = {bigPhi1, littlePhi1};
@@ -365,7 +365,7 @@ rankTarget (ToricStackDatumMap) := (f) -> ({rank source (f.target).map, rank tar
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
-D1 = toricStackDatum(betaMap, rayList, coneList)
+D1 = toricStack(betaMap, rayList, coneList)
 bigPhi1 = matrix {{2,0},{0,2}}
 littlePhi1 = matrix {{2,0},{0,2}}
 A1 = {bigPhi1, littlePhi1};
@@ -394,7 +394,7 @@ ToricStackDatumMap * ToricStackDatumMap := ToricMapToricStackDatumMap => (f1, f2
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
-D1 = toricStackDatum(betaMap, rayList, coneList)
+D1 = toricStack(betaMap, rayList, coneList)
 bigPhi1 = matrix {{2,0},{0,2}}
 littlePhi1 = matrix {{2,0},{0,2}}
 A1 = {bigPhi1, littlePhi1};

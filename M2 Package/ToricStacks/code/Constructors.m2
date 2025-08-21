@@ -38,7 +38,7 @@ describe ToricStack := D -> Describe (expression toricStack) (
 
 
 -----------------------------------------------------------------------------
------ toricStackDatum
+----- toricStack
 -----------------------------------------------------------------------------
 ----- INPUT: 
 -----
@@ -62,7 +62,7 @@ toricStack = method (
 ---- form of a list of rays and a list of maximal cones.
 ----
 ---- **ALL** other constructors should compute a betaMap, raysList, and
----- coneList and then call this main version of toricStackDatum. This is
+---- coneList and then call this main version of toricStack. This is
 ---- for consistentcy and easy of debugging. 
 -----------------------------------------------------------------------------
 toricStack (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> (
@@ -123,7 +123,7 @@ toricStack(betaMap, F)
 
 -----------------------------------------------------------------------------
 ---- Realizes a toric variety (given as a list of rays and a list of maximal
----- cones) as a toricStackDatum by taking betaMap to be the identiy on the
+---- cones) as a toricStack by taking betaMap to be the identiy on the
 ---- lattice of the toric variety.
 -----------------------------------------------------------------------------
 toricStack (List, List) := opts -> (rayList, coneList) -> (
@@ -142,7 +142,7 @@ toricStack(rayList, coneList)
 
 -----------------------------------------------------------------------------
 ---- Realizes a toric variety (given as a NormalToricVariety)
----- as a toricStackDatum by taking betaMap to be the identiy on the
+---- as a toricStack by taking betaMap to be the identiy on the
 ---- lattice of the toric variety.
 -----------------------------------------------------------------------------
 toricStack (NormalToricVariety) := opts -> (X) -> (
@@ -163,7 +163,7 @@ toricStack(X)
 
 -----------------------------------------------------------------------------
 ---- Realizes a toric variety (given as a Fan)
----- as a toricStackDatum by taking betaMap to be the identity on the
+---- as a toricStack by taking betaMap to be the identity on the
 ---- lattice of the toric variety.
 -----------------------------------------------------------------------------
 toricStack (Fan) := opts -> (F) -> (

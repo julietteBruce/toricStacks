@@ -32,7 +32,7 @@ ToricStack.GlobalReleaseHook = globalReleaseFunction
 expression ToricStack := D -> if hasAttribute (D, ReverseDictionary) 
     then expression getAttribute (D, ReverseDictionary) else 
    (describe D)#0
-describe ToricStack := D -> Describe (expression toricStackDatum) (
+describe ToricStack := D -> Describe (expression toricStack) (
     expression D.map, expression D.rays, expression D.max)
 
 
