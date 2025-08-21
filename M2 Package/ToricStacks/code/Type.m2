@@ -25,14 +25,14 @@ Stack.GlobalReleaseHook = globalReleaseFunction
 -- TORIC STACK TYPE DECLaRATION
 -----------------------------------------------------------------------------
 
-ToricStackDatum = new Type of Stack
-ToricStackDatum.synonym = "toric stack datum"
-ToricStackDatum.GlobalAssignHook = globalAssignFunction
-ToricStackDatum.GlobalReleaseHook = globalReleaseFunction
-expression ToricStackDatum := D -> if hasAttribute (D, ReverseDictionary) 
+ToricStack = new Type of Stack
+ToricStack.synonym = "toric stack datum"
+ToricStack.GlobalAssignHook = globalAssignFunction
+ToricStack.GlobalReleaseHook = globalReleaseFunction
+expression ToricStack := D -> if hasAttribute (D, ReverseDictionary) 
     then expression getAttribute (D, ReverseDictionary) else 
    (describe D)#0
-describe ToricStackDatum := D -> Describe (expression toricStackDatum) (
+describe ToricStack := D -> Describe (expression toricStackDatum) (
     expression D.map, expression D.rays, expression D.max)
 
 
@@ -45,7 +45,7 @@ describe ToricStackDatum := D -> Describe (expression toricStackDatum) (
 ----- DESCRIPTION: 
 --------------------------------------------------------------------
 -------------------------------------------------------------------- 
-isWellDefined ToricStackDatum := Boolean => D -> (
+isWellDefined ToricStack := Boolean => D -> (
     -- CHECK DATA STRUCTURE
     -- check keys
     K := keys D;

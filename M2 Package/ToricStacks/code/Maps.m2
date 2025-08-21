@@ -26,14 +26,14 @@ Stack.GlobalReleaseHook = globalReleaseFunction
 ---- TORIC STACK TYPE DECLARATION
 -----------------------------------------------------------------------------
 
-ToricStackDatum = new Type of Stack
-ToricStackDatum.synonym = "toric stack datum"
-ToricStackDatum.GlobalAssignHook = globalAssignFunction
-ToricStackDatum.GlobalReleaseHook = globalReleaseFunction
-expression ToricStackDatum := D -> if hasAttribute (D, ReverseDictionary) 
+ToricStack = new Type of Stack
+ToricStack.synonym = "toric stack datum"
+ToricStack.GlobalAssignHook = globalAssignFunction
+ToricStack.GlobalReleaseHook = globalReleaseFunction
+expression ToricStack := D -> if hasAttribute (D, ReverseDictionary) 
     then expression getAttribute (D, ReverseDictionary) else 
    (describe D)#0
-describe ToricStackDatum := D -> Describe (expression toricStackDatum) (
+describe ToricStack := D -> Describe (expression toricStackDatum) (
     expression D.map, expression D.rays, expression D.max)
 
 
@@ -55,7 +55,7 @@ describe ToricStackDatum := D -> Describe (expression toricStackDatum) (
 -----------------------------------------------------------------------------
 ----------------------------------------------------------------------------- 
 toricStackDatum = method (
-    TypicalValue => ToricStackDatum, 
+    TypicalValue => ToricStack, 
     Options => {
     	CoefficientRing   => QQ,
     	Variable          => getSymbol "x",
@@ -76,7 +76,7 @@ toricStackDatum (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> 
    -- sorting rays/cones gives a slight more uniform output.
     rayList' := sort rayList;
     coneList' := sort apply(coneList, sigma -> sort sigma);
-    D := new ToricStackDatum from {
+    D := new ToricStack from {
 	symbol map => betaMap,
     	symbol rays  => rayList',
     	symbol max   => coneList',
@@ -95,7 +95,7 @@ ToricStackDatumMap.synonym = "toric stack datum map"
 
 
 -----------------------------------------------------------------------------
------ map(ToricStackDatum,ToricStackDatum,-)
+----- map(ToricStack,ToricStack,-)
 -----------------------------------------------------------------------------
 ----- INPUT: 
 -----
@@ -111,10 +111,10 @@ ToricStackDatumMap.synonym = "toric stack datum map"
 ---- form of a list of rays and a list of maximal cones.
 ----
 ---- **ALL** other constructors should compute a D2, D1, and an A map
----- then call this main version of map for ToricStackDatum. This is
+---- then call this main version of map for ToricStack. This is
 ---- for consistentcy and easy of debugging. 
 -----------------------------------------------------------------------------
-map(ToricStackDatum, ToricStackDatum, List) := ToricStackDatumMap => opts -> (D2, D1, A) -> (
+map(ToricStack, ToricStack, List) := ToricStackDatumMap => opts -> (D2, D1, A) -> (
     bigPhi := A#0;
     littlePhi := A#1;
     if ring bigPhi =!= ZZ or ring littlePhi =!= ZZ then error "-- expected integer matrices";
@@ -147,7 +147,7 @@ map(D1,D1,A)
 -----------------------------------------------------------------------------
 ---- Contructs from two matrices instead of a list of matrices
 -----------------------------------------------------------------------------
-map(ToricStackDatum, ToricStackDatum, Matrix, Matrix) := ToricStackDatumMap => opts -> (D2, D1, bigPhi, littlePhi) -> (
+map(ToricStack, ToricStack, Matrix, Matrix) := ToricStackDatumMap => opts -> (D2, D1, bigPhi, littlePhi) -> (
     A := {bigPhi, littlePhi};
     map(D2, D1, A)
     )
@@ -164,7 +164,7 @@ map(D1,D1,bigPhi,littlePhi)
 ---- Contructs either the zero-map or the map given by m*Id.
 ---- If m != 0 the source and target lattices must be the same.
 -----------------------------------------------------------------------------
-map(ToricStackDatum, ToricStackDatum, ZZ) := ToricStackDatumMap => opts -> (D2, D1, m) -> (
+map(ToricStack, ToricStack, ZZ) := ToricStackDatumMap => opts -> (D2, D1, m) -> (
     rankSource := {rank source D1.map, rank target D2.map};
     rankTarget := {rank source D2.map, rank target D2.map};
     if m == 0 then (
@@ -188,9 +188,9 @@ D1 = toricStackDatum(betaMap, rayList, coneList)
 map(D1,D1,3)
 
 -----------------------------------------------------------------------------
----- Defines the id map on a ToricStackDatum
+---- Defines the id map on a ToricStack
 -----------------------------------------------------------------------------
-ToricStackDatum#id = D -> map(D,D,1)
+ToricStack#id = D -> map(D,D,1)
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
@@ -282,8 +282,8 @@ isWellDefined ToricMap := Boolean => f -> (
 -----------------------------------------------------------------------------
 ---- Defines source, target, and map of ToricStackDatumMap
 -----------------------------------------------------------------------------
-source ToricStackDatumMap := ToricStackDatum => f -> f.source
-target ToricStackDatumMap := ToricStackDatum => f -> f.target
+source ToricStackDatumMap := ToricStack => f -> f.source
+target ToricStackDatumMap := ToricStack => f -> f.target
 map ToricStackDatumMap := List => opts -> f -> f.map
 
 betaMap = matrix {{1,0},{1,2}}
