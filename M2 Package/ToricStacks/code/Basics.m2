@@ -18,24 +18,22 @@ fan(List, List) := Fan => (V,F) -> (
     fan(apply(F, C -> transpose matrix apply(C, idx -> V_idx)) / coneFromVData)
 )
 
-projectionMapSES := (A) -> (
-    transpose syz transpose A
+cokerMap := (A) -> (
+    (prune coker A).cache.pruningMap
     )
 
 fanGensFromGeneralizedFan = method ()
 fanGensFromGeneralizedFan (List, List) := (rayList, coneList) -> (
     F := fan(rayList,coneList);
-    L := dual gens kernel dual linealitySpace F;
+    L := cokerMap linealitySpace F;
     rayList' := entries transpose (L*(rays F));
     {rayList', maxCones F}
     )
 
 toricVarietyGeneralizedFan = method ()
 toricVarietyGeneralizedFan (List, List) := (rayList, coneList) -> (
-    F := fan(rayList,coneList);
-    L := dual gens kernel dual linealitySpace F;
-    rayList' := entries transpose (L*(rays F));
-    normalToricVariety(rayList', maxCones F)
+    F := fanGensFromGeneralizedFan(rayList, coneList);
+    normalToricVariety(F#0,F#1)
     )
 
 rayList = {{0,0,1},{0,0,-1},{0,1,0},{1,0,0},{1,1,0}}
