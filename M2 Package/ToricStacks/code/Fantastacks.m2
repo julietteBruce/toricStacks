@@ -43,8 +43,39 @@ fantastack(Matrix, List, List) := Fantastack => opts -> (beta, rayList, coneList
 fantastack(Matrix, Fan) := Fantastack => opts -> (beta, Sigma) -> fantastack(beta, entries transpose rays Sigma, maxCones Sigma, opts)
 
 -- this is the canonical stack of a fan
-fantastack(List, List) := Fantastack => opts -> (rayList, coneList) -> toricStack(transpose matrix for ray in rayList list ray // gcd(ray), entries basis source(beta), coneList, opts)
+-- The canonical stack only depends on the stack and its torus action, not on the stacky fan.
+-- Over any non-strict toric stack, the canonical stack is isomorphic to it over its smooth locus.
+fantastack(List, List) := Fantastack => opts -> (rayList, coneList) -> fantastack(transpose matrix for ray in rayList list ray // gcd(ray), rayList, coneList, opts)
+
 fantastack(Fan) := Fantastack => opts -> Sigma -> fantastack(entries transpose rays Sigma, maxCones Sigma, opts)
+
+
+canonicalStack = method(
+    TypicalValue => Fantastack, 
+    Options => {
+        CoefficientRing   => QQ,
+        Variable          => getSymbol "x",
+        NonStrict         => false
+    }   
+)
+canonicalStack(List, List) := Fantastack => opts -> (rayList, coneList) -> fantastack(rayList, coneList, opts)
+canonicalStack(Fan) := Fantastack => opts -> Sigma -> fantastack(Sigma, opts)
+--- TODO: ADD canonicalStack(ToricStack)
+
+
+
+-- If we didn't save the input fan, we would need to compute some invariantRing stuff. 
+moduliSpace = method()
+moduliSpace(Fantastack) := NormalToricVariety => D -> (
+    Sigma := D.cache#inputFan;
+    rayList := rays Sigma;
+    normalToricVariety( entries transpose rays Sigma, maxCones Sigma)
+)
+
+
+ring Fantastack := Ring => D -> ring moduliSpace D
+-- get the irrelevant ideal of the moduliSpace, as defined in Remark 4.2
+ideal Fantastack := Ideal => D -> ideal moduliSpace D
 
 
 isWellDefined Fantastack := Boolean => D -> (
@@ -69,4 +100,28 @@ maxFacesAsCones(Fan) := List => (Sigma) -> (
 )
 *-
 
+toricIdeal = method()
+toricIdeal(Matrix,Ring) := (A,R) -> (
+    m := product gens R;
+    saturate(sub(toBinomial(transpose(syz(A)),R),R),m)
+    )
+toricIdeal(Matrix) := A -> (
+    numcol := numColumns(A);
+    p := local p;
+    R := QQ[p_0..p_(numcol-1)];
+    toricIdeal(A,R)
+)
+toricIdeal(NormalToricVariety, Ring) := Ideal => (X,R) -> toricIdeal(transpose matrix rays X, R)
+toricIdeal(NormalToricVariety) := X -> toricIdeal(transpose matrix rays X, ring X)
 
+
+toBinomial = method()
+toBinomial(Matrix,Ring) := (M,S) -> (
+     toBinom := (b) -> (
+       pos := 1_S;
+       neg := 1_S;
+       scan(#b, i -> if b_i > 0 then pos = pos*S_i^(b_i)
+                   else if b_i < 0 then neg = neg*S_i^(-b_i));
+       pos - neg);
+     ideal apply(entries M, toBinom)
+     )
