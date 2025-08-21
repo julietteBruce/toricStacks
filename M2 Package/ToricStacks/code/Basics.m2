@@ -9,24 +9,11 @@ needsPackage "Polyhedra"
 map ToricStack := Matrix => opts -> D -> D.map
 rays ToricStack := List => {} >> o -> D -> D.rays
 max  ToricStack := List => D -> D.max
-fan ToricStack := Fan => D -> (
-    fanRaysMatrix := (transpose matrix D.rays)**QQ;
-    fan(fanRaysMatrix, D.max)
-    )
-
-fan(List, List) := Fan => (V,F) -> (
-    fan(apply(F, C -> transpose matrix apply(C, idx -> V_idx)) / coneFromVData)
-)
+fan ToricStack := Fan => D -> fan(D.rays, D.max)
 
 cokerMap := (A) -> (
     (prune coker A).cache.pruningMap
     )
-
-maxFacesAsCones = method()
-maxFacesAsCones(Fan) := List => (Sigma) -> (
-    V := entries transpose rays Sigma;
-    (for maxCone in maxCones(Sigma) list (V_maxCone)) / transpose / matrix / coneFromVData
-)
 
 fanGensFromGeneralizedFan = method ()
 fanGensFromGeneralizedFan (List, List) := (rayList, coneList) -> (

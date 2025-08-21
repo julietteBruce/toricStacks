@@ -13,6 +13,9 @@ toricIdeal(Matrix) := A -> (
 toricIdeal(NormalToricVariety, Ring) := Ideal => (X,R) -> toricIdeal(transpose matrix rays X, R)
 toricIdeal(NormalToricVariety) := X -> toricIdeal(transpose matrix rays X, ring X)
 
+fan(List, List) := Fan => (V,F) -> (
+    fan(apply(F, C -> transpose matrix apply(C, idx -> V_idx)) / coneFromVData)
+)
 
 toBinomial = method()
 toBinomial(Matrix,Ring) := (M,S) -> (
@@ -24,6 +27,12 @@ toBinomial(Matrix,Ring) := (M,S) -> (
        pos - neg);
      ideal apply(entries M, toBinom)
      )
+
+maxFacesAsCones = method()
+maxFacesAsCones(Fan) := List => (Sigma) -> (
+    V := entries transpose rays Sigma;
+    (for maxCone in maxCones(Sigma) list (V_maxCone)) / transpose / matrix / coneFromVData
+)
 
 areIsomorphic = (X1, X2) -> (
 	dim X1 == dim X2 and length rays X1 == length rays X2 and length max X1 == length max X2 and any(
