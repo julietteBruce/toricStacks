@@ -90,6 +90,21 @@ map(ToricStack, ToricStack, ZZ) := ToricStackMap => opts -> (D2, D1, m) -> (
 ToricStack#id = D -> map(D,D,1)
 
 
+isIsomorphism(ToricStackMap) := Boolean => f -> (
+    phiList := map f;
+    (bigPhi, littlePhi) := (phiList#0, phiList#1);
+    condition1 := (rank littlePhi == numcols littlePhi);
+    condition2 := (
+        apply(maxFacesAsCones(fan D2),
+            tau -> class(affinePreimage(bigPhi, tau)) === Cone
+        ));
+    -- is this right?? I'm a little confused about the condition 2 for Theorem B.3
+    condition3 := apply(maxFacesAsCones(fan D2),
+            tau -> (   
+                getHilbRays affinePreimage(bigPhi, tau) == getHilbRays tau
+            ));
+    all({condition1} | condition2 | condition3, bool -> bool)
+)
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 ----------------------------- BASICS -------------------------------
