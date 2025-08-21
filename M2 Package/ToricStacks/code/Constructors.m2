@@ -25,14 +25,14 @@ Stack.GlobalReleaseHook = globalReleaseFunction
 ---- TORIC STACK TYPE DECLARATION
 -----------------------------------------------------------------------------
 
-ToricStackDatum = new Type of Stack
-ToricStackDatum.synonym = "toric stack datum"
-ToricStackDatum.GlobalAssignHook = globalAssignFunction
-ToricStackDatum.GlobalReleaseHook = globalReleaseFunction
-expression ToricStackDatum := D -> if hasAttribute (D, ReverseDictionary) 
+ToricStack = new Type of Stack
+ToricStack.synonym = "toric stack"
+ToricStack.GlobalAssignHook = globalAssignFunction
+ToricStack.GlobalReleaseHook = globalReleaseFunction
+expression ToricStack := D -> if hasAttribute (D, ReverseDictionary) 
     then expression getAttribute (D, ReverseDictionary) else 
    (describe D)#0
-describe ToricStackDatum := D -> Describe (expression toricStackDatum) (
+describe ToricStack := D -> Describe (expression toricStack) (
     expression D.map, expression D.rays, expression D.max)
 
 
@@ -47,8 +47,8 @@ describe ToricStackDatum := D -> Describe (expression toricStackDatum) (
 ----- DESCRIPTION: 
 -----------------------------------------------------------------------------
 ----------------------------------------------------------------------------- 
-toricStackDatum = method (
-    TypicalValue => ToricStackDatum, 
+toricStack = method (
+    TypicalValue => ToricStack, 
     Options => {
     	CoefficientRing   => QQ,
     	Variable          => getSymbol "x",
@@ -65,11 +65,11 @@ toricStackDatum = method (
 ---- coneList and then call this main version of toricStackDatum. This is
 ---- for consistentcy and easy of debugging. 
 -----------------------------------------------------------------------------
-toricStackDatum (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> (
+toricStack (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> (
    -- sorting rays/cones gives a slight more uniform output.
     rayList' := sort rayList;
     coneList' := sort apply(coneList, sigma -> sort sigma);
-    D := new ToricStackDatum from {
+    D := new ToricStack from {
 	symbol map => betaMap,
     	symbol rays  => rayList',
     	symbol max   => coneList',
@@ -84,13 +84,13 @@ toricStackDatum (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> 
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
-toricStackDatum(betaMap, rayList, coneList)
+toricStack(betaMap, rayList, coneList)
 
 -----------------------------------------------------------------------------
 ---- Contructs from NormalToricVariety
 -----------------------------------------------------------------------------
-toricStackDatum (Matrix, NormalToricVariety) := opts -> (betaMap,X) -> (
-    toricStackDatum(betaMap, rays X, max X,
+toricStack (Matrix, NormalToricVariety) := opts -> (betaMap,X) -> (
+    toricStack(betaMap, rays X, max X,
 	CoefficientRing => opts.CoefficientRing,
 	Variable => opts.Variable,
 	NonStrict => opts.NonStrict
@@ -101,15 +101,15 @@ betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
 X = normalToricVariety(rayList,coneList)
-toricStackDatum(betaMap,X)
+toricStack(betaMap,X)
 
 -----------------------------------------------------------------------------
 ---- Contructs from a Fan
 -----------------------------------------------------------------------------
-toricStackDatum (Matrix, Fan) := opts -> (betaMap, F) -> (
+toricStack (Matrix, Fan) := opts -> (betaMap, F) -> (
     rayList := entries transpose rays F;
     coneList := maxCones F;
-    toricStackDatum(betaMap, rayList, coneList,
+    toricStack(betaMap, rayList, coneList,
 	CoefficientRing => opts.CoefficientRing,
 	Variable => opts.Variable,
 	NonStrict => opts.NonStrict
@@ -119,17 +119,17 @@ toricStackDatum (Matrix, Fan) := opts -> (betaMap, F) -> (
 betaMap = matrix {{1,0},{1,2}}
 C1 = coneFromVData matrix {{1,0},{0,1}}
 F = fan C1
-toricStackDatum(betaMap, F)
+toricStack(betaMap, F)
 
 -----------------------------------------------------------------------------
 ---- Realizes a toric variety (given as a list of rays and a list of maximal
 ---- cones) as a toricStackDatum by taking betaMap to be the identiy on the
 ---- lattice of the toric variety.
 -----------------------------------------------------------------------------
-toricStackDatum (List, List) := opts -> (rayList, coneList) -> (
+toricStack (List, List) := opts -> (rayList, coneList) -> (
     dimFanTorus := #(rayList#0);
     betaMap := id_(ZZ^dimFanTorus);
-    toricStackDatum(betaMap, rayList, coneList,
+    toricStack(betaMap, rayList, coneList,
 	CoefficientRing => opts.CoefficientRing,
 	Variable => opts.Variable,
 	NonStrict => opts.NonStrict
@@ -138,17 +138,17 @@ toricStackDatum (List, List) := opts -> (rayList, coneList) -> (
 
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
-toricStackDatum(rayList, coneList)
+toricStack(rayList, coneList)
 
 -----------------------------------------------------------------------------
 ---- Realizes a toric variety (given as a NormalToricVariety)
 ---- as a toricStackDatum by taking betaMap to be the identiy on the
 ---- lattice of the toric variety.
 -----------------------------------------------------------------------------
-toricStackDatum (NormalToricVariety) := opts -> (X) -> (
+toricStack (NormalToricVariety) := opts -> (X) -> (
     dimFanTorus :=  #((rays X)#0);
     betaMap := id_(ZZ^dimFanTorus);
-    toricStackDatum(betaMap, rays X, max X,
+    toricStack(betaMap, rays X, max X,
 	CoefficientRing => opts.CoefficientRing,
 	Variable => opts.Variable,
 	NonStrict => opts.NonStrict
@@ -158,7 +158,7 @@ toricStackDatum (NormalToricVariety) := opts -> (X) -> (
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
 X = normalToricVariety(rayList,coneList)
-toricStackDatum(X)
+toricStack(X)
 
 
 -----------------------------------------------------------------------------
@@ -166,12 +166,12 @@ toricStackDatum(X)
 ---- as a toricStackDatum by taking betaMap to be the identity on the
 ---- lattice of the toric variety.
 -----------------------------------------------------------------------------
-toricStackDatum (Fan) := opts -> (F) -> (
+toricStack (Fan) := opts -> (F) -> (
     rayList := entries transpose rays F;
     coneList := maxCones F;
     dimFanTorus := #(rayList#0);
     betaMap := id_(ZZ^dimFanTorus);
-    toricStackDatum(betaMap, rayList, coneList,
+    toricStack(betaMap, rayList, coneList,
 	CoefficientRing => opts.CoefficientRing,
 	Variable => opts.Variable,
 	NonStrict => opts.NonStrict
@@ -180,4 +180,4 @@ toricStackDatum (Fan) := opts -> (F) -> (
 
 C1 = coneFromVData matrix {{1,0},{0,1}}
 F = fan C1
-toricStackDatum(betaMap, F)
+toricStack(betaMap, F)
