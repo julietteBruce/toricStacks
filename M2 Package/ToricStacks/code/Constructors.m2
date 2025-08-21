@@ -35,8 +35,6 @@ expression ToricStack := D -> if hasAttribute (D, ReverseDictionary)
 describe ToricStack := D -> Describe (expression toricStack) (
     expression D.map, expression D.rays, expression D.max)
 
-
-
 -----------------------------------------------------------------------------
 ----- toricStack
 -----------------------------------------------------------------------------
@@ -56,7 +54,6 @@ toricStack = method (
 	}
     )
 
-
 -----------------------------------------------------------------------------
 ---- Main Constructor: Inputs betaMap as a matrix and toric variety in the 
 ---- form of a list of rays and a list of maximal cones.
@@ -70,7 +67,7 @@ toricStack (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> (
     rayList' := sort rayList;
     coneList' := sort apply(coneList, sigma -> sort sigma);
     D := new ToricStack from {
-	symbol map => betaMap,
+	    symbol map => betaMap,
     	symbol rays  => rayList',
     	symbol max   => coneList',
     	symbol cache => new CacheTable
@@ -181,3 +178,5 @@ toricStack (Fan) := opts -> (F) -> (
 C1 = coneFromVData matrix {{1,0},{0,1}}
 F = fan C1
 toricStack(betaMap, F)
+
+load "./Basics.m2"
