@@ -1,8 +1,3 @@
---- We can come later and separate this out into separate files.
-load "./Constructors.m2"
-load "./ToricExtras.m2"
-topLevelMode = Standard
-
 Fantastack = new Type of ToricStack
 Fantastack.synonym = "fantastack"
 Fantastack.GlobalAssignHook = globalAssignFunction
@@ -36,7 +31,7 @@ fantastack(Matrix, List, List) := Fantastack => opts -> (beta, rayList, coneList
         conePositions
     );
     D := new Fantastack from toricStack(beta, fantastackRayList, fantastackConeList, opts);
-    D.cache#inputFan = fan(rayList, coneList);
+    D.cache#InputFan = fan(rayList, coneList);
 
     assert(isWellDefined D);
     D
@@ -62,21 +57,32 @@ canonicalStack = method(
 canonicalStack(List, List) := Fantastack => opts -> (rayList, coneList) -> fantastack(rayList, coneList, opts)
 canonicalStack(Fan) := Fantastack => opts -> Sigma -> fantastack(Sigma, opts)
 canonicalStack(NormalToricVariety) := Fantastack => opts -> X -> canonicalStack(fan X)
+canonicalStack(Fantastack) := Fantastack => opts -> D -> (
+    Sigma := fan D;
+    canonicalStack(Sigma, opts)
+)
 --- TODO: ADD canonicalStack(ToricStack) 
 -*canonicalStack(ToricStack) := Fantastack => opts -> D -> (
 
 )*-
 
 -- TODO: Implement == of toricStacks using Theorem B.3 
+-*
+canonicalStackMorphism = method()
+canonicalStackMorphism(Fantastack) = ToricStackMap => opts -> (D) -> (
+    canonicalD := canonicalStack(D, opts);
+    N := target map canonicalD;
+    toricStackMap(moduliSpace(canonicalD),canonicalD,,map(N,N, 1), opts)
+) *-
 
 
 -- If we didn't save the input fan, we would need to compute some invariantRing stuff. 
 moduliSpace = method()
 moduliSpace(Fantastack) := NormalToricVariety => D -> (
-    Sigma := D.cache#inputFan;
+    Sigma := D.cache#InputFan;
     rayList := rays Sigma;
     normalToricVariety( entries transpose rays Sigma, maxCones Sigma)
-)
+) -- TODO: should return the toricStackMap
 
 
 ring Fantastack := Ring => D -> ring moduliSpace D
@@ -88,7 +94,7 @@ isWellDefined Fantastack := Boolean => D -> (
     betaImages := apply(D.rays, r -> D.map * transpose matrix{r});
     all({
         isWellDefined fan D,
-        all(betaImages, b -> any(maxFacesAsCones(D.cache.inputFan), face -> contains(face, coneFromVData b)))-- this is checking that the image of each ray is actually contained in the imageFan.
+        all(betaImages, b -> any(maxFacesAsCones(D.cache.InputFan), face -> contains(face, coneFromVData b)))-- this is checking that the image of each ray is actually contained in the imageFan.
     })
 )
 

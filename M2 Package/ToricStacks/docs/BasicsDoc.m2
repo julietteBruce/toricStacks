@@ -11,7 +11,7 @@ doc ///
 
 ///
 
-
+-*
 doc ///
    Key 
     withoutOddAut
@@ -36,4 +36,4 @@ doc ///
       M = uniformMatroid(2,4);
       withoutOddAut(M)
 
-///
+///*-

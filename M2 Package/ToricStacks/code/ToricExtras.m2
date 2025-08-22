@@ -44,11 +44,11 @@ areIsomorphic = (X1, X2) -> (
 		-- and because the number of cones for X1 is same as X2,
 		-- it is also surjective, so it is a bijection on the sets of cones
 		( -- check that there is a matrix sending v_i to w_sigma(i) for all i
-			V = matrix rays X1;
-			W = matrix rays X2;
-			Wsig = (permMatrix perm) * W;
-			T = solve(V, Wsig, MaximalRank=>true); -- 'solve' uses row reduction over ZZ. Already implemented in Macaulay2 (InvariantRing package)
-			diffMatrix = V*T - Wsig;
+			V := matrix rays X1;
+			W := matrix rays X2;
+			Wsig := (permMatrix perm) * W;
+			T := solve(V, Wsig, MaximalRank=>true); -- 'solve' uses row reduction over ZZ. Already implemented in Macaulay2 (InvariantRing package)
+			diffMatrix := V*T - Wsig;
 			diffMatrix == 0 and (try inverse T then true else false) -- to make sure inverse is also defined over ZZ
 		)
 	)
@@ -56,7 +56,7 @@ areIsomorphic = (X1, X2) -> (
 
 
 genRow = (i, n) -> (
-    l = {};
+    l := {};
     for ind from 0 to n-1 do (
         if ind == i then l = append(l, 1) else l = append(l, 0);
     );
@@ -64,8 +64,8 @@ genRow = (i, n) -> (
 )
 
 permMatrix = perm -> (
-    n = length perm;
-    mat = {};
+    n := length perm;
+    mat := {};
     for i in perm do (
         mat = append(mat, genRow(i, n));
     );
@@ -85,3 +85,11 @@ getHilbRays(Cone) := List => sigma -> (
     hilbRays := apply(hilbBasis, b -> coneFromVData transpose matrix{b});
     hilbRays
 )
+
+mapsConestoCones = method()
+mapsConestoCones(Fan, Fan, Matrix) := Boolean => (Sigma2, Sigma1, phi) -> (
+    all(apply(maxFacesAsCones(Sigma1), sigma -> (
+        imagePhi := affineImage(phi, sigma);
+        any(apply(maxFacesAsCones(Sigma2), tau -> contains(tau, imagePhi)), bool -> bool)
+            )), bool -> bool)
+    )

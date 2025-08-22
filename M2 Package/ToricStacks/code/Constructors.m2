@@ -1,40 +1,3 @@
-needsPackage "NormalToricVarieties"
-needsPackage "Polyhedra"
-
---------------------------------------------------------------------
---------------------------------------------------------------------
-------------------------- CREATE TYPE ------------------------------
---------------------------------------------------------------------
---------------------------------------------------------------------
---- kludge to access parts of the 'Core'
-hasAttribute = value Core#"private dictionary"#"hasAttribute";
-getAttribute = value Core#"private dictionary"#"getAttribute";
-ReverseDictionary = value Core#"private dictionary"#"ReverseDictionary";
-
-
------------------------------------------------------------------------------
----- Stack  TYPE DECLARATION
------------------------------------------------------------------------------
-
-Stack = new Type of MutableHashTable
-Stack.synonym = "stack"
-Stack.GlobalAssignHook = globalAssignFunction
-Stack.GlobalReleaseHook = globalReleaseFunction
-
------------------------------------------------------------------------------
----- TORIC STACK TYPE DECLARATION
------------------------------------------------------------------------------
-
-ToricStack = new Type of Stack
-ToricStack.synonym = "toric stack"
-ToricStack.GlobalAssignHook = globalAssignFunction
-ToricStack.GlobalReleaseHook = globalReleaseFunction
-expression ToricStack := D -> if hasAttribute (D, ReverseDictionary) 
-    then expression getAttribute (D, ReverseDictionary) else 
-   (describe D)#0
-describe ToricStack := D -> Describe (expression toricStack) (
-    expression D.map, expression D.rays, expression D.max)
-
 -----------------------------------------------------------------------------
 ----- toricStack
 -----------------------------------------------------------------------------
@@ -50,7 +13,7 @@ toricStack = method (
     Options => {
     	CoefficientRing   => QQ,
     	Variable          => getSymbol "x",
-	NonStrict        => false
+	    NonStrict     => false
 	}
     )
 
@@ -210,5 +173,3 @@ weightedProjcetiveStack (List) := opts -> (betaMap,X) -> (
 C1 = coneFromVData matrix {{1,0},{0,1}}
 F = fan C1
 toricStack(betaMap, F)
-
-load "./Basics.m2"

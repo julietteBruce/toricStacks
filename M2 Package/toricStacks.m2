@@ -53,14 +53,10 @@ newPackage("ToricStacks",
             Email => "mayadb@uic.edu"
         },
         {
-            Name => "Boyana Martinova",
-            Email => "martinova@wisc.edu",
-	    HomePage => "https://sites.google.com/view/bmartinova/home"
-        },	     
-        {
-            Name => "Christin Sum",          
-            Email => "csum@hawaii.edu"
-    }},
+            Name => "John Cobb",
+            Email => "jdcobb3@gmail.com",
+	    HomePage => "https://johndcobb.github.io"
+        }},
   PackageExports => {"NormalToricVarieties", "Polyhedra"},
   DebuggingMode => true,
   AuxiliaryFiles => true
@@ -78,6 +74,8 @@ export {
     "toricVarietyGeneralizedFan", --docs, --test
     --Functions
     --Symbols
+    "NonStrict",
+    "InputFan"
     --
   }
 
@@ -91,7 +89,9 @@ needsPackage "Polyhedra"
 
 load "ToricStacks/code/Type.m2"
 load "ToricStacks/code/Basics.m2"
+load "ToricStacks/code/ToricExtras.m2"
 load "ToricStacks/code/Constructors.m2"
+load "ToricStacks/code/Fantastacks.m2"
 load "ToricStacks/code/Maps.m2"
 
 
@@ -102,7 +102,7 @@ load "ToricStacks/code/Maps.m2"
 --------------------------------------------------------------------
 load "ToricStacks/tests/TypeTests.m2"
 load "ToricStacks/tests/BasicsTests.m2"
-load "ToricStacks/tests/ConstructorTests.m2"
+load "ToricStacks/tests/ConstructorsTests.m2"
 load "ToricStacks/tests/MapsTests.m2"
 
 --------------------------------------------------------------------

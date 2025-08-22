@@ -1,6 +1,3 @@
-needsPackage "NormalToricVarieties"
-needsPackage "Polyhedra"
-
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 ------------------------- BASIC FUNCTIONS --------------------------
@@ -15,7 +12,7 @@ cokerMap := (A) -> (
     (prune coker A).cache.pruningMap
     )
 
-fanGensFromGeneralizedFan = method ()
+fanGensFromGeneralizedFan = method()
 fanGensFromGeneralizedFan (List, List) := (rayList, coneList) -> (
     F := fan(rayList,coneList);
     L := cokerMap linealitySpace F;
@@ -23,7 +20,7 @@ fanGensFromGeneralizedFan (List, List) := (rayList, coneList) -> (
     {rayList', maxCones F}
     )
 
-toricVarietyGeneralizedFan = method ()
+toricVarietyGeneralizedFan = method()
 toricVarietyGeneralizedFan (List, List) := (rayList, coneList) -> (
     F := fanGensFromGeneralizedFan(rayList, coneList);
     normalToricVariety(F#0,F#1)

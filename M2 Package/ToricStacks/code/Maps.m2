@@ -1,7 +1,4 @@
-needsPackage "NormalToricVarieties"
-needsPackage "Polyhedra"
-
------------------------------------------------------------------------------
+---------------------------------------------------------------------------
 ---- TORIC STACK MAP TYPE DECLARATION
 -----------------------------------------------------------------------------
 ToricStackMap = new Type of HashTable
@@ -42,10 +39,7 @@ map(ToricStack, ToricStack, List) := ToricStackMap => opts -> (D2, D1, A) -> (
         error("-- expected target of littlePhi be the target lattice of D2");
     if (D2.map)*(bigPhi) != (littlePhi)*(D1.map) then
         error("-- expected maps to commute");
-    if not (all(apply(maxFacesAsCones(fan D1), sigma -> (
-            imagePhi := affineImage(bigPhi, sigma);
-            any(apply(maxFacesAsCones(fan D2), tau -> contains(tau, imagePhi)), bool -> bool)
-                )), bool -> bool))
+    if not mapsConestoCones(fan D2, fan D1, bigPhi)
     then error("-- expected that map sends cones to cones");
     new ToricStackMap from {
     	symbol source => D1,
@@ -89,9 +83,10 @@ map(ToricStack, ToricStack, ZZ) := ToricStackMap => opts -> (D2, D1, m) -> (
 -----------------------------------------------------------------------------
 ToricStack#id = D -> map(D,D,1)
 
-
+--- This uses Theorem B.3 in Geraschencko and Satriano
 isIsomorphism(ToricStackMap) := Boolean => f -> (
     phiList := map f;
+    (D1, D2) := (source f, target f);
     (bigPhi, littlePhi) := (phiList#0, phiList#1);
     condition1 := (rank littlePhi == numcols littlePhi);
     condition2 := (
