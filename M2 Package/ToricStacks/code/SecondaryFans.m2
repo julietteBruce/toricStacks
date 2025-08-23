@@ -18,15 +18,6 @@ SecondaryFan.GlobalReleaseHook = globalReleaseFunction
 
 SecondaryFan#(symbol inputRays) = null
 
-secondaryFan = method()
-secondaryFan (List) := (rayList) ->(
-    ccRefinement(galeDual(rayList))
-    )
-
-secondaryFan (NormalToricVariety) := (X) ->(
-	secondaryFan(rays X)
-	)
-    
 secondaryFan = method(
     TypicalValue => SecondaryFan, 
     Options => {
@@ -78,23 +69,61 @@ secondaryFan(Matrix) := SecondaryFan => opts -> (rayInputMatrix) -> (
     F
     )
 
-rayInputMat = transpose matrix {{1,0,0},{1,1,0},{1,0,1},{1,0,2},{1,1,2}} 
+rayInputMatrix =  transpose matrix {{1,0,0},{1,1,0},{1,0,1},{1,0,2},{1,1,2}} 
+F1 = secondaryFan(rayInputMatrix)
+F2 = secondaryFan(rayInputMatrix,gkzGenFans => true)
+F2.cache.gkzGenFans
+F3 = secondaryFan(rayInputMatrix,gkzStacks => true)
+F3.cache.gkzStacks
+
+
+secondaryFan(List) := SecondaryFan => opts -> (rayInputList) -> (
+    rayInputMatrix := transpose matrix rayInputList;
+    secondaryFan(rayInputMatrix,opts)
+    )
+
+rayInputList = {{1,0,0},{1,1,0},{1,0,1},{1,0,2},{1,1,2}} 
+G1 = secondaryFan(rayInputList)
+G2 = secondaryFan(rayInputList,gkzGenFans => true)
+G2.cache.gkzGenFans
+G3 = secondaryFan(rayInputList,gkzStacks => true)
+G3.cache.gkzStacks
+
+secondaryFan(NormalToricVariety) := SecondaryFan => opts -> (X) -> (
+    rayInputMatrix := transpose matrix rays X;
+    secondaryFan(rayInputMatrix,opts)
+    )
+
+rayList = {{1,0,0},{1,1,0},{1,0,1},{1,0,2},{1,1,2}};
+coneList = {{0,1,4},{0,2,4},{2,3,4}}
+X = normalToricVariety(rayList,coneList)
+H1 = secondaryFan(X)
+H2 = secondaryFan(X,gkzGenFans => true)
+H2.cache.gkzGenFans
+H3 = secondaryFan(X,gkzStacks => true)
+H3.cache.gkzStacks
+
+
+rayInputList =  matrix {{1,0,0},{1,1,0},{1,0,1},{1,0,2},{1,1,2}} 
 secondaryFan(rayInputMat)
 G = secondaryFan(rayInputMat,gkzGenFans => true)
 G.cache.gkzGenFans
 H = secondaryFan(rayInputMat,gkzStacks => true)
 H.cache.gkzStacks
-pt	}
-    )
 
 gkzGeneralizedFan = method()
-gkzGeneralizedFan (Matrix, List, Matrix
-gkzGeneralizedFan (List,List) := (rayList, gammaList) ->(
-    A := galeDual(rayList);
-    relIntPt := transpose matrix {sum(gammaList)};
-    splitA := id_(target A)//A;
-    liftPt := splitA*relIntPt;
-    Fgamma := regularSubdivision(transpose rayMat, transpose liftPt);
-    Igamma := toList set(0..#rayList-1) - set flatten Fgamma;
-    {Fgamma,Igamma}
+gkzGeneralizedFan (Matrix, Matrix, Matrix) := (rayInputMatrix, gammaMatrix, galDualMatrix) -> (
+    m := numcols gammaMtrix;
+    -- find point in the relative interior of Gamma and lift
+    -- from secondary fan to ZZ^(Rays) with choosen splitting
+    allOnesMatrix := matrix toList (m:{1});
+    ptInRelInt :=  gammaMatrix*allOnesMatrix;
+    splitGaleMatrix := id_(target galDualMatrix)//(galDualMatrix);
+    ptLift := splitGaleMatrix*ptInRelInt;
+    -- compute the gkz fan for Gamma 
+    gammaFan' := regularSubdivision(rayInputMatrix, transpose ptLift);
+    -- sorting for some semi-consistency
+    gammaFan := apply(sort gammaFan', i -> sort i);
+    irrRays := sort toList set(0..n-1) - set flatten gammaFan;
+    {gammaFan,irrRays}
     )
