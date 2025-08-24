@@ -2,8 +2,127 @@ loadPackage "NormalToricVarieties"
 loadPackage "Polyhedra"
 -- This consruction only depends on Cox(S) not the toric variety
 -- Example 2.11 does not give an X just the rays.
-rayMat = matrix {{1,0,0},{1,1,0},{1,0,1},{1,0,2},{1,1,2}} 
 
+------------------------------------------------------------------------------------
+----------- SET UP
+------------------------------------------------------------------------------------
+--rayMat = matrix {{1,0,0},{1,1,0},{1,0,1},{1,0,2},{1,1,2}}
+-- I am working with the transpose of Christine to follow M2/Polyhedra convetntions
+rayMatrix = matrix {{1, 1, 1, 1, 1}, {0, 1, 0, 0, 1}, {0, 0, 1, 2, 2}} -- tilde(f)
+
+
+------------------------------------------------------------------------------------
+----------- SECONDARY FAN
+------------------------------------------------------------------------------------
+-- Compute the Gale Dual of rayMatrix. Christine picked a different basis
+--- than M2 so we work with hers directly. 
+-- galeMatrix = transpose mingens ker rayMatrix -- M2 galeDual
+galeMatrix = matrix{{1, 0, -2, 1, 0}, {-1, 1, 0, 1, -1}} -- G(tilde(f))
+
+-- Compute the secondary fan via coarsest common refinement
+secondaryFan = ccRefinement (galeMatrix)
+
+-- Note M2 gives a different ordering to the rays of secondaryFan
+-- so we define our cones by hand to match the document
+rays secondaryFan
+-- rays
+psi0 = matrix {{1}, {-1}}
+psi1 = matrix {{0}, {1}}
+psi2 = matrix {{-2}, {0}}
+psi3 = matrix {{1}, {1}}
+psi4 = matrix {{0}, {-1}}
+-- 2D cones
+gamma03 = matrix {{1, 1}, {-1, 1}}
+gamma13 = matrix {{0, 1}, {1, 1}}
+gamma12 = matrix {{0, -1}, {1, 0}}
+gamma24 = matrix {{-1, 0}, {0, -1}}
+gamma04 = matrix {{1, 0}, {-1, -1}}
+
+
+------------------------------------------------------------------------------------
+----------- WEIGHT VECTORS
+------------------------------------------------------------------------------------
+-- Define the point in the relative interior
+-- rays
+w0 = matrix {{1}, {-1}}
+w1 = matrix {{0}, {1}}
+w2 = matrix {{-2}, {0}}
+w3 = matrix {{1}, {1}}
+w4 = matrix {{0}, {-1}}
+-- 2D Cones (multplying by the all ones vector is the fast way to add the columns)
+w03 = gamma03*(matrix{{1},{1}})
+w13 = gamma13*(matrix{{1},{1}})
+w12 = gamma12*(matrix{{1},{1}})
+w24 = gamma24*(matrix{{1},{1}})
+w04 = gamma04*(matrix{{1},{1}})
+
+-- Get a spliting of the galeMatrix 
+splittingGaleMatrix = id_(target galeMatrix)//galeMatrix
+-- Lift each point to tilde(N)
+-- rays
+liftW0 = splittingGaleMatrix*w0
+liftW1 = splittingGaleMatrix*w1
+liftW2 = splittingGaleMatrix*w2
+liftW3 = splittingGaleMatrix*w3
+liftW4 = splittingGaleMatrix*w4
+-- 2D cones
+liftW03 = splittingGaleMatrix*w03
+liftW13 = splittingGaleMatrix*w13
+liftW12 = splittingGaleMatrix*w12
+liftW24 = splittingGaleMatrix*w24
+liftW04 = splittingGaleMatrix*w04
+
+
+------------------------------------------------------------------------------------
+----------- GKZ GENERALIZED FANS
+------------------------------------------------------------------------------------
+-- We use the lifts to define weights and apply regularSubdiviaon to compute the GKZ
+-- generalized fans for each of the chambers in our secondary fan. We also compute
+-- the irrelevant rays which is just the rays not appearing in the subdivions
+--
+-- rays
+gkz0 = regularSubdivision(rayMatrix, transpose liftW0)
+irrRays0 =  toList set(0..numcols rayMatrix-1) - set flatten gkz0
+--
+gkz1 = regularSubdivision(rayMatrix, transpose liftW1)
+irrRays1 =  toList set(0..numcols rayMatrix-1) - set flatten gkz1
+--
+gkz2 = regularSubdivision(rayMatrix, transpose liftW2)
+irrRays2 =  toList set(0..numcols rayMatrix-1) - set flatten gkz2
+--
+gkz3 = regularSubdivision(rayMatrix, transpose liftW3)
+irrRays3 =  toList set(0..numcols rayMatrix-1) - set flatten gkz3
+--
+gkz4 = regularSubdivision(rayMatrix, transpose liftW4)
+irrRays4 =  toList set(0..numcols rayMatrix-1) - set flatten gkz4
+--
+-- 2D Cones
+gkz03 = regularSubdivision(rayMatrix, transpose liftW03)
+irrRays03 =  toList set(0..numcols rayMatrix-1) - set flatten gkz03
+--
+gkz13 = regularSubdivision(rayMatrix, transpose liftW13)
+irrRays13 =  toList set(0..numcols rayMatrix-1) - set flatten gkz13
+--
+gkz12 = regularSubdivision(rayMatrix, transpose liftW12)
+irrRays12 =  toList set(0..numcols rayMatrix-1) - set flatten gkz12
+--
+gkz24 = regularSubdivision(rayMatrix, transpose liftW24)
+irrRays24 =  toList set(0..numcols rayMatrix-1) - set flatten gkz24
+--
+gkz04 = regularSubdivision(rayMatrix, transpose liftW04)
+irrRays04 =  toList set(0..numcols rayMatrix-1) - set flatten gkz04
+--
+
+
+
+
+
+
+
+
+
+
+----OLD
 galeMat = matrix{{1,0,-2,1,0},{-1,1,0,1,-1}} --gives gail dual 
 ccRefinement (galeMat)
 
