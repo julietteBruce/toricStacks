@@ -113,6 +113,44 @@ gkz04 = regularSubdivision(rayMatrix, transpose liftW04)
 irrRays04 =  toList set(0..numcols rayMatrix-1) - set flatten gkz04
 --
 
+cokerMap := (A) -> (
+    (prune coker A).cache.pruningMap
+    )
+
+concatenateMatrices := (L) -> (
+    if #L === 1 then (return L#0);
+    A := L#0;
+    apply(1..#L-1,i->(A = A|L#i));
+    A
+    )
+
+gkzGF3 = fan(rayMatrix,gkz3)
+lin3 = linealitySpace gkzGF3
+fGamma3 = cokerMap(lin3)
+F3 = fGamma3*rayMatrix
+
+lambda3 = apply(delete({},flatten values faces gkzGF3), tau->(
+	raysTau = unique flatten tau;
+	lambdaIrrList = toList set(0..numcols rayMatrix-1) - ((set flatten gkz3) + (set raysTau));
+	lambdaTau = apply(unique(raysTau|lambdaIrrList),i->(matrix(id_(source rayMatrix))_i));
+--	lambdaTauMatrix = matrix(lambdaTau#0);
+--	apply(1..#lambdaTau-1,i->lambdaTauMatrix=lambdaTauMatrix|(matrix lambdaTau#i));
+	lambdaTauMatrix = concatenateMatrices(lambdaTau);
+--	{tau, concatenateMatrices(lambdaTau)};
+	kerTau = ker(F3*lambdaTauMatrix);
+--	{tau,lambdaTauMatrix*(gens kerTau)};
+	lambdaTauMatrix*(gens kerTau)
+	))
+lambdaSpace3 = concatenateMatrices(lambda3)**QQ
+lambdaCoker3 = cokerMap(lambdaSpace3)
+lambdaCokerSplit = id_(target E)//E
+beta3 = F3*lambdaCokerSplit
+
+
+
+
+E = transpose matrix {{0, 0, 0, -2}, {1, 0, 0, 1}, {0, 1, 0, 2}, {0, 0, 1, 0}, {0, 0, 0, 0}}
+
 
 
 
