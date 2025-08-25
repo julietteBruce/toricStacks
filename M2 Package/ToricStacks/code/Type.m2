@@ -86,6 +86,11 @@ isWellDefined ToricStack := Boolean => D -> (
 			<< "-- expected 'map' to be a map to a lattice for a strict toric stack." << endl;
 		return false 
 		);
+		if rank( (coker D.map) ** QQ) != 0 then (
+		if debugLevel > 0 then
+			<< "-- expected 'map' to have finite cokernel for a strict toric stack." << endl;
+		return false
+		);
 	);
 	return true
 )
