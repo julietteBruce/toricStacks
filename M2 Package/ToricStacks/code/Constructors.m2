@@ -37,7 +37,7 @@ toricStack (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> (
 	};
     D.cache.CoefficientRing = opts.CoefficientRing;
     D.cache.Variable = opts.Variable;
-    D.cache.NonStrict = opts.NonStrict;
+    D.cache.NonStrict = not isStrict(D);
     D
     )
 

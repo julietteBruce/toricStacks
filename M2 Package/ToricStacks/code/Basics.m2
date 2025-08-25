@@ -8,6 +8,13 @@ rays ToricStack := List => {} >> o -> D -> D.rays
 max  ToricStack := List => D -> D.max
 fan ToricStack := Fan => D -> fan(D.rays, D.max)
 
+isStrict = method()
+isStrict ToricStack := Boolean => D -> (
+    if isMember(NonStrict, keys D.cache) then (not D.cache.NonStrict) else (
+         isFreeModule(target D.map) and rank((coker D.map) ** QQ) == 0
+    )
+)
+
 cokerMap := (A) -> (
     (prune coker A).cache.pruningMap
     )
