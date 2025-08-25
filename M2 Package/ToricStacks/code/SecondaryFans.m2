@@ -23,6 +23,31 @@ galeDual (List) := (rayList) -> (
     galeDual(transpose (matrix rayList))
     )
 
+fanGensFromGeneralizedFan = method()
+fanGensFromGeneralizedFan (List, List) := (rayList, coneList) -> (
+    F := fan(rayList,coneList);
+    L := cokerMap linealitySpace F;
+    rayList' := entries transpose (L*(rays F));
+    {rayList', maxCones F}
+    )
+
+toricVarietyGeneralizedFan = method()
+toricVarietyGeneralizedFan (List, List) := (rayList, coneList) -> (
+    F := fanGensFromGeneralizedFan(rayList, coneList);
+    normalToricVariety(F#0,F#1)
+    )
+-*
+rayList = {{0,0,1},{0,0,-1},{0,1,0},{1,0,0},{1,1,0}}
+coneList = {{0,1,2,3},{0,1,3,4},{0,1,2,4}}
+toricVarietyFromGeneralizedFan(rayList,coneList)
+
+
+rayList = {{1,1,1},{-1,-1,-1},{1,-1,0},{1,0,-1},{0,1,-1}}
+coneList = {{0,1,2,3},{0,1,2,4},{0,1,3,4}}
+toricVarietyFromGeneralizedFan(rayList,coneList)
+*-
+
+
 SecondaryFan = new Type of Fan
 SecondaryFan.synonym = "secondary fan"
 SecondaryFan.GlobalAssignHook = globalAssignFunction
@@ -166,8 +191,26 @@ bettaGamma (Matrix, Matrix, List) := (rayInputMatrix, gammaRayMatrix, galDualMat
     )
 
 gkzStack = method()
-gkzStack (Matrix, Matrix, Matrix) := (rayInputMatrix, gammaMatrix, galDualMatrix) -> (
-    gamm
+gkzStack (Matrix, Matrix, Matrix) := (rayInputMatrix, gammaRayMatrix, galDualMatrix) -> (
+    {gzkGenFanGamma,irrRaysList} := gkzGeneralizedFan(rayInputMatrix, gammaRayMatrix, galDualMatrix);
+    --
+    coarseGamma := toricStack(fanGensFromGeneralizedFan(gzkGenFanGamma));
+    --
+    beta := bettaGamma(rayInputMatrix, gzkGenFanGamma, irrRaysList);
+    preimageCones := apply(0..dim gzkGenFanGamma,d->(
+	    apply(facesAsCones(d,gzkGenFanGamma),C->(
+		    affinePreimage(beta,C)
+		    ));
+	    ));
+    preimageFan := fan preimageCones;
+    stackGamma := toricStack(beta, rays preimageFan, maxCones preimageFan);
+    goodMorphism := 
+    {stackGamma, coarseGamma, goodMorphism}
+    )
+    
+    
+
+    {stackGamma, coarseGamma, goodMorphism}
     )
 
 
