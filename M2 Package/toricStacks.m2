@@ -19,7 +19,7 @@
 -- PURPOSE : A package for working with toric stacks
 --
 --
--- PROGRAMMERS : Juliette Bruce, Maya Banks, 
+-- PROGRAMMERS : Juliette Bruce, Maya Banks, John Cobb
 --
 --
 -- UPDATE HISTORY #0 - August 19, 2025 (AIM, Cal Tech, Pasadena, CA): Package started
@@ -67,6 +67,7 @@ export {
     "Stack", --docs, --test
     "ToricStack", --docs, --test
     "ToricStackMap", --docs, --test
+    "Fantastack", --docs, --test
     --Methods
     "toricStack", --docs, --test
     "toricStackMap", --docs, --test
@@ -84,8 +85,6 @@ export {
 ----- CODE
 --------------------------------------------------------------------
 --------------------------------------------------------------------
-needsPackage "NormalToricVarieties"
-needsPackage "Polyhedra"
 
 load "ToricStacks/code/Type.m2"
 load "ToricStacks/code/Basics.m2"
@@ -122,7 +121,7 @@ end
 
 --------------------------------------------------------------------
 --------------------------------------------------------------------
------ Begining of sandbox
+----- Beginning of sandbox
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 
@@ -131,7 +130,6 @@ end
 restart
 uninstallPackage "ToricStacks"
 restart
-installPackage "ToricStacks"
+debug needsPackage "ToricStacks"
 check "ToricStacks"
 installPackage "ToricStacks"
-viewHelp SchurVeronese
