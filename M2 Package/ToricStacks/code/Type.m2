@@ -54,7 +54,7 @@ isWellDefined ToricStack := Boolean => D -> (
 	    if #added > 0 then 
 	    << "-- unexpected key(s): " << toString added << endl;
 	    if #missing > 0 then 
-	    << "-- missing keys(s): " << toString missing << endl
+	    << "-- missing keys(s): " << toString missing << endl;
 	    );	 
     	return false
     	);
@@ -70,14 +70,22 @@ isWellDefined ToricStack := Boolean => D -> (
 	    << "-- expected `map' to be a matrix" << endl;
 	return false
 	);
-     if (ring source D.map != ZZ) or (ring target D.map != ZZ) then (
+     if (not ring source D.map === ZZ) or (not ring target D.map === ZZ) then (
 	if debugLevel > 0 then 
 	    << "-- expected `map' to be a map of ZZ modules" << endl;
 	return false
 	);
-    if not isFreeModule(source D.map) or not isFreeModule(target D.map) then (
-	if debugLevel > 0 then 
-	    << "-- expected `map' to be a map of free ZZ modules" << endl;
+	if not isFreeModule(source D.map) then (
+	if debugLevel > 0 then
+	    << "-- expected `map' to be a map from a lattice, a free ZZ module." << endl;
 	return false
 	);
-	)
+	if not D.cache.NonStrict then (
+		if not isFreeModule(target D.map) then (
+		if debugLevel > 0 then
+			<< "-- expected 'map' to be a map to a lattice for a strict toric stack." << endl;
+		return false 
+		);
+	);
+	return true
+)
