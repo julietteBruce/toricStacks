@@ -1,6 +1,18 @@
 loadPackage "NormalToricVarieties"
 loadPackage "Polyhedra"
 
+cokerMap := (A) -> (
+    --(prune coker A).cache.pruningMap
+    transpose gens ker transpose A
+    )
+
+concatenateMatrices := (L) -> (
+    if #L === 1 then (return L#0);
+    A := L#0;
+    apply(1..#L-1,i->(A = A|L#i));
+    A
+    )
+
 
 galeDual = method()
 galeDual (Matrix) := (A) -> (
@@ -69,6 +81,97 @@ secondaryFan(Matrix) := SecondaryFan => opts -> (rayInputMatrix) -> (
     F
     )
 
+gkzGeneralizedFan = method()
+gkzGeneralizedFan (Matrix, Matrix, Matrix) := (rayInputMatrix, gammRayMatrix, galDualMatrix) -> (
+    m := numcols gammaMtrix;
+    -- find point in the relative interior of Gamma and lift
+    -- from secondary fan to ZZ^(Rays) with choosen splitting
+    allOnesMatrix := matrix toList (m:{1});
+    ptInRelInt :=  gammRayMatrix*allOnesMatrix;
+    splitGaleMatrix := id_(target galDualMatrix)//(galDualMatrix);
+    ptLift := splitGaleMatrix*ptInRelInt;
+    -- compute the gkz fan for Gamma 
+    gammaFan' := regularSubdivision(rayInputMatrix, transpose ptLift);
+    -- sorting for some semi-consistency
+    gammaFan := apply(sort gammaFan', i -> sort i);
+    irrRays := sort toList set(0..n-1) - set flatten gammaFan;
+    {gammaFan,irrRays}
+    )
+
+tildeL = method()
+tildeL (Matrix, Fan, List) := (rayInputMatrix, gzkGenFanGamma, irrRays) ->(
+    -- set-up
+    tildeN := source rayInputMatrix;
+    -- map from N to N_Gamma
+    fGamma := cokerMap linealitySpace gzkGenFanGamma;
+    -- map from tildeN to N_gamma
+    FGamma := fGamma*rayInputMatrix;
+    nonemptyCones := delete({},flatten values faces gzkGenFanGamma);
+    -- the irrelevant rays contribute the same to each lambda space
+    -- we will convert the indices to rays in tildeN later
+    irrIndices := toList set(0..numcols rayInputMatrix-1) - ((set flatten maxCones gzkGenFanGamma) + (set irrRays));
+    -- computing the Lambda_tau space for each face tau of gamma
+    -- then compute the kernel of fTildeGamma restricted to Lambda_tau
+    lambdaKernels := apply(nonemptyCones, tau->(
+	    -- these lines find the indices of the rays that span Lambda_tau
+	    tauRayIndices := flatten tau;
+	    tauLambdaIndices := unique(tauRayIndices | irrIndices);
+	    -- convert the indices of the rays spanning Lambda_tau to vectors in tildeN
+	    tayLambdaVectors := apply(tauLambdaIndices, i->(matrix( (id_(tildeN))_i)));
+	    -- convert into a matrix whose columns are the vectors spanning Lambda_tau
+	    -- i.e. the image is the Lambda_tau subspace of tildeN
+	    tauLambdaMatrix := concatenateMatrices(tayLambdaVectors);
+	    -- To comptue the kernel of FGamma we use the fact that
+	    -- g(ker(f*g) = ker(f|_img(g)))
+	    -- so we compute kernel of FGamma*tauLambdaMatrix and then go back
+	    kerFGammaResTau := ker(FGamma*tauLambdaMatrix);
+	    tauLambdaMatrix*(gens kerFGammaResTau)
+	    ));
+    -- concatenate all the lambdaKernels to find tildeL
+    concatenateMatrices lambdaKernels
+    )
+
+tildeL (Matrix, Matrix, List) := (rayInputMatrix, gammaRayMatrix, galDualMatrix) -> (
+        gzkGenFanGamma := gkzGeneralizedFan(rayInputMatrix, gammaRayMatrix, irrRays);
+	tildeL(rayInputMatrix, gzkGenFanGamma, galDualMatrix)
+	)
+   
+
+bettaGamma = method()
+bettaGamma (Matrix, Fan, List) := (rayInputMatrix, gzkGenFanGamma, irrRaysList) ->(
+    -- Construct the tilde-L subspace and the cokernel map called tildeFGamma
+    tildeLSubspace := tildeL(rayInputMatrix,gzkGenFanGamma,irrRaysList);
+    tildeFGamma := cokerMap tildeLSubspace;
+    -- We now have the short exact sequences
+    --
+    --- 0----> tildeL_Gamma ---> tildeN ---- tildeFGamma --->> tildeN_Gamma ----> 0
+    ---                            |
+    ---                            |
+    ---                            | tilde(f)
+    ---                            |
+    ---                            v
+    --- 0----> L_Gamma -------->   N ------>   fGamma ------>> N_Gamma ---------> 0
+    --
+    -- We want beta_Gamma : tildeN_Gamma ----> N_Gamma making this commute
+    -- Since tildeFGamma is surjective  we find it my taking a splitting of
+    -- tildeFGamma and composing down
+    splitTildeFGamma := id_(target tildeFGamma)//tildeFGamma;
+    fGamma := cokerMap linealitySpace gzkGenFanGamma;
+    fGamma*rayInputMatrix*splitTildeFGamma
+    )
+
+bettaGamma (Matrix, Matrix, List) := (rayInputMatrix, gammaRayMatrix, galDualMatrix) -> (
+     gzkGenFanGamma := gkzGeneralizedFan(rayInputMatrix, gammaRayMatrix, irrRays);
+     bettaGamma(rayInputMatrix, gzkGenFanGamma, galDualMatrix)
+    )
+
+gkzStack = method()
+gkzStack (Matrix, Matrix, Matrix) := (rayInputMatrix, gammaMatrix, galDualMatrix) -> (
+    gamm
+    )
+
+
+
 rayInputMatrix =  transpose matrix {{1,0,0},{1,1,0},{1,0,1},{1,0,2},{1,1,2}} 
 F1 = secondaryFan(rayInputMatrix)
 F2 = secondaryFan(rayInputMatrix,gkzGenFans => true)
@@ -111,19 +214,4 @@ G.cache.gkzGenFans
 H = secondaryFan(rayInputMat,gkzStacks => true)
 H.cache.gkzStacks
 
-gkzGeneralizedFan = method()
-gkzGeneralizedFan (Matrix, Matrix, Matrix) := (rayInputMatrix, gammaMatrix, galDualMatrix) -> (
-    m := numcols gammaMtrix;
-    -- find point in the relative interior of Gamma and lift
-    -- from secondary fan to ZZ^(Rays) with choosen splitting
-    allOnesMatrix := matrix toList (m:{1});
-    ptInRelInt :=  gammaMatrix*allOnesMatrix;
-    splitGaleMatrix := id_(target galDualMatrix)//(galDualMatrix);
-    ptLift := splitGaleMatrix*ptInRelInt;
-    -- compute the gkz fan for Gamma 
-    gammaFan' := regularSubdivision(rayInputMatrix, transpose ptLift);
-    -- sorting for some semi-consistency
-    gammaFan := apply(sort gammaFan', i -> sort i);
-    irrRays := sort toList set(0..n-1) - set flatten gammaFan;
-    {gammaFan,irrRays}
-    )
+

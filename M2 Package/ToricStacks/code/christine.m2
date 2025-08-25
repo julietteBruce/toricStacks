@@ -218,8 +218,8 @@ bettaGamma (Matrix, Fan, List) := (rayMatrix,gamma,irrRays) ->(
     --- 0----> L_Gamma -------->   N ------>   fGamma ------>> N_Gamma ---------> 0
     --
     -- We want beta_Gamma : tildeN_Gamma ----> N_Gamma making this commute
-    -- Since tildeFGamma is surjective, right cancelation implies beta_Gamma is
-    -- unique and we find it my taking a splitting of tildeFGamma and composing down
+    -- Since tildeFGamma is surjective  we find it my taking a splitting of
+    -- tildeFGamma and composing down
     splitTildeFGamma := id_(target tildeFGamma)//tildeFGamma;
     fGamma := cokerMap linealitySpace gamma;
     fGamma*rayMatrix*splitTildeFGamma
