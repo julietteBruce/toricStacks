@@ -138,8 +138,6 @@ toricStack (Fan) := opts -> (F) -> (
 	)
     )
 
-
-
 -----------------------------------------------------------------------------
 ----- weightProjectiveStack
 -----------------------------------------------------------------------------
@@ -151,7 +149,7 @@ toricStack (Fan) := opts -> (F) -> (
 -----------------------------------------------------------------------------
 -----------------------------------------------------------------------------
 
-weightedProjcetiveStack = method (
+weightedProjectiveStack = method (
     TypicalValue => ToricStack, 
     Options => {
     	CoefficientRing   => QQ,
@@ -160,7 +158,7 @@ weightedProjcetiveStack = method (
 	}
     )
 
-weightedProjcetiveStack (List) := opts -> (betaMap,X) -> (
+weightedProjectiveStack (List) := opts -> (betaMap,X) -> (
     
     toricStack(betaMap, rays X, max X,
 	CoefficientRing => opts.CoefficientRing,
