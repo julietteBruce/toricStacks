@@ -204,7 +204,38 @@ L04 = tildeL(rayMatrix,gkzGenFan04,irrRays04)
 
 bettaGamma = method()
 bettaGamma (Matrix, Fan, List) := (rayMatrix,gamma,irrRays) ->(
+    -- Construct the tilde-L subspace and the cokernel map called tildeFGamma
+    tildeLSubspace := tildeL(rayMatrix,gamma,irrRays);
+    tildeFGamma := cokerMap tildeLSubspace;
+    -- We now have the short exact sequences
+    --
+    --- 0----> tildeL_Gamma ---> tildeN ---- tildeFGamma --->> tildeN_Gamma ----> 0
+    ---                            |
+    ---                            |
+    ---                            | tilde(f)
+    ---                            |
+    ---                            v
+    --- 0----> L_Gamma -------->   N ------>   fGamma ------>> N_Gamma ---------> 0
+    --
+    -- We want beta_Gamma : tildeN_Gamma ----> N_Gamma making this commute
+    -- Since tildeFGamma is surjective, right cancelation implies beta_Gamma is
+    -- unique and we find it my taking a splitting of tildeFGamma and composing down
+    splitTildeFGamma := id_(target tildeFGamma)//tildeFGamma;
+    fGamma := cokerMap linealitySpace gamma;
+    fGamma*rayMatrix*splitTildeFGamma
     )
+-- rays
+L0 = bettaGamma(rayMatrix,gkzGenFan0,irrRays0)
+L1 = bettaGamma(rayMatrix,gkzGenFan1,irrRays1)
+L2 = bettaGamma(rayMatrix,gkzGenFan2,irrRays2)
+L3 = bettaGamma(rayMatrix,gkzGenFan3,irrRays3)
+L4 = bettaGamma(rayMatrix,gkzGenFan4,irrRays4)
+-- 2D Cones
+L03 = bettaGamma(rayMatrix,gkzGenFan03,irrRays03)
+L13 = bettaGamma(rayMatrix,gkzGenFan13,irrRays13)
+L12 = bettaGamma(rayMatrix,gkzGenFan12,irrRays12)
+L24 = bettaGamma(rayMatrix,gkzGenFan24,irrRays24)
+L04 = bettaGamma(rayMatrix,gkzGenFan04,irrRays04)
 
 
 
