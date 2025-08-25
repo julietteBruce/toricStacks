@@ -31,6 +31,13 @@ fanGensFromGeneralizedFan (List, List) := (rayList, coneList) -> (
     {rayList', maxCones F}
     )
 
+fanGensFromGeneralizedFan (Matrix, List) := (rayMatrix, coneList) -> (
+    F := fan(rayMatrix,coneList);
+    L := cokerMap linealitySpace F;
+    rayList' := entries transpose (L*(rays F));
+    {rayList', maxCones F}
+    )
+
 toricVarietyGeneralizedFan = method()
 toricVarietyGeneralizedFan (List, List) := (rayList, coneList) -> (
     F := fanGensFromGeneralizedFan(rayList, coneList);
@@ -94,7 +101,7 @@ secondaryFan(Matrix) := SecondaryFan => opts -> (rayInputMatrix) -> (
 		-- sorting for some semi-consistency
 		gammaFan := apply(sort gammaFan', i -> sort i);
 		irrRays := sort toList set(0..n-1) - set flatten gammaFan;
-		gkzHash#f = {gammaFan,irrRays};
+		gkzHash#f = (gammaFan,irrRays);
 		-- this subroutine will compute the stacks if desired once implemented. 
 		if opts.gkzStacks == true then (
 		    stackHash#f = "This is where the stack will go";
@@ -107,34 +114,43 @@ secondaryFan(Matrix) := SecondaryFan => opts -> (rayInputMatrix) -> (
     )
 
 gkzGeneralizedFan = method()
-gkzGeneralizedFan (Matrix, Matrix, Matrix) := (rayInputMatrix, gammRayMatrix, galDualMatrix) -> (
-    m := numcols gammaMtrix;
+gkzGeneralizedFan (Matrix, Matrix, Matrix) := (rayInputMatrix, gammRayMatrix, galeDualMatrix) -> (
+    n := numcols rayInputMatrix;
+    m := numcols gammRayMatrix;
     -- find point in the relative interior of Gamma and lift
     -- from secondary fan to ZZ^(Rays) with choosen splitting
     allOnesMatrix := matrix toList (m:{1});
     ptInRelInt :=  gammRayMatrix*allOnesMatrix;
-    splitGaleMatrix := id_(target galDualMatrix)//(galDualMatrix);
+    splitGaleMatrix := id_(target galeDualMatrix)//(galeDualMatrix);
     ptLift := splitGaleMatrix*ptInRelInt;
     -- compute the gkz fan for Gamma 
     gammaFan' := regularSubdivision(rayInputMatrix, transpose ptLift);
     -- sorting for some semi-consistency
     gammaFan := apply(sort gammaFan', i -> sort i);
     irrRays := sort toList set(0..n-1) - set flatten gammaFan;
-    {gammaFan,irrRays}
+    (gammaFan,irrRays)
     )
 
+gkzGeneralizedFan (Matrix, Matrix) := (rayInputMatrix, gammRayMatrix) -> (
+    galeDualMatrix := galeDual(rayInputMatrix);
+    gkzGeneralizedFan(rayInputMatrix, gammRayMatrix, galeDualMatrix)
+    )
+    
 tildeL = method()
-tildeL (Matrix, Fan, List) := (rayInputMatrix, gzkGenFanGamma, irrRays) ->(
+tildeL (Matrix, Sequence) := (rayInputMatrix, gzkGenFanData) ->(
+    gzkGenFanGamma := gzkGenFanData#0;
+    irrRaysList := gzkGenFanData#1;
     -- set-up
+    gkzGammaAsFan := fan(rayInputMatrix, gzkGenFanGamma); -- CAN WE AVOID THIS
     tildeN := source rayInputMatrix;
     -- map from N to N_Gamma
-    fGamma := cokerMap linealitySpace gzkGenFanGamma;
+    fGamma := cokerMap linealitySpace gkzGammaAsFan;
     -- map from tildeN to N_gamma
     FGamma := fGamma*rayInputMatrix;
-    nonemptyCones := delete({},flatten values faces gzkGenFanGamma);
+    nonemptyCones := delete({},flatten values faces gkzGammaAsFan);
     -- the irrelevant rays contribute the same to each lambda space
     -- we will convert the indices to rays in tildeN later
-    irrIndices := toList set(0..numcols rayInputMatrix-1) - ((set flatten maxCones gzkGenFanGamma) + (set irrRays));
+    irrIndices := toList set(0..numcols rayInputMatrix-1) - ((set flatten maxCones gkzGammaAsFan) + (set irrRaysList));
     -- computing the Lambda_tau space for each face tau of gamma
     -- then compute the kernel of fTildeGamma restricted to Lambda_tau
     lambdaKernels := apply(nonemptyCones, tau->(
@@ -156,16 +172,16 @@ tildeL (Matrix, Fan, List) := (rayInputMatrix, gzkGenFanGamma, irrRays) ->(
     concatenateMatrices lambdaKernels
     )
 
-tildeL (Matrix, Matrix, List) := (rayInputMatrix, gammaRayMatrix, galDualMatrix) -> (
-        gzkGenFanGamma := gkzGeneralizedFan(rayInputMatrix, gammaRayMatrix, irrRays);
-	tildeL(rayInputMatrix, gzkGenFanGamma, galDualMatrix)
+tildeL (Matrix, Matrix) := (rayInputMatrix, gammaRayMatrix) -> (
+        gzkGenFanData := gkzGeneralizedFan(rayInputMatrix);
+	tildeL(rayInputMatrix, gzkGenFanData)
 	)
    
 
 bettaGamma = method()
-bettaGamma (Matrix, Fan, List) := (rayInputMatrix, gzkGenFanGamma, irrRaysList) ->(
+bettaGamma (Matrix, Sequence) := (rayInputMatrix, gzkGenFanData) ->(
     -- Construct the tilde-L subspace and the cokernel map called tildeFGamma
-    tildeLSubspace := tildeL(rayInputMatrix,gzkGenFanGamma,irrRaysList);
+    tildeLSubspace := tildeL(rayInputMatrix,gzkGenFanData);
     tildeFGamma := cokerMap tildeLSubspace;
     -- We now have the short exact sequences
     --
@@ -185,18 +201,18 @@ bettaGamma (Matrix, Fan, List) := (rayInputMatrix, gzkGenFanGamma, irrRaysList) 
     fGamma*rayInputMatrix*splitTildeFGamma
     )
 
-bettaGamma (Matrix, Matrix, List) := (rayInputMatrix, gammaRayMatrix, galDualMatrix) -> (
-     gzkGenFanGamma := gkzGeneralizedFan(rayInputMatrix, gammaRayMatrix, irrRays);
-     bettaGamma(rayInputMatrix, gzkGenFanGamma, galDualMatrix)
+bettaGamma (Matrix, Matrix) := (rayInputMatrix, gammaRayMatrix) -> (
+     gzkGenFanData := gkzGeneralizedFan(rayInputMatrix, gammaRayMatrix);
+     bettaGamma(rayInputMatrix, gzkGenFanData)
     )
 
 gkzStack = method()
-gkzStack (Matrix, Matrix, Matrix) := (rayInputMatrix, gammaRayMatrix, galDualMatrix) -> (
-    {gzkGenFanGamma,irrRaysList} := gkzGeneralizedFan(rayInputMatrix, gammaRayMatrix, galDualMatrix);
+gkzStack (Matrix, Matrix) := (rayInputMatrix, gammaRayMatrix) -> (
+    (gzkGenFanGamma,irrRaysList) = gkzGeneralizedFan(rayInputMatrix, gammaRayMatrix);
     --
-    coarseGamma := toricStack(fanGensFromGeneralizedFan(gzkGenFanGamma));
+    coarseGamma := toricStack(fanGensFromGeneralizedFan(rayInputMatrix,gzkGenFanGamma));
     --
-    beta := bettaGamma(rayInputMatrix, gzkGenFanGamma, irrRaysList);
+    beta := bettaGamma(rayInputMatrix, gzkGenFanGamma);
     preimageCones := apply(0..dim gzkGenFanGamma,d->(
 	    apply(facesAsCones(d,gzkGenFanGamma),C->(
 		    affinePreimage(beta,C)
@@ -204,15 +220,15 @@ gkzStack (Matrix, Matrix, Matrix) := (rayInputMatrix, gammaRayMatrix, galDualMat
 	    ));
     preimageFan := fan preimageCones;
     stackGamma := toricStack(beta, rays preimageFan, maxCones preimageFan);
-    goodMorphism := 
+    goodMorphism := map(coarseGamma, stackGamma, beta, coarseGamma.map);
     {stackGamma, coarseGamma, goodMorphism}
     )
     
     
 
-    {stackGamma, coarseGamma, goodMorphism}
-    )
-
+rayInputMatrix =  transpose matrix {{1,0,0},{1,1,0},{1,0,1},{1,0,2},{1,1,2}} 
+gammaRayMatrix = matrix {{1},{1}}
+gkzStack(rayInputMatrix, gammaRayMatrix)
 
 
 rayInputMatrix =  transpose matrix {{1,0,0},{1,1,0},{1,0,1},{1,0,2},{1,1,2}} 
