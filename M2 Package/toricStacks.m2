@@ -59,7 +59,8 @@ newPackage("ToricStacks",
         }},
   PackageExports => {"NormalToricVarieties", "Polyhedra", "Normaliz"},
   DebuggingMode => true,
-  AuxiliaryFiles => true
+  AuxiliaryFiles => true,
+  Reload => true
   )
 
 export {
@@ -75,7 +76,7 @@ export {
     "toricStackMap", --docs, --test
     "isStrict", --docs, --test
     "weightedProjectiveStack", --docs, --test
-    "isIsomorphism", --docs, --test
+    --"isIsomorphism", --docs, --test
     "rankSource", --docs, --test
     "rankTarget", --docs, --test
     "fanGensFromGeneralizedFan", --docs, --test
@@ -105,7 +106,7 @@ load "ToricStacks/code/ToricExtras.m2"
 load "ToricStacks/code/Constructors.m2"
 load "ToricStacks/code/Fantastacks.m2"
 load "ToricStacks/code/Maps.m2"
-load "ToricStacks/code/SecondaryFan.m2"
+load "ToricStacks/code/SecondaryFans.m2"
 
 --------------------------------------------------------------------
 --------------------------------------------------------------------

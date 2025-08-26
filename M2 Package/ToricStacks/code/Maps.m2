@@ -83,6 +83,7 @@ map(ToricStack, ToricStack, ZZ) := ToricStackMap => opts -> (D2, D1, m) -> (
 -----------------------------------------------------------------------------
 ToricStack#id = D -> map(D,D,1)
 
+-*
 isIsomorphism(ToricStackMap) := Boolean => f -> (
     phiList := map f;
     (D1, D2) := (source f, target f);
@@ -104,7 +105,7 @@ isIsomorphism(ToricStackMap) := Boolean => f -> (
     ) else (
         error("-- need to implement Proposition B.21 of Garschenko and Satriano to handle when the maps have nonfinite cokernel")
     )
-)
+)*-
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 ----------------------------- BASICS -------------------------------
