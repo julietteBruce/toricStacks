@@ -83,14 +83,14 @@ map(ToricStack, ToricStack, ZZ) := ToricStackMap => opts -> (D2, D1, m) -> (
 -----------------------------------------------------------------------------
 ToricStack#id = D -> map(D,D,1)
 
--*
+
 isIsomorphism(ToricStackMap) := Boolean => f -> (
     phiList := map f;
     (D1, D2) := (source f, target f);
     (bigPhi, littlePhi) := (phiList#0, phiList#1);
 
     --- This uses Theorem B.3 in Geraschencko and Satriano
-    if rank((coker D.map) ** QQ) == 0 and rank((coker D.map) ** QQ) == 0 then (
+    if rank((coker D1.map) ** QQ) == 0 and rank((coker D2.map) ** QQ) == 0 then (
         condition1 := (rank littlePhi == numcols littlePhi);
         condition2 := (
             apply(maxFacesAsCones(fan D2),
@@ -105,7 +105,7 @@ isIsomorphism(ToricStackMap) := Boolean => f -> (
     ) else (
         error("-- need to implement Proposition B.21 of Garschenko and Satriano to handle when the maps have nonfinite cokernel")
     )
-)*-
+)
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 ----------------------------- BASICS -------------------------------

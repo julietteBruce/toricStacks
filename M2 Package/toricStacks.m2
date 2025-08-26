@@ -90,7 +90,11 @@ export {
     --Functions
     --Symbols
     "NonStrict",
-    "InputFan"
+    "InputFan",
+    "gkzStacks",
+    "inputRays",
+    "galeDualMatrix",
+    "gkzGenFans"
     --
   }
 

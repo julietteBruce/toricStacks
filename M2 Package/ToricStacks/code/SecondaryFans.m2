@@ -1,5 +1,5 @@
-loadPackage "NormalToricVarieties"
-loadPackage "Polyhedra"
+needsPackage "NormalToricVarieties"
+needsPackage "Polyhedra"
 
 cokerMap := (A) -> (
     --(prune coker A).cache.pruningMap
@@ -89,7 +89,7 @@ secondaryFan(Matrix) := SecondaryFan => opts -> (rayInputMatrix) -> (
 	stackHash := new MutableHashTable;
 	apply(sort faceSecFan, f -> (
 		-- get cone Gamma in secondary fan from list of rays f
-		gammaMatrix = (rays F)_(f);
+		gammaMatrix := (rays F)_(f);
 		m := numcols gammaMatrix;
 		-- find point in the relative interior of Gamma and lift
 		-- from secondary fan to ZZ^(Rays) with choosen splitting
@@ -137,11 +137,11 @@ gkzGeneralizedFan (Matrix, Matrix) := (rayInputMatrix, gammRayMatrix) -> (
     )
     
 tildeL = method()
-tildeL (Matrix, Sequence) := (rayInputMatrix, gzkGenFanData) ->(
-    gzkGenFanGamma := gzkGenFanData#0;
-    irrRaysList := gzkGenFanData#1;
+tildeL (Matrix, Sequence) := (rayInputMatrix, gkzGenFanData) ->(
+    gkzGenFanGamma := gkzGenFanData#0;
+    irrRaysList := gkzGenFanData#1;
     -- set-up
-    gkzGammaAsFan := fan(rayInputMatrix, gzkGenFanGamma); -- CAN WE AVOID THIS
+    gkzGammaAsFan := fan(rayInputMatrix, gkzGenFanGamma); -- CAN WE AVOID THIS
     tildeN := source rayInputMatrix;
     -- map from N to N_Gamma
     fGamma := cokerMap linealitySpace gkzGammaAsFan;
@@ -197,7 +197,8 @@ bettaGamma (Matrix, Sequence) := (rayInputMatrix, gzkGenFanData) ->(
     -- Since tildeFGamma is surjective  we find it my taking a splitting of
     -- tildeFGamma and composing down
     splitTildeFGamma := id_(target tildeFGamma)//tildeFGamma;
-    fGamma := cokerMap linealitySpace gzkGenFanGamma;
+    gkzGenFanGamma := gzkGenFanData#0;
+    fGamma := cokerMap linealitySpace gkzGenFanGamma;
     fGamma*rayInputMatrix*splitTildeFGamma
     )
 
@@ -208,13 +209,13 @@ bettaGamma (Matrix, Matrix) := (rayInputMatrix, gammaRayMatrix) -> (
 
 gkzStack = method()
 gkzStack (Matrix, Matrix) := (rayInputMatrix, gammaRayMatrix) -> (
-    (gzkGenFanGamma,irrRaysList) = gkzGeneralizedFan(rayInputMatrix, gammaRayMatrix);
+    (gkzGenFanGamma,irrRaysList) := gkzGeneralizedFan(rayInputMatrix, gammaRayMatrix);
     --
-    coarseGamma := toricStack(fanGensFromGeneralizedFan(rayInputMatrix,gzkGenFanGamma));
+    coarseGamma := toricStack(fanGensFromGeneralizedFan(rayInputMatrix,gkzGenFanGamma));
     --
-    beta := bettaGamma(rayInputMatrix, gzkGenFanGamma);
-    preimageCones := apply(0..dim gzkGenFanGamma,d->(
-	    apply(facesAsCones(d,gzkGenFanGamma),C->(
+    beta := bettaGamma(rayInputMatrix, gkzGenFanGamma);
+    preimageCones := apply(0..dim gkzGenFanGamma,d->(
+	    apply(facesAsCones(d,gkzGenFanGamma),C->(
 		    affinePreimage(beta,C)
 		    ));
 	    ));
