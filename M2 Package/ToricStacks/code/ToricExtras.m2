@@ -1,4 +1,4 @@
-needsPackage "Normaliz"
+--needsPackage "Normaliz"
 
 toricIdeal = method()
 toricIdeal(Matrix,Ring) := (A,R) -> (

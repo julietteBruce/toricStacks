@@ -41,10 +41,12 @@ toricStack (Matrix, List, List) := opts -> (betaMap, rayList, coneList) -> (
     D
     )
 
+-*
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
 toricStack(betaMap, rayList, coneList)
+*-
 
 -----------------------------------------------------------------------------
 ---- Contructs from NormalToricVariety
@@ -57,11 +59,13 @@ toricStack (Matrix, NormalToricVariety) := opts -> (betaMap,X) -> (
 	)
     )
 
+-*
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
 X = normalToricVariety(rayList,coneList)
 toricStack(betaMap,X)
+*-
 
 -----------------------------------------------------------------------------
 ---- Contructs from a Fan
@@ -76,10 +80,12 @@ toricStack (Matrix, Fan) := opts -> (betaMap, F) -> (
 	)
     )
 
+-*
 betaMap = matrix {{1,0},{1,2}}
 C1 = coneFromVData matrix {{1,0},{0,1}}
 F = fan C1
 toricStack(betaMap, F)
+*-
 
 -----------------------------------------------------------------------------
 ---- Realizes a toric variety (given as a list of rays and a list of maximal
@@ -96,9 +102,11 @@ toricStack (List, List) := opts -> (rayList, coneList) -> (
 	)
     )
 
+-*
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
 toricStack(rayList, coneList)
+*-
 
 -----------------------------------------------------------------------------
 ---- Realizes a toric variety (given as a NormalToricVariety)
@@ -115,10 +123,12 @@ toricStack (NormalToricVariety) := opts -> (X) -> (
 	)
     )
 
+-*
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
 X = normalToricVariety(rayList,coneList)
 toricStack(X)
+*-
 
 
 -----------------------------------------------------------------------------
@@ -167,7 +177,8 @@ weightedProjectiveStack (List) := opts -> (betaMap,X) -> (
 	)
     )
 
-
+-*
 C1 = coneFromVData matrix {{1,0},{0,1}}
 F = fan C1
 toricStack(betaMap, F)
+*-

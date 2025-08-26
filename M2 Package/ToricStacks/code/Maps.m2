@@ -118,6 +118,7 @@ source ToricStackMap := ToricStack => f -> f.source
 target ToricStackMap := ToricStack => f -> f.target
 map ToricStackMap := List => opts -> f -> f.map
 
+-*
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
@@ -130,7 +131,7 @@ f = map(D1,D1,A)
 source f
 target f
 map f
-
+*-
 
 -----------------------------------------------------------------------------
 ---- Defines == for ToricStackDatumMap
@@ -152,6 +153,7 @@ ToricStackMap == ToricStackMap := Boolean => (f1, f2) -> (
 rankSource = method ()
 rankSource (ToricStackMap) := (f) -> ({rank source (f.source).map, rank target (f.source).map})
 
+-*
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
@@ -162,6 +164,7 @@ A1 = {bigPhi1, littlePhi1};
 f1 = map(D1,D1,A)
 
 rankSource f1
+*-
 
 -----------------------------------------------------------------------------
 ----- rankSource
@@ -176,6 +179,7 @@ rankSource f1
 rankTarget = method ()
 rankTarget (ToricStackMap) := (f) -> ({rank source (f.target).map, rank target (f.target).map})
 
+-*
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
 coneList = {{0,1}}
@@ -186,7 +190,7 @@ A1 = {bigPhi1, littlePhi1};
 f1 = map(D1,D1,A)
 
 rankTarget f1
-
+*-
 
 -----------------------------------------------------------------------------
 ---- Defines compostion for ToricStackDatumMap
@@ -204,6 +208,8 @@ ToricStackMap * ToricStackMap := ToricStackMap => (f1, f2) -> (
     map(D2,D2,A)
     )
 
+-*
+
 
 betaMap = matrix {{1,0},{1,2}}
 rayList = {{1,0},{0,1}}
@@ -220,3 +226,4 @@ A2 = {bigPhi2, littlePhi2};
 f2 = map(D1,D1,A2)
 
 f2*f1
+*-

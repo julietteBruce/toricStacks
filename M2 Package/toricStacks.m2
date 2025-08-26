@@ -1,6 +1,6 @@
 -- -*- coding: utf-8 -*-
 --------------------------------------------------------------------------------
--- Copyright 2025  Juliette Bruce, Maya Banks, Boyana Martinova, Christin Sum
+-- Copyright 2025  Juliette Bruce, Maya Banks, John Cobb
 --
 -- This program is free software: you can redistribute it and/or modify it under
 -- the terms of the GNU General Public License as published by the Free Software
@@ -57,7 +57,7 @@ newPackage("ToricStacks",
             Email => "jdcobb3@gmail.com",
 	    HomePage => "https://johndcobb.github.io"
         }},
-  PackageExports => {"NormalToricVarieties", "Polyhedra"},
+  PackageExports => {"NormalToricVarieties", "Polyhedra", "Normaliz"},
   DebuggingMode => true,
   AuxiliaryFiles => true
   )
@@ -68,11 +68,24 @@ export {
     "ToricStack", --docs, --test
     "ToricStackMap", --docs, --test
     "Fantastack", --docs, --test
+    "SecondaryFan", --docs, --test
+    -----------------------------------------
     --Methods
     "toricStack", --docs, --test
     "toricStackMap", --docs, --test
-    "fanGensFromGeneralizedFan",  --docs, --test
+    "isStrict", --docs, --test
+    "weightedProjectiveStack", --docs, --test
+    "isIsomorphism", --docs, --test
+    "rankSource", --docs, --test
+    "rankTarget", --docs, --test
+    "fanGensFromGeneralizedFan", --docs, --test
     "toricVarietyGeneralizedFan", --docs, --test
+    "secondaryFan", --docs, --test
+    "gkzGeneralizedFan", --docs, --test
+    "tildeL", --docs, --test
+    "bettaGamma", --docs, --test
+    "gkzStack", --docs, --test
+    -----------------------------------------
     --Functions
     --Symbols
     "NonStrict",
@@ -92,7 +105,7 @@ load "ToricStacks/code/ToricExtras.m2"
 load "ToricStacks/code/Constructors.m2"
 load "ToricStacks/code/Fantastacks.m2"
 load "ToricStacks/code/Maps.m2"
-
+load "ToricStacks/code/SecondaryFan.m2"
 
 --------------------------------------------------------------------
 --------------------------------------------------------------------

@@ -225,7 +225,7 @@ gkzStack (Matrix, Matrix) := (rayInputMatrix, gammaRayMatrix) -> (
     )
     
     
-
+-*
 rayInputMatrix =  transpose matrix {{1,0,0},{1,1,0},{1,0,1},{1,0,2},{1,1,2}} 
 gammaRayMatrix = matrix {{1},{1}}
 gkzStack(rayInputMatrix, gammaRayMatrix)
@@ -274,3 +274,4 @@ H = secondaryFan(rayInputMat,gkzStacks => true)
 H.cache.gkzStacks
 
 
+*-
