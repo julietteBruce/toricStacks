@@ -26,26 +26,13 @@ ToricStackMap.synonym = "toric stack map"
 ---- for consistentcy and easy of debugging. 
 -----------------------------------------------------------------------------
 map(ToricStack, ToricStack, List) := ToricStackMap => opts -> (D2, D1, A) -> (
-    bigPhi := A#0;
-    littlePhi := A#1;
-    if ring bigPhi =!= ZZ or ring littlePhi =!= ZZ then error "-- expected integer matrices";
-    if rank source bigPhi != rank source D1.map then 
-        error("-- expected source of bigPhi be the source lattice of D1");
-    if rank target bigPhi != rank source D2.map then 
-        error("-- expected target of bigPhi be the source lattice of D1");
-    if rank source littlePhi != rank target D1.map then 
-        error("-- expected source of littlePhi be the target lattice of D2");
-    if rank target littlePhi != rank target D2.map then
-        error("-- expected target of littlePhi be the target lattice of D2");
-    if (D2.map)*(bigPhi) != (littlePhi)*(D1.map) then
-        error("-- expected maps to commute");
-    if not mapsConestoCones(fan D2, fan D1, bigPhi)
-    then error("-- expected that map sends cones to cones");
-    new ToricStackMap from {
+    stackMap := new ToricStackMap from {
     	symbol source => D1,
     	symbol target => D2,
     	symbol map => A,
-    	symbol cache => new CacheTable}
+    	symbol cache => new CacheTable} ; 
+    assert(isWellDefined stackMap);
+    stackMap
     )
 
 -----------------------------------------------------------------------------
@@ -133,6 +120,62 @@ source f
 target f
 map f
 *-
+
+-----------------------------------------------------------------------------
+---- isWellDefined for ToricStackMap
+-----------------------------------------------------------------------------
+
+isWellDefined(ToricStackMap) := Boolean => f -> (
+    (D1, D2) := (source f, target f);
+    if not isWellDefined D1 then (
+        if debugLevel > 0 then 
+            << "-- source of map is not a well-defined toric stack." << endl;
+            return false
+    );
+    if not isWellDefined D2 then (
+        if debugLevel > 0 then 
+            << "-- target of map is not a well-defined toric stack." << endl;
+            return false
+    );
+    phiList := map f;
+    (bigPhi, littlePhi) := (phiList#0, phiList#1);
+    if not instance (bigPhi, Matrix) or not instance (littlePhi, Matrix) then (
+        if debugLevel > 0 then 
+            << "-- expected map to be described by (a list of) two matrices." << endl;
+            return false
+    );
+    if rank source bigPhi != rank source D1.map then (
+        if debugLevel > 0 then 
+            << "-- expected source of bigPhi be the source lattice of D1" << endl;
+        return false
+    );
+    if rank target bigPhi != rank source D2.map then (
+        if debugLevel > 0 then 
+            << "-- expected target of bigPhi be the source lattice of D1" << endl;
+        return false
+    );
+    if rank source littlePhi != rank target D1.map then (
+        if debugLevel > 0 then 
+            << "-- expected source of littlePhi be the target lattice of D2" << endl;
+        return false
+    );
+    if rank target littlePhi != rank target D2.map then (
+        if debugLevel > 0 then 
+            << "-- expected target of littlePhi be the target lattice of D2" << endl;
+        return false
+    );
+    if (D2.map)*(bigPhi) != (littlePhi)*(D1.map) then (
+        if debugLevel > 0 then 
+            << "-- expected maps to commute" << endl;
+        return false
+    );
+    if not mapsConestoCones(fan D2, fan D1, bigPhi) then (
+        if debugLevel > 0 then 
+            << "-- expected that map sends cones to cones" << endl;
+        return false
+    );
+    return true
+)
 
 -----------------------------------------------------------------------------
 ---- Defines == for ToricStackDatumMap
