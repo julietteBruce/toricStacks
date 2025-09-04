@@ -16,7 +16,7 @@ fantastack = method(
 
 max Fantastack := List => D -> D.max
 rays Fantastack := List => {} >> o -> D -> D.rays
-fan Fantastack := Fan => D -> fan(D.rays, D.max)
+fan Fantastack := Fan => D -> fan(D.rays, D.max) -- should save this, it takes awhile to make a fan.
 
 ---------------------------------------------------------------------------
 -*
