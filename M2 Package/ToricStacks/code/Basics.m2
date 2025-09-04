@@ -40,6 +40,24 @@ cokerMap := (A) -> (
     (prune coker A).cache.pruningMap
     )
 
+-- This checks if a cone of a non-strick stacky fan is unstable using the second equivalent condition listed in Definition 6.2 of Geraschenko and Satriano. This says:
+-- the relative interior of the image of tau in N/N_tor contains 0
+isUnstable = method()
+isUnstable(ToricStack, Cone) := Boolean => (D, tau) -> (
+    (Sigma, beta) := (fan D, D.map);
+    if not isStrict(D) then (
+        beta = beta**QQ; -- restrict beta to free part to get rid of torsion.
+    );
+    zeroVector := map(ZZ^1, ZZ^(ambDim Sigma), 0);
+    inInterior(zeroVector, affineImage(map D, tau))
+)
+
+unstableCones = method()
+unstableCones(ToricStack) := List => D -> (
+    (beta, Sigma) := (map D, fan D);
+    select(maxFacesAsCones Sigma, tau -> isUnstable(D, tau))
+)
+
 -*
 fanGensFromGeneralizedFan = method()
 fanGensFromGeneralizedFan (List, List) := (rayList, coneList) -> (
