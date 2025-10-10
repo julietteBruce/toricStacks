@@ -33,8 +33,22 @@ saturation(Matrix) := Module => M -> (
 )
 isSaturated = method()
 isSaturated(Matrix) := Boolean => M -> (
-    source M == saturation(M)
+    M == gens saturation(M)
 )
+
+-- this takes a direct complement of a saturated submodule M of ZZ^n. It returns a matrix whose columns generate a direct complement. This will be used for the canonical stack.
+directComplement = method()
+directComplement(Matrix) := Matrix => M -> (
+    if not isSaturated M then error("not saturated");
+    (D,P,Q) := smithNormalForm(M); -- M2 returns (D,P,Q) with D = P*M*Q
+    p := numrows P;
+    q := numrows Q;
+    if p-q == 0 then return image matrix{{0}} else (
+        L := inverse(P); -- this expresses generators of L = M + M', where the first q columns generate M and the last p-q columns generate M'
+        return L_{q..p-1}
+    )
+)
+directComplement(Module) := Matrix => M -> directComplement(gens M)
 
 cokerMap := (A) -> (
     (prune coker A).cache.pruningMap
