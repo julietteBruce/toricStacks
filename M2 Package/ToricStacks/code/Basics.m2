@@ -72,6 +72,36 @@ unstableCones(ToricStack) := List => D -> (
     select(maxFacesAsCones Sigma, tau -> isUnstable(D, tau))
 )
 
+
+cartesianProduct NormalToricVariety := X -> NormalToricVariety.cartesianProduct (1 : X)
+NormalToricVariety.cartesianProduct = args -> (
+    rayList := entries transpose directSum apply(args, X -> transpose matrix rays X);
+    betaSum := directSum apply(args, X -> map X);
+    m := # rays args#0;
+    coneList := max args#0;
+    for i from 1 to #args - 1 do (
+	X := args#i;
+	cones := apply (max X, sigma -> apply (sigma, j -> j + m));
+	m = m + #rays X;
+	coneList = flatten table(coneList, cones, (sigma, tau) -> sigma | tau);
+	);
+    normalToricVariety (rayList, coneList, betaSum,
+	CoefficientRing => coefficientRing ring args#0,
+	--Variable => opts.Variable,
+	NonStrict => any(args, X -> (isStrict X)==false)
+	)
+    )
+
+ToricStack ** ToricStack := ToricStack => (X,Y) -> (
+    cartesianProduct (X,Y))
+
+ToricStack ^** ZZ := ToricStack => (X, n) ->  (
+    if n <= 0 then error "-- expected a positive integer";
+    cartesianProduct (n : X)
+    )
+
+
+
 -*
 fanGensFromGeneralizedFan = method()
 fanGensFromGeneralizedFan (List, List) := (rayList, coneList) -> (
