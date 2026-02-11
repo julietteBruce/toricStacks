@@ -35,6 +35,9 @@ map(ToricStack, ToricStack, List) := ToricStackMap => opts -> (D2, D1, A) -> (
     stackMap
     )
 
+-- this version is (probably) never used by the user
+-- if D1: (Sigma_1, \beta_1) and D2: (Sigma_2, \beta_2) are toric stacks, then A is a list of two matrices {bigPhi, littlePhi} such that littlePhi: N_1 --> N_2 and bigPhi: L_1 --> L_2 commute, and so that the map of fans induced by bigPhi sends cones of Sigma_1 to cones of Sigma_2.
+
 -----------------------------------------------------------------------------
 ---- Contructs from two matrices instead of a list of matrices
 -----------------------------------------------------------------------------

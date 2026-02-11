@@ -43,7 +43,7 @@ directComplement(Matrix) := Matrix => M -> (
     (D,P,Q) := smithNormalForm(M); -- M2 returns (D,P,Q) with D = P*M*Q
     p := numrows P;
     q := numrows Q;
-    if p-q == 0 then return image matrix{{0}} else (
+    if p-q == 0 then return ZZ^0 else (
         L := inverse(P); -- this expresses generators of L = M + M', where the first q columns generate M and the last p-q columns generate M'
         return L_{q..p-1}
     )
@@ -71,6 +71,8 @@ unstableCones(ToricStack) := List => D -> (
     (beta, Sigma) := (map D, fan D);
     select(maxFacesAsCones Sigma, tau -> isUnstable(D, tau))
 )
+
+-- TODO: Implement == of toricStacks using Theorem B.3 
 
 -*
 fanGensFromGeneralizedFan = method()
