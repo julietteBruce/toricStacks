@@ -9,11 +9,70 @@ max  ToricStack := List => D -> D.max
 fan ToricStack := Fan => D -> fan(D.rays, D.max)
 
 isStrict = method()
-isStrict ToricStack := Boolean => D -> (
+isStrict(ToricStack) := Boolean => D -> (
     if isMember(NonStrict, keys D.cache) then (not D.cache.NonStrict) else (
          isFreeModule(target D.map) and rank((coker D.map) ** QQ) == 0
     )
 )
+
+-*
+dim = method()
+dim(ToricStack) := ZZ => D -> (
+    dim normalToricVariety(D.rays, D.max) -- would be better to not call this probably
+)
+
+characterGroup = method()
+characterGroup(Matrix) := List => M -> (
+    if ring M != ZZ return error "Expected matrix over the integers";
+    --- FINISH
+    )
+
+characterGroup(ToricStack) := List => D -> (
+    characterGroup(D.map)
+    )
+
+---
+coarseSpace = method()
+coarseSpace =
+
+*-
+
+cartesianProduct NormalToricVariety := X -> NormalToricVariety.cartesianProduct (1 : X)
+NormalToricVariety.cartesianProduct = args -> (
+    rayList := entries transpose directSum apply(args, X -> transpose matrix rays X);
+    betaSum := directSum apply(args, X -> map X);
+    m := # rays args#0;
+    coneList := max args#0;
+    for i from 1 to #args - 1 do (
+	X := args#i;
+	cones := apply (max X, sigma -> apply (sigma, j -> j + m));
+	m = m + #rays X;
+	coneList = flatten table(coneList, cones, (sigma, tau) -> sigma | tau);
+	);
+    normalToricVariety (rayList, coneList, betaSum,
+	CoefficientRing => coefficientRing ring args#0,
+	--Variable => opts.Variable,
+	NonStrict => any(args, X -> (isStrict X)==false)
+	)
+    )
+
+ToricStack ** ToricStack := ToricStack => (X,Y) -> (
+    cartesianProduct (X,Y))
+
+ToricStack ^** ZZ := ToricStack => (X, n) ->  (
+    if n <= 0 then error "-- expected a positive integer";
+    cartesianProduct (n : X)
+    )
+
+
+
+
+
+
+
+
+
+
 
 
 -- The following is an attempt to implement Definition 2.20 in Geraschenko and Satriano. I think this will be needed later to compute unstable cones and compute direct complements of lattices and whatnot.
@@ -73,32 +132,7 @@ unstableCones(ToricStack) := List => D -> (
 )
 
 
-cartesianProduct NormalToricVariety := X -> NormalToricVariety.cartesianProduct (1 : X)
-NormalToricVariety.cartesianProduct = args -> (
-    rayList := entries transpose directSum apply(args, X -> transpose matrix rays X);
-    betaSum := directSum apply(args, X -> map X);
-    m := # rays args#0;
-    coneList := max args#0;
-    for i from 1 to #args - 1 do (
-	X := args#i;
-	cones := apply (max X, sigma -> apply (sigma, j -> j + m));
-	m = m + #rays X;
-	coneList = flatten table(coneList, cones, (sigma, tau) -> sigma | tau);
-	);
-    normalToricVariety (rayList, coneList, betaSum,
-	CoefficientRing => coefficientRing ring args#0,
-	--Variable => opts.Variable,
-	NonStrict => any(args, X -> (isStrict X)==false)
-	)
-    )
 
-ToricStack ** ToricStack := ToricStack => (X,Y) -> (
-    cartesianProduct (X,Y))
-
-ToricStack ^** ZZ := ToricStack => (X, n) ->  (
-    if n <= 0 then error "-- expected a positive integer";
-    cartesianProduct (n : X)
-    )
 
 
 
