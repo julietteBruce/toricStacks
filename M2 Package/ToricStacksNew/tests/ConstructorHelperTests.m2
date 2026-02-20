@@ -125,7 +125,7 @@ TEST ///
 
 
 --------------------------------------------------------------------
------ validateFanData
+----- fanData
 --------------------------------------------------------------------
 TEST ///
    -- We will use the standard fan for P^2 as the test case.
@@ -207,4 +207,103 @@ TEST ///
   B = matrix {{5,9},{7,3}};
   result = reduceByDiagonal(B, D);
   assert(result == matrix {{1,1},{7,3}});
+///
+
+
+--------------------------------------------------------------------
+----- canonicalizeMapData
+--------------------------------------------------------------------
+TEST ///
+    -- set to false doesnt change anything
+    B = matrix {{1, 2}, {3, 4}};
+    Q = matrix {{4, 2}, {2, 4}};
+    (B1, Q1) = canonicalizeMapData(B, Q, CanonicalizeMap => false);
+    assert(B1 == B)
+    assert(Q1 == Q)
+///    
+
+TEST ///
+    B = matrix {{1, 2}, {3, 4}};
+    Q = matrix {{4, 2}, {2, 4}};
+    D = matrix {{2, 0}, {0, 6}};
+    P = matrix {{1, -1}, {-1, 2}};
+    B1 = reduceByDiagonal(P*B,D);
+    (B2, Q2) = canonicalizeMapData(B, Q);
+    assert(B2 == B1)
+    assert(Q2 == D)
+///
+
+
+--------------------------------------------------------------------
+----- validateMapData
+--------------------------------------------------------------------
+TEST ///
+  -- Valid integer matrices with compatible rows
+  B = matrix {{1,0},{0,1},{-1,-1}};
+  Q = map(ZZ^3, ZZ^0, 0);
+  assert(validateMapData(B, Q) == true);
+///
+
+TEST ///
+  -- Non-integer ring should fail
+  B = matrix(QQ, {{1,0},{0,1}});
+  Q = map(QQ^2, QQ^0, 0);
+  assert(try (validateMapData(B, Q); false) else true);
+  -- Row mismatch should fail
+  B = matrix {{1,0},{0,1}};
+  Q = matrix {{1},{0},{0}};
+  assert(try (validateMapData(B, Q); false) else true);
+///
+
+
+--------------------------------------------------------------------
+----- mapData
+--------------------------------------------------------------------
+TEST ///
+    -- set to false doesnt change anything
+    B = matrix {{1, 2}, {3, 4}};
+    Q = matrix {{4, 2}, {2, 4}};
+    (B1, Q1) = mapData(B, Q, CanonicalizeMap => false);
+    assert(B1 == B);
+    assert(Q1 == Q);
+///    
+
+TEST ///
+    B = matrix {{1, 2}, {3, 4}};
+    Q = matrix {{4, 2}, {2, 4}};
+    D = matrix {{2, 0}, {0, 6}};
+    P = matrix {{1, -1}, {-1, 2}};
+    B1 = reduceByDiagonal(P*B,D);
+    (B2, Q2) = mapData(B, Q);
+    assert(B2 == B1);
+    assert(Q2 == D);
+///
+
+TEST ///
+    B = matrix {{1, 2}, {3, 4}};
+    (B1, Q1) = mapData(B, CanonicalizeMap => false);
+    Q = map(ZZ^2, ZZ^0, 0);
+    assert(B1 == B)
+    assert(Q1 == Q)
+///
+
+TEST ///
+    B = matrix {{1, 2}, {3, 4}};
+    (B1, Q1) = mapData(B);
+    Q = map(ZZ^2, ZZ^0, 0);
+    assert(B1 == B);
+    assert(Q1 == Q);
+///
+
+TEST ///
+    -- Map from ZZ^1 to ZZ/2ZZ
+    L = ZZ^1 / image matrix{{2}};
+    B = map(L, ZZ^1, matrix{{1}});
+    (B1,Q1) = mapData(B);
+    --
+    B2 = matrix {{1}};
+    Q2 = matrix {{2}};
+    --
+    assert(B1 == B2);
+    assert(Q1 == Q2);
 ///

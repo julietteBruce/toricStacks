@@ -116,6 +116,16 @@ reduceByDiagonal = (B, D) -> (
 	    ))
     )
 
+-----------------------------------------------------------------------------
+--- Takes a pair of matrices (B,Q) representing a stacky fan morphism,
+--- beta: N ---> L then we have
+--- Q = presentation of L so Q:Z^s--->Z^t such that coker(Q) = L
+--- B = lift of beta i.e. B:N ---> Z^t,
+--- and returns a pair (B', D) representing the same morphism beta
+--- where (B',D) are in a psudeo-stadard form. Does this by  replacing the
+--- presentation matrix Q by its Smith normal form D and adjusts the
+--- lift B accordingly (via row operations and reduction modulo D)
+-----------------------------------------------------------------------------
 canonicalizeMapData = method(Options => {CanonicalizeMap => true})
 canonicalizeMapData(Matrix, Matrix) := opts -> (B, Q) -> (
     if opts.CanonicalizeMap == false then return (B, Q);
@@ -137,7 +147,7 @@ canonicalizeMapData(Matrix, Matrix) := opts -> (B, Q) -> (
 -----------------------------------------------------------------------------
 validateMapData = (B, Q) -> (
     if not instance(B, Matrix) or not instance(Q, Matrix) then error "B and Q must be matrices";
-    if (ring B != ZZ) or (ring Q != ZZ) then error "B and Q must be defined over the integers";
+    if not (ring B === ZZ) or not (ring Q === ZZ) then error "B and Q must be defined over the integers";
     if numRows Q != numRows B then error "Target of B and target of Q must be the same";
     true
 );
@@ -155,24 +165,24 @@ validateMapData = (B, Q) -> (
 ---- Q and B is somewhatcanonical form by replace Q with its SNF and chaning
 ---- B approriately.
 -----------------------------------------------------------------------------
-mapData = method(Options => {})
+mapData = method(Options => {CanonicalizeMap => true})
 mapData(Matrix, Matrix) := opts -> (B, Q) -> (
     validateMapData(B,Q);
-    canonicalizeMapData(B, Q)
+    canonicalizeMapData(B, Q, CanonicalizeMap => opts.CanonicalizeMap)
     )
 
 mapData(Matrix) := opts -> (B) -> (
-    if (ring B != ZZ) then error "Expected a ZZ-linear map or matrix";
+    if not (ring B === ZZ) then error "Expected a ZZ-linear map or matrix";
     if not isFreeModule(source B) then error "Expected the source to be a free ZZ-module";
     if isFreeModule(target B) then (
 	r := numRows B;
 	Q := map(ZZ^r,ZZ^0,0);
-	mapData(B,Q)
+	mapData(B,Q, opts)
 	)
     else (
 	L := target B;
 	P := coverMap L;
 	Q := matrix presentation L;
-	mapData(B//P,Q)
+	mapData(B//P,Q, opts)
 	)
     )
