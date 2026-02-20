@@ -15,20 +15,6 @@
 --
 
 
-validateFanMapCompatibility = (B, rayList) -> (
-    if numColumns B !=  #(rayList#0) then error "Expect the source of lift of map to have same rank as lattice of fan";
-    true
-    )
-
-validateStrictness = (B, Q, rayList) -> (
-    if not isFreeModule(coker Q) then error "Is Non-Strict: Expected the target of map to be torsion-free";
-    d := #(rayList#0);
-    if numRows B != d or numColumns B != d then error "Is Non-Strict: Expected target and source to have same rank";
-    if rank B != d then error "Is Non-Strict: Expected map to have finite co-kernel";
-    true
-    )
-
-
 -----------------------------------------------------------------------------
 ---- toricStack constructor
 -----------------------------------------------------------------------------

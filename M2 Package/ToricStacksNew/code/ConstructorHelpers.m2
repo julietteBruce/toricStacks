@@ -186,3 +186,24 @@ mapData(Matrix) := opts -> (B) -> (
 	mapData(B//P,Q, opts)
 	)
     )
+
+-----------------------------------------------------------------------------
+---- This function does a simple reality check that the map B:N-->Z^t
+---- and the fan with rays rayList are compatibile in that the rays
+---- live in N the source of B.
+-----------------------------------------------------------------------------
+validateFanMapCompatibility = (B, rayList) -> (
+    if numColumns B !=  #(rayList#0) then error "Expect the source of lift of map to have same rank as lattice of fan";
+    true
+    )
+
+-----------------------------------------------------------------------------
+---- This function checks whether (B,Q,raysList) gives a strict toric stack
+-----------------------------------------------------------------------------
+validateStrictness = (B, Q, rayList) -> (
+    if not isFreeModule(coker Q) then error "Is Non-Strict: Expected the target of map to be torsion-free";
+    d := #(rayList#0);
+    if numRows B != d or numColumns B != d then error "Is Non-Strict: Expected target and source to have same rank";
+    if rank B != d then error "Is Non-Strict: Expected map to have finite co-kernel";
+    true
+    )
