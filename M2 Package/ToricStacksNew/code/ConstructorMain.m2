@@ -41,12 +41,6 @@ toricStack = method(Options => {
 
 -- Constructor #1
 toricStack(Matrix, Matrix, List, List) := opts -> (B, Q, rayList, coneList) -> (
-    (rayList', coneList') := fanDataFromAnything(rayList, coneList, opts);
-    (B', Q') := mapDataFromAnything(B, Q, opts);
-    buildToricStack(B', Q', rayList', coneList', opts)
-);
-
-toricStack(Matrix, Matrix, List, List) := opts -> (B, Q, rayList, coneList) -> (
     (rayList', coneList') := fanData(rayList, coneList,
 	CanonicalizeFan => opts.CanonicalizeFan,
 	CanonicalizeLight => opts.CanonicalizeLight
