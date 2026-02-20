@@ -71,12 +71,12 @@ isWellDefined ToricStack := Boolean => D -> (
 	    << "-- expected `map' to be a matrix" << endl;
 	return false
 	);
-     if (not ring source D.map == ZZ) or (not ring target D.map === ZZ) then (
+     if (not ring source D.map === ZZ) or (not ring target D.map === ZZ) then (
 	if debugLevel > 0 then 
 	    << "-- expected `map' to be a map of ZZ modules" << endl;
 	return false
 	);
-    if (not numColumns D.map == #((D.rays)#0) then (
+    if (not numColumns D.map == #((D.rays)#0)) then (
 	    if debugLevel > 0 then
 	        << "-- expected source of `map' to be equal to lattice of fan" << endl;
 	    return false
@@ -92,7 +92,7 @@ isWellDefined ToricStack := Boolean => D -> (
 	    << "-- expected `presentation' to be a matrix" << endl;
 	return false
 	);
-    if (not ring source D.presentation == ZZ) or (not ring target D.presentation === ZZ) then (
+    if (not ring source D.presentation === ZZ) or (not ring target D.presentation === ZZ) then (
 	if debugLevel > 0 then 
 	    << "-- expected `presentation' to be a map of ZZ modules" << endl;
 	return false
@@ -102,18 +102,6 @@ isWellDefined ToricStack := Boolean => D -> (
 	if debugLevel > 0 then 
 	    << "-- expected `map' and 'presentation' to have same target" << endl;
 	return false
-	);
-    if D.cache.Strict then (
-	if not isFreeModule(coker D.presentation) then (
-	    if debugLevel > 0 then
-		<< "-- expect coker of 'presentation' to free ZZ module for a strict toric stack." << endl;
-	    return false
-	    );
-	if not rank((coker D.map) ** QQ) == 0 then (
-	    if debugLevel > 0  then
-		<< "-- expected map to have a finite cokernel for a strict toric stack." << endl;
-	    return false
-	    );
 	);
     return true
 )

@@ -23,7 +23,6 @@ toricStack = method(Options => {
     CanonicalizeFan => true,
     CanonicalizeLight => false,
     CanonicalizeMap => true,
-    Strict => false,
     CoefficientRing   => QQ,
     Variable          => getSymbol "x"}
 );
@@ -51,7 +50,7 @@ toricStack(Matrix, Matrix, List, List) := opts -> (B, Q, rayList, coneList) -> (
 	);
     --
     validateFanMapCompatibility(B', rayList');
-    if opts.Strict == true then validateStrictness(B', Q', rayList');
+    --if opts.Strict == true then validateStrictness(B', Q', rayList');
     --
     D := new ToricStack from {
 	symbol map => B',
