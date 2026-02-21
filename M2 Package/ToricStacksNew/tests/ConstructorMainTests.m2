@@ -20,33 +20,51 @@ TEST ///
    --
    B = matrix {{1, 0}, {0, 1}};
    Q = map(ZZ^2, ZZ^0, 0);
+   --
    D = toricStack(B,Q,rayList,coneList);
    assert(isWellDefined(D) == true)
+   --
    assert(isStrict(D) == true)
+   assert(map(D) == B)
+   assert(presentation(D) == Q)
+   assert(rays(D) == rayList)
+   assert(max(D) == coneList)
 ///
 
 --- Stacky: Strict: P(1,1,2)
 TEST ///
-   rayList = {{1,0,0}, {0,1,0}, {0,0,1}};
+   rayList = {{0,0,1}, {0,1,0}, {1,0,0}};
    coneList = {{0,1}, {0,2}, {1,2}};
    --
    B = matrix {{-1, 1, 0}, {-2, 0, 1}};
    Q = map(ZZ^2, ZZ^0, 0);
+   --
    D = toricStack(B,Q,rayList,coneList);
    assert(isWellDefined(D) == true)
+   --
    assert(isStrict(D) == true)
+   assert(map(D) == B)
+   assert(presentation(D) == Q)
+   assert(rays(D) == rayList)
+   assert(max(D) == coneList)
 ///
 
 --- Stacky: Non-Strict P(2,2,4)
 TEST ///
-   rayList = {{1,0,0}, {0,1,0}, {0,0,1}};
+   rayList = {{0,0,1}, {0,1,0}, {1,0,0}};
    coneList = {{0,1}, {0,2}, {1,2}};
    --
    B = matrix {{-1, 1, 0}, {-2, 0, 1}, {1,0,0}};
    Q = matrix {{0}, {0}, {2}};
+   --
    D = toricStack(B,Q,rayList,coneList);
    assert(isWellDefined(D) == true)
+   --
    assert(isStrict(D) == false)
+   assert(map(D) == B)
+   assert(presentation(D) == Q)
+   assert(rays(D) == rayList)
+   assert(max(D) == coneList)
 ///
 
 --------------------------------------------------------------------
@@ -60,9 +78,15 @@ TEST ///
    --
    B = matrix {{1, 0}, {0, 1}};
    Q = map(ZZ^2, ZZ^0, 0);
+   --
    D = toricStack(B,Q,X);
    assert(isWellDefined(D) == true)
+   --
    assert(isStrict(D) == true)
+   assert(map(D) == B)
+   assert(presentation(D) == Q)
+   assert(rays(D) == sort rays X)
+   assert(max(D) == sort max X)
 ///
 
 
@@ -76,8 +100,14 @@ TEST ///
    B = matrix {{-1, 1, 0}, {-2, 0, 1}};
    Q = map(ZZ^2, ZZ^0, 0);
    D = toricStack(B,Q,X);
+   --
    assert(isWellDefined(D) == true)
+   --
    assert(isStrict(D) == true)
+   assert(map(D) == B)
+   assert(presentation(D) == Q)
+   assert(rays(D) == sort rays X)
+   assert(max(D) == sort max X)
 ///
 
 
@@ -90,9 +120,15 @@ TEST ///
    --
    B = matrix {{-1, 1, 0}, {-2, 0, 1}, {1,0,0}};
    Q = matrix {{0}, {0}, {2}};
+   --
    D = toricStack(B,Q,X);
    assert(isWellDefined(D) == true)
+   --
    assert(isStrict(D) == false)
+   assert(map(D) == B) ----FUCK FIX it dos a canonicalize
+   assert(presentation(D) == Q)
+   assert(rays(D) == sort rays X)
+   assert(max(D) == sort max X)
 ///
 
 --------------------------------------------------------------------
@@ -285,7 +321,13 @@ TEST ///
    --
    D = toricStack(rayList,coneList);
    assert(isWellDefined(D) == true)
+   --
+   --
    assert(isStrict(D) == true)
+   assert(map(D) == id_(ZZ^2))
+   assert(presentation(D) == map(ZZ^2,ZZ^0,0))
+   assert(rays(D) == rayList)
+   assert(max(D) == coneList)   
 ///
 
 
@@ -301,7 +343,12 @@ TEST ///
    --
    D = toricStack(X);
    assert(isWellDefined(D) == true)
+   --
    assert(isStrict(D) == true)
+   assert(map(D) == id_(ZZ^2))
+   assert(presentation(D) == map(ZZ^2,ZZ^0,0))
+   assert(rays(D) == sort rays X)
+   assert(max(D) == sort max X)
 ///
 
 
@@ -318,5 +365,10 @@ TEST ///
    --
    D = toricStack(F);
    assert(isWellDefined(D) == true)
+   --
    assert(isStrict(D) == true)
+   assert(map(D) == id_(ZZ^2))
+   assert(presentation(D) == map(ZZ^2,ZZ^0,0))
+   assert(rays(D) == sort rays X)
+   assert(max(D) == sort max X)
 ///

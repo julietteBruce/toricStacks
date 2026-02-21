@@ -12,7 +12,7 @@ map ToricStack := Matrix => opts -> D -> D.map
 rays ToricStack := List => {} >> o -> D -> D.rays
 max  ToricStack := List => D -> D.max
 fan ToricStack := Fan => D -> fan(D.rays, D.max)
-presentation ToricStack := Matrix => opts -> D -> D.presentation
+presentation ToricStack := Matrix =>  D -> D.presentation
 
 
 ----------------------------------------------------------------------------
