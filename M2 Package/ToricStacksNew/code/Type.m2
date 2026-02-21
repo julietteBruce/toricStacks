@@ -10,7 +10,7 @@ ReverseDictionary = value Core#"private dictionary"#"ReverseDictionary";
 
 
 -----------------------------------------------------------------------------
--- Stack  TYPE DECLA
+-- Stack  TYPE DECLARATION
 -----------------------------------------------------------------------------
 
 Stack = new Type of MutableHashTable
@@ -19,11 +19,11 @@ Stack.GlobalAssignHook = globalAssignFunction
 Stack.GlobalReleaseHook = globalReleaseFunction
 
 -----------------------------------------------------------------------------
--- TORIC STACK TYPE DECLaRATION
+-- TORIC STACK TYPE DECLARATION
 -----------------------------------------------------------------------------
 
 ToricStack = new Type of Stack
-ToricStack.synonym = "toric stack datum"
+ToricStack.synonym = "toric stack"
 ToricStack.GlobalAssignHook = globalAssignFunction
 ToricStack.GlobalReleaseHook = globalReleaseFunction
 expression ToricStack := D -> if hasAttribute (D, ReverseDictionary) 
