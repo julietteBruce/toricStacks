@@ -22,6 +22,7 @@ TEST ///
    Q = map(ZZ^2, ZZ^0, 0);
    D = toricStack(B,Q,rayList,coneList);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///
 
 --- Stacky: Strict: P(1,1,2)
@@ -33,6 +34,7 @@ TEST ///
    Q = map(ZZ^2, ZZ^0, 0);
    D = toricStack(B,Q,rayList,coneList);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///
 
 --- Stacky: Non-Strict P(2,2,4)
@@ -44,6 +46,7 @@ TEST ///
    Q = matrix {{0}, {0}, {2}};
    D = toricStack(B,Q,rayList,coneList);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == false)
 ///
 
 --------------------------------------------------------------------
@@ -59,6 +62,7 @@ TEST ///
    Q = map(ZZ^2, ZZ^0, 0);
    D = toricStack(B,Q,X);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///
 
 
@@ -73,6 +77,7 @@ TEST ///
    Q = map(ZZ^2, ZZ^0, 0);
    D = toricStack(B,Q,X);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///
 
 
@@ -87,6 +92,7 @@ TEST ///
    Q = matrix {{0}, {0}, {2}};
    D = toricStack(B,Q,X);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == false)
 ///
 
 --------------------------------------------------------------------
@@ -103,6 +109,7 @@ TEST ///
    Q = map(ZZ^2, ZZ^0, 0);
    D = toricStack(B,Q,F);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///
 
 --- Stacky: Strict: P(1,1,2)
@@ -117,6 +124,7 @@ TEST ///
    Q = map(ZZ^2, ZZ^0, 0);
    D = toricStack(B,Q,F);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///
 
 --- Stacky: Non-Strict P(2,2,4)
@@ -131,6 +139,7 @@ TEST ///
    Q = matrix {{0}, {0}, {2}};
    D = toricStack(B,Q,F);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == false)
 ///
 --------------------------------------------------------------------
 ----- #3 = (beta, rayList, coneList)
@@ -144,6 +153,7 @@ TEST ///
    B = matrix {{1, 0}, {0, 1}};
    D = toricStack(B,rayList,coneList);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///
 
 
@@ -155,6 +165,7 @@ TEST ///
    B = matrix {{-1, 1, 0}, {-2, 0, 1}};
    D = toricStack(B,rayList,coneList);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///
 
 --- Stacky: Non-Strict P(2,2,4)
@@ -166,6 +177,7 @@ TEST ///
    Q = matrix {{0}, {0}, {2}};
    D = toricStack(B,Q,F);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == false)
 ///
 --------------------------------------------------------------------
 ----- #3A = (beta, normalToricVariety)
@@ -179,6 +191,7 @@ TEST ///
    B = matrix {{1, 0}, {0, 1}};
    D = toricStack(B,X);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///
 
 --- Stacky: Strict: P(1,1,2)
@@ -191,6 +204,7 @@ TEST ///
    B = matrix {{-1, 1, 0}, {-2, 0, 1}};
    D = toricStack(B,X);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///
 
 --- Stacky: Non-Strict P(2,2,4)
@@ -206,6 +220,7 @@ TEST ///
    --
    D = toricStack(beta,X);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == false)
 ///
 
 --------------------------------------------------------------------
@@ -224,6 +239,7 @@ TEST ///
    --
    D = toricStack(beta,F);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///
 
 
@@ -238,6 +254,7 @@ TEST ///
    B = matrix {{-1, 1, 0}, {-2, 0, 1}};
    D = toricStack(B,F);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///
 
 --- Stacky: Non-Strict P(2,2,4)
@@ -254,6 +271,7 @@ TEST ///
    --
    D = toricStack(beta,F);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == false)
 ///
 
 --------------------------------------------------------------------
@@ -267,6 +285,7 @@ TEST ///
    --
    D = toricStack(rayList,coneList);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///
 
 
@@ -282,6 +301,7 @@ TEST ///
    --
    D = toricStack(X);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///
 
 
@@ -298,4 +318,5 @@ TEST ///
    --
    D = toricStack(F);
    assert(isWellDefined(D) == true)
+   assert(isStrict(D) == true)
 ///

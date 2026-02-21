@@ -28,14 +28,12 @@ isStrict(ToricStack) := Boolean => D -> (
     --
     result := (
 	if not isFreeModule(coker Q) then false
-	else (
-	    d :=  #(rayList#0);
-	    if d
-	    )
+	else if rank ((B|Q)**QQ) != numRows (B|Q) then false
+	else true
 	);
     D.cache#Strict = result;
     --
-    result
+   result
 )
 
 
