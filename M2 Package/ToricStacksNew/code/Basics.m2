@@ -3,40 +3,46 @@
 ------------------------- BASIC FUNCTIONS --------------------------
 --------------------------------------------------------------------
 --------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+--- These are basic functions that basically allow one to call the keys
+--- of ToricStack as function.
+-----------------------------------------------------------------------------
 map ToricStack := Matrix => opts -> D -> D.map
 rays ToricStack := List => {} >> o -> D -> D.rays
 max  ToricStack := List => D -> D.max
 fan ToricStack := Fan => D -> fan(D.rays, D.max)
+presentation ToricStack := Matrix => opts -> D -> D.presentation
 
+
+----------------------------------------------------------------------------
+---- Tests whether a toric stack is strict.
+-----------------------------------------------------------------------------
 isStrict = method()
 isStrict(ToricStack) := Boolean => D -> (
-    if isMember(NonStrict, keys D.cache) then (not D.cache.NonStrict) else (
-         isFreeModule(target D.map) and rank((coker D.map) ** QQ) == 0
-    )
+    if D.cache#?Strict then return D.cache#Strict;   -- return cached result
+    ---
+    B := D.map;
+    Q := D.presentation;
+    rayList := D.rays;
+    --
+    result := (
+	if not isFreeModule(coker Q) then false
+	else (
+	    d :=  #(rayList#0);
+	    if d
+	    )
+	);
+    D.cache#Strict = result;
+    --
+    result
 )
 
--*
-dim = method()
-dim(ToricStack) := ZZ => D -> (
-    dim normalToricVariety(D.rays, D.max) -- would be better to not call this probably
-)
 
-characterGroup = method()
-characterGroup(Matrix) := List => M -> (
-    if ring M != ZZ return error "Expected matrix over the integers";
-    --- FINISH
-    )
 
-characterGroup(ToricStack) := List => D -> (
-    characterGroup(D.map)
-    )
-
----
-coarseSpace = method()
-coarseSpace =
-
-*-
-
+----------------------------------------------------------------------------
+---- Cartesian Product 
+-----------------------------------------------------------------------------
 cartesianProduct NormalToricVariety := X -> NormalToricVariety.cartesianProduct (1 : X)
 NormalToricVariety.cartesianProduct = args -> (
     rayList := entries transpose directSum apply(args, X -> transpose matrix rays X);

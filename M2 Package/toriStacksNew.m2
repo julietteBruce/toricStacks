@@ -74,7 +74,7 @@ export {
     "fanData", --docs
     "canonicalizeMapData", --docs
     "mapData", --docs
-
+    "toricStack",
     --Functions
     --Symbols
 

@@ -36,6 +36,15 @@ TEST ///
 ///
 
 --- Stacky: Non-Strict P(2,2,4)
+TEST ///
+   rayList = {{1,0,0}, {0,1,0}, {0,0,1}};
+   coneList = {{0,1}, {0,2}, {1,2}};
+   --
+   B = matrix {{-1, 1, 0}, {-2, 0, 1}, {1,0,0}};
+   Q = matrix {{0}, {0}, {2}};
+   D = toricStack(B,Q,rayList,coneList);
+   assert(isWellDefined(D) == true)
+///
 
 --------------------------------------------------------------------
 ----- #2A = (B, Q, normalToricVariety) 
@@ -62,6 +71,20 @@ TEST ///
    --
    B = matrix {{-1, 1, 0}, {-2, 0, 1}};
    Q = map(ZZ^2, ZZ^0, 0);
+   D = toricStack(B,Q,X);
+   assert(isWellDefined(D) == true)
+///
+
+
+--- Stacky: Non-Strict P(2,2,4)
+TEST ///
+   needsPackage "NormalToricVarieties";
+   rayList = {{1,0,0}, {0,1,0}, {0,0,1}};
+   coneList = {{0,1}, {0,2}, {1,2}};
+   X = normalToricVariety(rayList,coneList);
+   --
+   B = matrix {{-1, 1, 0}, {-2, 0, 1}, {1,0,0}};
+   Q = matrix {{0}, {0}, {2}};
    D = toricStack(B,Q,X);
    assert(isWellDefined(D) == true)
 ///
@@ -96,6 +119,19 @@ TEST ///
    assert(isWellDefined(D) == true)
 ///
 
+--- Stacky: Non-Strict P(2,2,4)
+TEST ///
+   needsPackage "NormalToricVarieties";
+   rayList = {{1,0,0}, {0,1,0}, {0,0,1}};
+   coneList = {{0,1}, {0,2}, {1,2}};
+   X = normalToricVariety(rayList,coneList);
+   F = fan X;
+   --
+   B = matrix {{-1, 1, 0}, {-2, 0, 1}, {1,0,0}};
+   Q = matrix {{0}, {0}, {2}};
+   D = toricStack(B,Q,F);
+   assert(isWellDefined(D) == true)
+///
 --------------------------------------------------------------------
 ----- #3 = (beta, rayList, coneList)
 --------------------------------------------------------------------
@@ -121,7 +157,16 @@ TEST ///
    assert(isWellDefined(D) == true)
 ///
 
-
+--- Stacky: Non-Strict P(2,2,4)
+TEST ///
+   rayList = {{1,0,0}, {0,1,0}, {0,0,1}};
+   coneList = {{0,1}, {0,2}, {1,2}};
+   --
+   B = matrix {{-1, 1, 0}, {-2, 0, 1}, {1,0,0}};
+   Q = matrix {{0}, {0}, {2}};
+   D = toricStack(B,Q,F);
+   assert(isWellDefined(D) == true)
+///
 --------------------------------------------------------------------
 ----- #3A = (beta, normalToricVariety)
 --------------------------------------------------------------------
@@ -137,7 +182,6 @@ TEST ///
 ///
 
 --- Stacky: Strict: P(1,1,2)
---- Stacky: Strict: P(1,1,2)
 TEST ///
    needsPackage "NormalToricVarieties";
    rayList = {{1,0,0}, {0,1,0}, {0,0,1}};
@@ -149,7 +193,20 @@ TEST ///
    assert(isWellDefined(D) == true)
 ///
 
-
+--- Stacky: Non-Strict P(2,2,4)
+TEST ///
+   needsPackage "NormalToricVarieties";
+   rayList = {{1,0,0}, {0,1,0}, {0,0,1}};
+   coneList = {{0,1}, {0,2}, {1,2}};
+   X = normalToricVariety(rayList,coneList);
+   --
+   N = ZZ^3;
+   L = coker matrix {{0, 0, 0}, {0, 0, 0}, {0, 0, 2}};
+   beta = map(L,N, matrix {{-1, 1, 0}, {-2, 0, 1}, {1,0,0}})
+   --
+   D = toricStack(beta,X);
+   assert(isWellDefined(D) == true)
+///
 
 --------------------------------------------------------------------
 ----- #3B = (beta, Fan)
@@ -161,8 +218,11 @@ TEST ///
    X = toricProjectiveSpace 2;
    F = fan X
    --
-   B = matrix {{1, 0}, {0, 1}};
-   D = toricStack(B,F);
+   N = ZZ^3;
+   L = coker matrix {{0, 0, 0}, {0, 0, 0}, {0, 0, 2}};
+   beta = map(L,N, matrix {{-1, 1, 0}, {-2, 0, 1}, {1,0,0}})
+   --
+   D = toricStack(beta,F);
    assert(isWellDefined(D) == true)
 ///
 
@@ -180,7 +240,21 @@ TEST ///
    assert(isWellDefined(D) == true)
 ///
 
-
+--- Stacky: Non-Strict P(2,2,4)
+TEST ///
+   needsPackage "NormalToricVarieties";
+   rayList = {{1,0,0}, {0,1,0}, {0,0,1}};
+   coneList = {{0,1}, {0,2}, {1,2}};
+   X = normalToricVariety(rayList,coneList);
+   F = fan X;
+   --
+   N = ZZ^3;
+   L = coker matrix {{0, 0, 0}, {0, 0, 0}, {0, 0, 2}};
+   beta = map(L,N, matrix {{-1, 1, 0}, {-2, 0, 1}, {1,0,0}})
+   --
+   D = toricStack(beta,F);
+   assert(isWellDefined(D) == true)
+///
 
 --------------------------------------------------------------------
 ----- #4 = (rayList, coneList)
