@@ -23,7 +23,7 @@ expression CoxGroup := G -> if hasAttribute (G, ReverseDictionary)
     then expression getAttribute (G, ReverseDictionary) else 
    (describe G)#0
 describe CoxGroup := G -> Describe (expression coxGroup) (
-    expression G.characterGroup, expression G.torusRank, expression G.torusInvariants,
+    expression G.characterGroup, expression G.torusRank, expression G.torsionInvariants,
     expression G.smithNormalForm, expression G.phi)
 
 
@@ -34,19 +34,19 @@ describe CoxGroup := G -> Describe (expression coxGroup) (
 --- returns a tuple (freeRank, torsionInvarisnts, D) where
 --- freeRank = r
 --- torsionInvariants = {d1,d2,...,dt}
---- D = smith normal form of A.
+--- (D,P,Q) = smith normal form of A.
 ----------------------------------------------------------------------------
 snfInvariants = method();
 snfInvariants(Matrix) :=  (M) -> (
-    if not ring M === ZZ then error "Expected map of ZZ-modules";
+    if not (ring M === ZZ) then error "Expected map of ZZ-modules";
     (D,P,Q) := smithNormalForm(M);
     --
-    r := min(numRows D, numRows D);
+    r := min(numRows D, numColumns D);
     diagonalEntries := apply(r, i-> abs D_(i,i));
     --
     freeRank := (numRows M) - #select(diagonalEntries, d -> d != 0);
     invariantFactors := select(diagonalEntries, d -> d > 1);
-    (freeRank, invariantFactors, D) 
+    (freeRank, invariantFactors, (D,P,Q)) 
     )
 
 
@@ -56,23 +56,25 @@ snfInvariants(Matrix) :=  (M) -> (
 --   * characterGroup       = DG(β) as a ZZ-module
 --   * torusRank            = rank of the free part (=> (G_m)^torusRank)
 --   * torsionInvariants    = {n1,...,nt} (=> μ_{n1}×...×μ_{nt} after splitting)
---   * smithForm            = Smith diagonal matrix for phi
+--   * smithNormalForm            = Smith diagonal matrix for phi
 --   * phi                  = transpose(B|Q) (presentation map for DG(β))
 -------------------------------------------------------------------------------
 
 coxGroup = method(Options => {});
 
 coxGroup(Matrix, Matrix) := opts -> (B, Q) -> (
+    validateMapData(B,Q);
+    --
     phi := transpose (B|Q);
     DG := coker phi;
     --
-    (freeRank, invariantFactors, D) := snfInvariants(phi);
+    (freeRank, invariantFactors, SNF) := snfInvariants(phi);
     --
     G := new CoxGroup from {
 	symbol characterGroup => DG,
 	symbol torusRank => freeRank,
-	symbol torusIvariants => invariantFactors,
-	symbol smithNormalForm => D,
+	symbol torsionInvariants => invariantFactors,
+	symbol smithNormalForm => SNF,
 	symbol phi => phi,
 	symbol cache   => new CacheTable
 	};
@@ -80,4 +82,23 @@ coxGroup(Matrix, Matrix) := opts -> (B, Q) -> (
     G
     )
 
+coxGroup(Matrix) := opts -> (B) -> (
+    if not (ring B === ZZ) then error "Expected a ZZ-linear map or matrix";
+    if not isFreeModule(source B) then error "Expected the source to be a free ZZ-module";
+    if isFreeModule(target B) then (
+	r := numRows B;
+	Q := map(ZZ^r,ZZ^0,0);
+	coxGroup(B,Q)
+	)
+    else (
+	L := target B;
+	P := coverMap L;
+	Q := matrix presentation L;
+	coxGroup(B//P,Q)
+	)
+    )
+
     
+coxGroup(ToricStack) := opts -> (D) -> (
+    coxGroup(D.map,D.presentation)
+    )
