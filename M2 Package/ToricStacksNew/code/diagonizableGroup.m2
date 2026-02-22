@@ -10,19 +10,19 @@ ReverseDictionary = value Core#"private dictionary"#"ReverseDictionary";
 
 
 -----------------------------------------------------------------------------
--- CoxGroup  TYPE DECLARATION
+-- DiagonalizableGroup  TYPE DECLARATION
 -----------------------------------------------------------------------------
 
 
 
-CoxGroup = new Type of MutableHashTable
-CoxGroup.synonym = "Cox group"
-CoxGroup.GlobalAssignHook = globalAssignFunction
-CoxGroup.GlobalReleaseHook = globalReleaseFunction
-expression CoxGroup := G -> if hasAttribute (G, ReverseDictionary) 
+DiagonalizableGroup = new Type of MutableHashTable
+DiagonalizableGroup.synonym = "Diagonalizable Group"
+DiagonalizableGroup.GlobalAssignHook = globalAssignFunction
+DiagonalizableGroup.GlobalReleaseHook = globalReleaseFunction
+expression DiagonalizableGroup := G -> if hasAttribute (G, ReverseDictionary) 
     then expression getAttribute (G, ReverseDictionary) else 
    (describe G)#0
-describe CoxGroup := G -> Describe (expression coxGroup) (
+describe DiagonalizableGroup := G -> Describe (expression coxGroup) (
     expression G.characterGroup, expression G.torusRank, expression G.torsionInvariants,
     expression G.smithNormalForm, expression G.phi)
 
@@ -52,18 +52,18 @@ snfInvariants(Matrix) :=  (M) -> (
 
 ----------------------------------------------------------------------------
 --- These are basic functions that basically allow one to call the keys
---- of CoxGroup as function.
+--- of DiagonalizableGroup as function.
 -----------------------------------------------------------------------------
-map CoxGroup := Module => G -> G.characterGroup
-smithNormalForm CoxGroup := Sequence => G -> G.smithNormalForm
+map DiagonalizableGroup := Module => G -> G.characterGroup
+smithNormalForm DiagonalizableGroup := Sequence => G -> G.smithNormalForm
 
 torusRank = method()
 torsionInvariants = method()
 phi = method()
 
-torusRank CoxGroup := ZZ => G -> G.torusRank
-torsionInvariants CoxGroup := List => G -> G.torsionInvariants
-phi CoxGroup := Matrix =>  G -> G.phi
+torusRank DiagonalizableGroup := ZZ => G -> G.torusRank
+torsionInvariants DiagonalizableGroup := List => G -> G.torsionInvariants
+phi DiagonalizableGroup := Matrix =>  G -> G.phi
 
 
 -------------------------------------------------------------------------------
@@ -76,9 +76,9 @@ phi CoxGroup := Matrix =>  G -> G.phi
 --   * phi                  = transpose(B|Q) (presentation map for DG(β))
 -------------------------------------------------------------------------------
 
-coxGroup = method(Options => {});
+diagonalizableGroup = method(Options => {});
 
-coxGroup(Matrix, Matrix) := opts -> (B, Q) -> (
+diagonalizableGroup(Matrix, Matrix) := opts -> (B, Q) -> (
     validateMapData(B,Q);
     --
     phi := transpose (B|Q);
@@ -98,7 +98,7 @@ coxGroup(Matrix, Matrix) := opts -> (B, Q) -> (
     G
     )
 
-coxGroup(Matrix) := opts -> (B) -> (
+diagonalizableGroup(Matrix) := opts -> (B) -> (
     if not (ring B === ZZ) then error "Expected a ZZ-linear map or matrix";
     if not isFreeModule(source B) then error "Expected the source to be a free ZZ-module";
     if isFreeModule(target B) then (
@@ -115,7 +115,7 @@ coxGroup(Matrix) := opts -> (B) -> (
     )
 
     
-coxGroup(ToricStack) := opts -> (D) -> (
+diagonalizableGroup(ToricStack) := opts -> (D) -> (
     coxGroup(D.map,D.presentation)
     )
 
@@ -123,31 +123,31 @@ coxGroup(ToricStack) := opts -> (D) -> (
 -----------------------------------------------------------------------------
 -- Returns the dimension of the group, which is the rank of the torus factor
 -----------------------------------------------------------------------------
-dim(CoxGroup) := G -> (torusRank G)
+dim(DiagonalizableGroup) := G -> (torusRank G)
 
 -----------------------------------------------------------------------------
 -- Checks whether group is finite
 -----------------------------------------------------------------------------
-isFinite(CoxGroup) := G -> (torusRank G == 0);
+isFinite(DiagonalizableGroup) := G -> (torusRank G == 0);
 
 -----------------------------------------------------------------------------
 -- Checks whether group is a torus
 -----------------------------------------------------------------------------
 isTorus = method();
-isTorus(CoxGroup) := G -> (#torsionInvariants G == 0);
+isTorus(DiagonalizableGroup) := G -> (#torsionInvariants G == 0);
 
 -----------------------------------------------------------------------------
 -- Checks whether group is connected
 -----------------------------------------------------------------------------
 isConnected = method();
-isConnected(CoxGroup) := G -> (isTrous(G));
+isConnected(DiagonalizableGroup) := G -> (isTorus(G));
 
 
 -----------------------------------------------------------------------------
 -- Returns order of the torsion part
 -----------------------------------------------------------------------------
 torsionOrder = method();
-torsionOrder(CoxGroup) := G -> (
+torsionOrder(DiagonalizableGroup) := G -> (
     product(torsionInvariants G) --M2 has 1 as the product over {}
 );
 
@@ -155,7 +155,7 @@ torsionOrder(CoxGroup) := G -> (
 -- Returns the exponent of the group 
 -----------------------------------------------------------------------------
 exponent = method()
-exponent(CoxGroup) := G -> (
+exponent(DiagonalizableGroup) := G -> (
     if torusRank(G) > 0 then error "Not every element is of finite order";
     lcm(torsionInvariants G)
     )
@@ -164,7 +164,7 @@ exponent(CoxGroup) := G -> (
 -- Checks if two groups are isomorphic 
 -----------------------------------------------------------------------------
 areIsomorphic = method()
-areIsomorphic(CoxGroup, CoxGroup) := (G, H) -> (
+areIsomorphic(DiagonalizableGroup, DiagonalizableGroup) := (G, H) -> (
     (torusRank G == torusRank H) and (torsionInvariants G == torsionInvariants H)
     )
 -----------------------------------------------------------------------------
@@ -198,7 +198,7 @@ coxGroupFromInvariants(ZZ, List) := (r, torsion) -> (
         symbol torusRank => freeRank,
         symbol torsionInvariants => invariantFactors,
         symbol smithNormalForm => SNF,
-        symbol phi => phi0,
+        symbol phi => phi,
         symbol cache => new CacheTable
     };
     G
@@ -217,7 +217,7 @@ joinWith = (L, sep) -> (
 );
 
 groupStructureString = method();
-groupStructureString CoxGroup := G -> (
+groupStructureString DiagonalizableGroup := G -> (
     r := torusRank G;
     inv := torsionInvariants G;
 
@@ -240,9 +240,9 @@ groupStructureString CoxGroup := G -> (
 
 -- as a Net (prints without string quotes)
 groupStructureNet = method();
-groupStructureNet CoxGroup := G -> net groupStructureString G;
+groupStructureNet DiagonalizableGroup := G -> net groupStructureString G;
 
 -- as an Expression (useful inside describe/expression methods)
 groupStructureExpression = method();
-groupStructureExpression CoxGroup := G -> expression groupStructureNet G;
+groupStructureExpression DiagonalizableGroup := G -> expression groupStructureNet G;
 
