@@ -50,6 +50,17 @@ snfInvariants(Matrix) :=  (M) -> (
     )
 
 
+----------------------------------------------------------------------------
+--- These are basic functions that basically allow one to call the keys
+--- of CoxGroup as function.
+-----------------------------------------------------------------------------
+map CoxGroup := Module => G -> G.characterGroup
+torusRank CoxGroup := ZZ => G -> G.torusRank
+torsionInvariants CoxGroup := List => G -> G.torsionInvariants
+smithNormalForm CoxGroup := Sequence => G -> G.smithNormalForm)
+phi CoxGroup := Matrix =>  G -> G.phi
+
+
 -------------------------------------------------------------------------------
 -- Main: compute G-data from (B,Q)
 -- Returns a HashTable describing the diagonalizable group G:
@@ -102,3 +113,74 @@ coxGroup(Matrix) := opts -> (B) -> (
 coxGroup(ToricStack) := opts -> (D) -> (
     coxGroup(D.map,D.presentation)
     )
+
+
+-----------------------------------------------------------------------------
+-- Returns the dimension of the group, which is the rank of the torus factor
+-----------------------------------------------------------------------------
+dim = method();
+dim(CoxGroup) := G -> (torusRank G)
+
+-----------------------------------------------------------------------------
+-- Checks whether group is finite
+-----------------------------------------------------------------------------
+isFinite = method();
+isFinit(CoxGroup) := G -> (torusRank G == 0);
+
+-----------------------------------------------------------------------------
+-- Checks whether group is a torus
+-----------------------------------------------------------------------------
+isTorus = method();
+isTorus(CoxGroup) := G -> (#torsionInvariants G == 0);
+
+-----------------------------------------------------------------------------
+-- Returns order of the torsion part
+-----------------------------------------------------------------------------
+finiteOrder = method();
+finiteOrder(CoxGroup) := G -> (
+    product(torsionInvariants G) --M2 has 1 as the product over {}
+);
+
+
+
+-----------------------------------------------------------------------------
+-- WARNING AI CODE TO LOOK AT
+-----------------------------------------------------------------------------
+joinWith = (L, sep) -> (
+    if #L == 0 then "" else (
+        s := L#0;
+        for i from 1 to #L-1 do s = s | sep | L#i;
+        s
+    )
+);
+
+groupStructureString = method();
+groupStructureString CoxGroup := G -> (
+    r := torusRank G;
+    inv := torsionInvariants G;
+
+    parts := {};
+
+    -- torus part
+    if r > 0 then (
+        parts = append(parts,
+            if r == 1 then "G_m" else "G_m^" | toString r
+        )
+    );
+
+    -- finite diagonalizable part
+    if #inv > 0 then (
+        parts = parts | apply(inv, n -> "mu_" | toString n)
+    );
+
+    if #parts == 0 then "1" else joinWith(parts, " x ")
+);
+
+-- as a Net (prints without string quotes)
+groupStructureNet = method();
+groupStructureNet CoxGroup := G -> net groupStructureString G;
+
+-- as an Expression (useful inside describe/expression methods)
+groupStructureExpression = method();
+groupStructureExpression CoxGroup := G -> expression groupStructureNet G;
+
