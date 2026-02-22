@@ -45,7 +45,7 @@ snfInvariants(Matrix) :=  (M) -> (
     diagonalEntries := apply(r, i-> abs D_(i,i));
     --
     freeRank := (numRows M) - #select(diagonalEntries, d -> d != 0);
-    invariantFactors := select(diagonalEntries, d -> d > 1);
+    invariantFactors := sort select(diagonalEntries, d -> d > 1);
     (freeRank, invariantFactors, (D,P,Q)) 
     )
 
@@ -55,9 +55,14 @@ snfInvariants(Matrix) :=  (M) -> (
 --- of CoxGroup as function.
 -----------------------------------------------------------------------------
 map CoxGroup := Module => G -> G.characterGroup
+smithNormalForm CoxGroup := Sequence => G -> G.smithNormalForm
+
+torusRank = method()
+torsionInvariants = method()
+phi = method()
+
 torusRank CoxGroup := ZZ => G -> G.torusRank
 torsionInvariants CoxGroup := List => G -> G.torsionInvariants
-smithNormalForm CoxGroup := Sequence => G -> G.smithNormalForm)
 phi CoxGroup := Matrix =>  G -> G.phi
 
 
@@ -118,14 +123,12 @@ coxGroup(ToricStack) := opts -> (D) -> (
 -----------------------------------------------------------------------------
 -- Returns the dimension of the group, which is the rank of the torus factor
 -----------------------------------------------------------------------------
-dim = method();
 dim(CoxGroup) := G -> (torusRank G)
 
 -----------------------------------------------------------------------------
 -- Checks whether group is finite
 -----------------------------------------------------------------------------
-isFinite = method();
-isFinit(CoxGroup) := G -> (torusRank G == 0);
+isFinite(CoxGroup) := G -> (torusRank G == 0);
 
 -----------------------------------------------------------------------------
 -- Checks whether group is a torus
@@ -134,13 +137,72 @@ isTorus = method();
 isTorus(CoxGroup) := G -> (#torsionInvariants G == 0);
 
 -----------------------------------------------------------------------------
+-- Checks whether group is connected
+-----------------------------------------------------------------------------
+isConnected = method();
+isConnected(CoxGroup) := G -> (isTrous(G));
+
+
+-----------------------------------------------------------------------------
 -- Returns order of the torsion part
 -----------------------------------------------------------------------------
-finiteOrder = method();
-finiteOrder(CoxGroup) := G -> (
+torsionOrder = method();
+torsionOrder(CoxGroup) := G -> (
     product(torsionInvariants G) --M2 has 1 as the product over {}
 );
 
+-----------------------------------------------------------------------------
+-- Returns the exponent of the group 
+-----------------------------------------------------------------------------
+exponent = method()
+exponent(CoxGroup) := G -> (
+    if torusRank(G) > 0 then error "Not every element is of finite order";
+    lcm(torsionInvariants G)
+    )
+
+-----------------------------------------------------------------------------
+-- Checks if two groups are isomorphic 
+-----------------------------------------------------------------------------
+areIsomorphic = method()
+areIsomorphic(CoxGroup, CoxGroup) := (G, H) -> (
+    (torusRank G == torusRank H) and (torsionInvariants G == torsionInvariants H)
+    )
+-----------------------------------------------------------------------------
+-- Gives a matrix presenting a group from given invariants
+-----------------------------------------------------------------------------
+matrixFromInvariants = method();
+matrixFromInvariants(ZZ, List) := (r, torsion) -> (
+    t := #torsion;
+    if t == 0 then D := map(ZZ^0,ZZ^0,0)
+    else D := diagonalMatrix torsion;
+    Z := map(ZZ^t, ZZ^r, 0);
+    D || Z
+);
+
+
+-----------------------------------------------------------------------------
+-- Returns group given a set of invariants 
+-----------------------------------------------------------------------------
+coxGroupFromInvariants = method();
+coxGroupFromInvariants(ZZ, List) := (r, torsion) -> (
+    if r < 0 then error "Torus rank must be non-negative";
+    if any(torsion, n -> not instance(n, ZZ)) then error "Torsion invarians must be integers";
+    if any(torsion, n -> n <= 1) then error "Torsion invariants must be >1";
+    --
+    phi := matrixFromInvariants(r, torsion);
+    DG := coker phi;
+    (freeRank, invariantFactors, SNF) := snfInvariants(phi);
+    --
+    G := new CoxGroup from {
+        symbol characterGroup => DG,
+        symbol torusRank => freeRank,
+        symbol torsionInvariants => invariantFactors,
+        symbol smithNormalForm => SNF,
+        symbol phi => phi0,
+        symbol cache => new CacheTable
+    };
+    G
+);
 
 
 -----------------------------------------------------------------------------
