@@ -1,155 +1,30 @@
-
-validateFanMapCompatibility = (B, rayList) -> (
-    if numColumns B !=  #(rayList#0) then error "Expect the source of lift of map to have same rank as lattice of fan";
-    true
+weightedProjectiveStack = method (
+    TypicalValue => ToricStack, 
+    Options => {
+    	CoefficientRing   => QQ,
+    	Variable          => getSymbol "x",
+	NonStrict        => false
+	}
     )
 
-validateStrictness = (B, Q, rayList) -> (
-    if not isFreeModule(coker Q) then error "Is Non-Strict: Expected the target of map to be torsion-free";
-    d := #(rayList#0);
-    if numRows B != d or numColumns B != d then error "Is Non-Strict: Expected target and source to have same rank";
-    if rank B != d then error "Is Non-Strict: Expected map to have finite co-kernel";
-    true
-    )
-
-
------------------------------------------------------------------------------
----- toricStack constructor
------------------------------------------------------------------------------
-
-toricStack = method(Options => {
-    CanonicalizeFan => true,
-    Light => false,
-    CanonicalizeMap => true,
-    Strict => false,
-    CoefficientRing   => QQ,
-    Variable          => getSymbol "x"}
-);
-
--- This is the layout of constructors
---- #1 = (B, Q, rayList, coneList)
---- #2A = (B, Q, normalToricVariety)
---- #2B = (B, Q, Fan)
---- #3 = (beta, rayList, coneList)
---- #3A = (beta, normalToricVariety)
---- #3B = (beta, Fan)
---- #4 = (rayList, coneList)
---- #4A = (normalToricVariety)
---- #4B = (Fan)
-
--- Constructor #1
-toricStack(Matrix, Matrix, List, List) := opts -> (B, Q, rayList, coneList) -> (
-    (rayList', coneList') := fanData(rayList, coneList,Canonicalize => opts.CanonicalizeFan, Light => opts.Light);
+weightedProjectiveStack (List) := opts -> (weights) -> (
+    if #weights <= 1 then error "Need at least 2 weights.";
+    if any(weights, w -> not instance(w,ZZ)) then error "All weights must be integers.";
+    if any(weights, w -> w <= 0) then error "All weights must be positive integers.";
     --
-    (B', Q') := mapData(B, Q, Canonicalize => opts.CanonicalizeMap);
+    n := #W;
     --
-    validateFanMapCompatibility(B', rayList');
-    if opts.Strict == true then validateStrictness(B', Q', rayList');
+    rayList := entries id_(ZZ^n);
+    coneList := apply(n, i->({i}));
     --
-    D := new ToricStack from {
-	symbol map => B',
-	symbol relations => Q',
-	symbol rays => rayList',
-	symbol max => coneList',
-	symbol cache => new CacheTable
-	};
-    D.cache.CoefficientRing = opts.CoefficientRing;
-    D.cache.Variable = opts.Variable;
-    D
-)
+    B = id_(ZZ^n);
+    Q = matrix apply(weights, w -> {w})
+    --
 
--- Constructor #2A
-toricStack(Matrix, Matrix, NormalToricVariety) := opts -> (B, Q, X) -> (
-    (rayList, coneList) := fanData(X, Canonicalize => opts.CanonicalizeFan, Light => opts.Light);
-    toricStack(B, Q, rayList, coneList,
-	CanonicalizeFan => false,
-	Light => opts.Light,
-        CanonicalizeMap => opts.CanonicalizeMap,
-	Strict => opts.Strict
+    toricStack(betaMap, rayList, coneList,
+	CoefficientRing => opts.CoefficientRing,
+	Variable => opts.Variable,
+	NonStrict => opts.NonStrict
 	)
     )
-
--- Constructor #2B
-toricStack(Matrix, Matrix, Fan) := opts -> (B, Q, F) -> (
-    (rayList, coneList) := fanData(F, Canonicalize => opts.CanonicalizeFan, Light => opts.Light);
-    toricStack(B, Q, rayList, coneList,
-	CanonicalizeFan => false,
-	Light => opts.Light,
-        CanonicalizeMap => opts.CanonicalizeMap,
-	Strict => opts.Strict
-	)
-    )
-
--- Constructor #3
-toricStack(Matrix, List, List) := opts -> (beta, rayList, coneList) -> (
-    (B, Q) := mapData(beta, Canonicalize => opts.CanonicalizeMap);
-    toricStack(B, Q, rayList, coneList,
-	CanonicalizeFan => opts.CanonicalizeFan,
-	Light => opts.Light,
-        CanonicalizeMap => false,
-	Strict => opts.Strict
-	)
-    )
-
--- Constructor #3A
-toricStack(Matrix, NormalToricVariety) := opts -> (beta, X) -> (
-    (B, Q) := mapData(beta, Canonicalize => opts.CanonicalizeMap);
-    toricStack(B, Q, X,
-	CanonicalizeFan => opts.CanonicalizeFan,
-	Light => opts.Light,
-        CanonicalizeMap => false,
-	Strict => opts.Strict
-	)
-    )
-
--- Constructor #3B
-toricStack(Matrix, Fan) := opts -> (beta, F) -> (
-    (B, Q) := mapData(beta, Canonicalize => opts.CanonicalizeMap);
-    toricStack(B, Q, F,
-	CanonicalizeFan => opts.CanonicalizeFan,
-	Light => opts.Light,
-        CanonicalizeMap => false,
-	Strict => opts.Strict
-	)
-    )
-
--- Constructor #4
-toricStack(List, List) := opts -> (rayList, coneList) -> (
-    d := #(rayList#0);
-    B := id_(ZZ^d);
-    toricStack(B, rayList, coneList,
-	CanonicalizeFan => opts.CanonicalizeFan,
-	Light => opts.Light,
-        CanonicalizeMap => opts.CanonicalizeMap,
-	Strict => opts.Strict
-	)
-    )
-
--- Constructor #4A
-toricStack(NormalToricVariety) := opts -> (X) -> (
-    d := #((rays X)#0);
-    B := id_(ZZ^d);
-    toricStack(B, X,
-	CanonicalizeFan => opts.CanonicalizeFan,
-	Light => opts.Light,
-        CanonicalizeMap => opts.CanonicalizeMap,
-	Strict => opts.Strict
-	)
-    )
-
--- Constructor #4B
-toricStack(Fan) := opts -> (F) -> (
-    d := numColumns (rays F);
-    B := id_(ZZ^d);
-    toricStack(B, F,
-	CanonicalizeFan => opts.CanonicalizeFan,
-	Light => opts.Light,
-        CanonicalizeMap => opts.CanonicalizeMap,
-	Strict => opts.Strict
-	)
-    )
-
--- Identity constructor
-toricStack(ToricStack) := opts -> (S) -> S;
-
 
