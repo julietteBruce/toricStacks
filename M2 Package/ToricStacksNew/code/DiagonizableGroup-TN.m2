@@ -78,10 +78,10 @@ phi DiagonalizableGroup := Matrix =>  G -> G.phi
 
 diagonalizableGroup = method(Options => {});
 
-diagonalizableGroup(Matrix, Matrix) := opts -> (B, Q) -> (
-    validateMapData(B,Q);
+diagonalizableGroup(Matrix, Matrix) := opts -> (M) -> (
+    if not (ring M === ZZ) then error "Expected map of ZZ-modules";
     --
-    phi := transpose (B|Q);
+    phi := M;
     DG := coker phi;
     --
     (freeRank, invariantFactors, SNF) := snfInvariants(phi);
@@ -97,28 +97,6 @@ diagonalizableGroup(Matrix, Matrix) := opts -> (B, Q) -> (
     --
     G
     )
-
-diagonalizableGroup(Matrix) := opts -> (B) -> (
-    if not (ring B === ZZ) then error "Expected a ZZ-linear map or matrix";
-    if not isFreeModule(source B) then error "Expected the source to be a free ZZ-module";
-    if isFreeModule(target B) then (
-	r := numRows B;
-	Q := map(ZZ^r,ZZ^0,0);
-	coxGroup(B,Q)
-	)
-    else (
-	L := target B;
-	P := coverMap L;
-	Q := matrix presentation L;
-	coxGroup(B//P,Q)
-	)
-    )
-
-    
-diagonalizableGroup(ToricStack) := opts -> (D) -> (
-    coxGroup(D.map,D.presentation)
-    )
-
 
 -----------------------------------------------------------------------------
 -- Returns the dimension of the group, which is the rank of the torus factor
