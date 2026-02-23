@@ -60,14 +60,28 @@ smithNormalForm DiagonalizableGroup := Sequence => G -> G.smithNormalForm
 torusRank = method()
 torsionInvariants = method()
 phi = method()
+characterGroup = method()
 
 torusRank DiagonalizableGroup := ZZ => G -> G.torusRank
 torsionInvariants DiagonalizableGroup := List => G -> G.torsionInvariants
 phi DiagonalizableGroup := Matrix =>  G -> G.phi
+characterGroup DiagonalizableGroup := Module =>  G -> G.characterGroup
+
+-----------------------------------------------------------------------------
+-- Gives a matrix presenting a group from given invariants
+-----------------------------------------------------------------------------
+matrixFromInvariants = method();
+matrixFromInvariants(ZZ, List) := (r, torsion) -> (
+    t := #torsion;
+    if t == 0 then D := map(ZZ^0,ZZ^0,0)
+    else D := diagonalMatrix torsion;
+    Z := map(ZZ^t, ZZ^r, 0);
+    D || Z
+);
 
 
 -------------------------------------------------------------------------------
--- Main: compute G-data from (B,Q)
+-- Main: compute G-data from (beta)
 -- Returns a HashTable describing the diagonalizable group G:
 --   * characterGroup       = DG(β) as a ZZ-module
 --   * torusRank            = rank of the free part (=> (G_m)^torusRank)
@@ -78,7 +92,7 @@ phi DiagonalizableGroup := Matrix =>  G -> G.phi
 
 diagonalizableGroup = method(Options => {});
 
-diagonalizableGroup(Matrix, Matrix) := opts -> (M) -> (
+diagonalizableGroup(Matrix) := opts -> (M) -> (
     if not (ring M === ZZ) then error "Expected map of ZZ-modules";
     --
     phi := M;
@@ -96,6 +110,14 @@ diagonalizableGroup(Matrix, Matrix) := opts -> (M) -> (
 	};
     --
     G
+    )
+
+diagonalizableGroup(ZZ, List) := (r, torsion) -> (
+    if r < 0 then error "Torus rank must be non-negative";
+    if any(torsion, n -> not instance(n, ZZ)) then error "Torsion invarians must be integers";
+    if any(torsion, n -> n <= 1) then error "Torsion invariants must be >1";
+    M := matrixFromInvariants(r, torsion);
+    diagonalizableGroup(M)
     )
 
 -----------------------------------------------------------------------------
@@ -145,44 +167,9 @@ areIsomorphic = method()
 areIsomorphic(DiagonalizableGroup, DiagonalizableGroup) := (G, H) -> (
     (torusRank G == torusRank H) and (torsionInvariants G == torsionInvariants H)
     )
------------------------------------------------------------------------------
--- Gives a matrix presenting a group from given invariants
------------------------------------------------------------------------------
-matrixFromInvariants = method();
-matrixFromInvariants(ZZ, List) := (r, torsion) -> (
-    t := #torsion;
-    if t == 0 then D := map(ZZ^0,ZZ^0,0)
-    else D := diagonalMatrix torsion;
-    Z := map(ZZ^t, ZZ^r, 0);
-    D || Z
-);
 
 
------------------------------------------------------------------------------
--- Returns group given a set of invariants 
------------------------------------------------------------------------------
-coxGroupFromInvariants = method();
-coxGroupFromInvariants(ZZ, List) := (r, torsion) -> (
-    if r < 0 then error "Torus rank must be non-negative";
-    if any(torsion, n -> not instance(n, ZZ)) then error "Torsion invarians must be integers";
-    if any(torsion, n -> n <= 1) then error "Torsion invariants must be >1";
-    --
-    phi := matrixFromInvariants(r, torsion);
-    DG := coker phi;
-    (freeRank, invariantFactors, SNF) := snfInvariants(phi);
-    --
-    G := new CoxGroup from {
-        symbol characterGroup => DG,
-        symbol torusRank => freeRank,
-        symbol torsionInvariants => invariantFactors,
-        symbol smithNormalForm => SNF,
-        symbol phi => phi,
-        symbol cache => new CacheTable
-    };
-    G
-);
-
-
+-*
 -----------------------------------------------------------------------------
 -- WARNING AI CODE TO LOOK AT
 -----------------------------------------------------------------------------
@@ -224,3 +211,4 @@ groupStructureNet DiagonalizableGroup := G -> net groupStructureString G;
 groupStructureExpression = method();
 groupStructureExpression DiagonalizableGroup := G -> expression groupStructureNet G;
 
+*-
