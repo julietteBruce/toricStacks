@@ -81,7 +81,7 @@ export {
     "phi",  --docs, --test
     "characterGroup", --docs, --test
     "diagonalizableGroup",  --docs, --test
-    "isTorus"  --docs, --test
+    "isTorus",  --docs, --test
     "isConnected",  --docs, --test
     "torsionOrder",  --docs, --test
     "exponent",  --docs, --test
@@ -93,8 +93,7 @@ export {
     --Symbols
     "CanonicalizeLight",
     "CanonicalizeFan",
-    "CanonicalizeMap",
-
+    "CanonicalizeMap"
     --
   }
 

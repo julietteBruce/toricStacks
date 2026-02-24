@@ -100,7 +100,7 @@ diagonalizableGroup(Matrix) := opts -> (M) -> (
     --
     (freeRank, invariantFactors, SNF) := snfInvariants(phi);
     --
-    G := new CoxGroup from {
+    G := new DiagonalizableGroup from {
 	symbol characterGroup => DG,
 	symbol torusRank => freeRank,
 	symbol torsionInvariants => invariantFactors,

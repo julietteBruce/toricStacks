@@ -19,7 +19,7 @@ weightedProjectiveStack (List) := opts -> (weights) -> (
     B := id_(ZZ^n);
     Q := matrix apply(weights, w -> {w});
     --
-    toricStack(betaMap, rayList, coneList,
+    toricStack(B,Q, rayList, coneList,
 	CoefficientRing => opts.CoefficientRing,
 	Variable => opts.Variable
 	)

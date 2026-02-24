@@ -37,7 +37,7 @@ isStrict(ToricStack) := Boolean => D -> (
 )
 
 
-
+-*
 ----------------------------------------------------------------------------
 ---- Cartesian Product 
 -----------------------------------------------------------------------------
@@ -67,6 +67,7 @@ ToricStack ^** ZZ := ToricStack => (X, n) ->  (
     if n <= 0 then error "-- expected a positive integer";
     cartesianProduct (n : X)
     )
+*-
 
 ----------------------------------------------------------------------------
 ---- dimension: dim [U/G] = dim U - dim G
