@@ -58,8 +58,6 @@ If you do not provide a beta map, there is a canonical choice: the map that send
 *-
 
 -- this is the canonical stack of a fan
--- The canonical stack only depends on the stack and its torus action, not on the stacky fan.
--- Over any non-strict toric stack, the canonical stack is isomorphic to it over its smooth locus.
 
 ---------------------------------------------------------------------------
 -*
@@ -70,14 +68,6 @@ Output: a Fantastack D.
 
 *-
 -----------------------------------------------------------------------------
-canonicalStack = method(
-    TypicalValue => Fantastack, 
-    Options => {
-        CoefficientRing   => QQ,
-        Variable          => getSymbol "x",
-        NonStrict         => false
-    }   
-)
 canonicalStack(List, List) := Fantastack => opts -> (rayList, coneList) -> fantastack(transpose matrix for ray in rayList list ray // gcd(ray), rayList, coneList, opts)
 canonicalStack(Fan) := Fantastack => opts -> Sigma -> canonicalStack(entries transpose rays Sigma, maxCones Sigma, opts)
 canonicalStack(NormalToricVariety) := Fantastack => opts -> X -> canonicalStack(fan X)
@@ -88,19 +78,6 @@ canonicalStack(Fantastack) := Fantastack => opts -> D -> (
 fantastack(List, List) := Fantastack => opts -> (rayList, coneList) -> canonicalStack(rayList, coneList, opts)
 fantastack(Fan) := Fantastack => opts -> Sigma -> canonicalStack(Sigma, opts)
 
---- TODO: ADD canonicalStack(ToricStack) 
--*canonicalStack(ToricStack) := Fantastack => opts -> D -> (
-
-)*-
-
--- TODO: Implement == of toricStacks using Theorem B.3 
--*
-canonicalStackMorphism = method()
-canonicalStackMorphism(Fantastack) = ToricStackMap => opts -> (D) -> (
-    canonicalD := canonicalStack(D, opts);
-    N := target map canonicalD;
-    toricStackMap(moduliSpace(canonicalD),canonicalD,,map(N,N, 1), opts)
-) *-
 
 
 ---------------------------------------------------------------------------

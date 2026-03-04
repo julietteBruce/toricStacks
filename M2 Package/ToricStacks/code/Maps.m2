@@ -35,6 +35,9 @@ map(ToricStack, ToricStack, List) := ToricStackMap => opts -> (D2, D1, A) -> (
     stackMap
     )
 
+-- this version is (probably) never used by the user
+-- if D1: (Sigma_1, \beta_1) and D2: (Sigma_2, \beta_2) are toric stacks, then A is a list of two matrices {bigPhi, littlePhi} such that littlePhi: N_1 --> N_2 and bigPhi: L_1 --> L_2 commute, and so that the map of fans induced by bigPhi sends cones of Sigma_1 to cones of Sigma_2.
+
 -----------------------------------------------------------------------------
 ---- Contructs from two matrices instead of a list of matrices
 -----------------------------------------------------------------------------
@@ -71,6 +74,47 @@ map(ToricStack, ToricStack, ZZ) := ToricStackMap => opts -> (D2, D1, m) -> (
 ToricStack#id = D -> map(D,D,1)
 
 
+preimageCones = method()
+preimageCones(ToricStackMap, Cone) := List => (f, sigma) -> (
+    (D1, D2) := (source f, target f);
+    bigPhi := (map f)#0;
+    select(maxFacesAsCones(fan D1), tau -> contains(tau,affineImage(bigPhi, tau)))
+)
+--- might need to change this to include non maximal cones!
+
+isInjectiveOnCones = method()
+isInjectiveOnCones(ToricStackMap) := Boolean => f -> (
+    all(apply(maxFacesAsCones(fan target f),
+        tau -> length(preimageCones(f, tau)) == 1))
+)
+--- I'm implementing this because it shows up, e.g. in theorem 6.3 condition (1) for a good moduli morphism.
+
+-* EXAMPLE 6.23
+beta1 = matrix {{1,1},{0,2}};
+rayList1 = {{1,0},{0,1}};
+coneList1 = {{0,1}};
+D1 = toricStack(beta1, rayList1, coneList1);
+
+beta2 = matrix {{1,0},{0,1}};
+rayList2 = {{1,0},{1,2}};
+coneList2 = {{0,1}};
+D2 = toricStack(beta2, rayList2, coneList2);
+
+bigPhi = matrix {{1,1},{0,2}};
+littlePhi = matrix {{1,0},{0,1}};
+f = map(D2, D1, bigPhi, littlePhi)
+
+assert(isInjectiveOnCones f)
+*-
+
+--TODO: Now in position to implement Theorem 6.3.
+
+--isGoodModuliMap = method()
+--isGoodModuliMap(ToricStackMap) := Boolean => f -> (
+
+
+
+--- must check if cok of beta and beta' are finite...
 isIsomorphism(ToricStackMap) := Boolean => f -> (
     phiList := map f;
     (D1, D2) := (source f, target f);

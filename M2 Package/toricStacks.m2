@@ -91,6 +91,9 @@ export {
     --Symbols
     "NonStrict",
     "InputFan",
+    "CanonicalStack",
+    "CanonicalPhi",
+    "InputStack",
     "gkzStacks",
     "inputRays",
     "galeDualMatrix",
@@ -108,8 +111,9 @@ load "ToricStacks/code/Type.m2"
 load "ToricStacks/code/Basics.m2"
 load "ToricStacks/code/ToricExtras.m2"
 load "ToricStacks/code/Constructors.m2"
-load "ToricStacks/code/Fantastacks.m2"
 load "ToricStacks/code/Maps.m2"
+load "ToricStacks/code/CanonicalStacks.m2"
+load "ToricStacks/code/Fantastacks.m2"
 load "ToricStacks/code/SecondaryFans.m2"
 
 --------------------------------------------------------------------
