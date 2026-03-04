@@ -191,3 +191,27 @@ toricStack(Fan) := opts -> (F) -> (
     )
 
 
+-*
+weightedProjectiveStack = method (
+    TypicalValue => ToricStack, 
+    Options => {
+    	CoefficientRing   => QQ,
+    	Variable          => getSymbol "x",
+	NonStrict        => false
+	}
+    )
+
+weightedProjectiveStack (List) := opts -> (W) -> (
+    n := #W;
+    rayList := entries id_(ZZ^n);
+    coneList := apply(n, i->({i}));
+    betaDual := transpose matrix W;
+    betaMap := transpose gens ker transpose W;
+    --betaMap = diagonalMatrix(W_{0..(n-2)})|(transpose matrix {toList(n-1:-W#(-1))})
+    toricStack(betaMap, rayList, coneList,
+	CoefficientRing => opts.CoefficientRing,
+	Variable => opts.Variable,
+	NonStrict => opts.NonStrict
+	)
+    )
+	*- 
