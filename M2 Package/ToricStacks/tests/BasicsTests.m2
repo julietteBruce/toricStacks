@@ -9,12 +9,12 @@ TEST ///
     beta = matrix {{1,0},{0,1}};
     rayList = {{1,0},{0,1}};
     coneList = {{0,1}};
-    X = toricStack(betaMap, rayList, coneList);
+    X = toricStack(beta, rayList, coneList);
     -----
     assert isWellDefined X
-    assert (map X == matrix {{1,0},{0,1}}
-    assert (rays X == {{1,0},{0,1}})
-    assert (max X == {{0,1}}))
+    assert (map X == matrix {{1,0},{0,1}})
+    assert (rays X == {{0,1}, {1,0}})
+    assert (max X == {{0,1}})
     --assert (fan X ==)
     assert (isStrict X == true)
     assert (dim X == 2)
@@ -29,15 +29,15 @@ TEST ///
 --------------------------------------------------------------------
 TEST ///
     beta = matrix {{1,1}};
-    rayList = {{1,0},{0,1};
+    rayList = {{1,0},{0,1}};
     coneList = {{0},{1}};
-    X = toricStack(betaMap, rayList, coneList);
+    X = toricStack(beta, rayList, coneList);
     -----
     assert isWellDefined X
-    assert (map X == matrix {{1,0},{0,1}}
-    assert (rays X == {{1,0},{0,1},{-1,-1}})
-    assert (max X == {{0,1},{1,2},{0,2}})
-    --assert (fan X ==)
+    assert (map X == matrix {{1,1}})
+    assert (rays X == {{0,1}, {1,0}})
+    assert (set max X == set {{0},{1}})
+    --assert (fan X == )
     assert (isStrict X == true)
     assert (dim X == 1)
 ///
@@ -53,7 +53,7 @@ TEST ///
     beta = matrix {{2}};
     rayList = {{1}};
     coneList = {{0}};
-    X = toricStack(betaMap, rayList, coneList);
+    X = toricStack(beta, rayList, coneList);
     -----
     assert isWellDefined X
     assert (map X == matrix {{2}})
@@ -73,15 +73,15 @@ TEST ///
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 TEST ///
-    betaMap = matrix {{1,0},{1,2}};
+    beta = matrix {{1,0},{1,2}};
     rayList = {{1,0},{0,1}};
     coneList = {{0,1}};
     X' = normalToricVariety(rayList,coneList);
-    X = toricStack(betaMap,X');
+    X = toricStack(beta,X');
     -----
     assert isWellDefined X
-    assert (map X == matrix {{1,0},{1,2}}
-    assert (rays X == {{1,0},{0,1}})
+    assert (map X == matrix {{1,0},{1,2}})
+    assert (rays X == {{0,1},{1,0}})
     assert (max X == {{0,1}})
     --assert (fan X ==)
     assert (isStrict X == true)
@@ -96,14 +96,14 @@ TEST ///
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 TEST ///
-    betaMap = matrix {{1,0},{1,2}}
-    C1 = coneFromVData matrix {{1,0},{0,1}}
-    F = fan C1
-    X = toricStack(betaMap, F)
+    beta = matrix {{1,0},{1,2}};
+    C1 = coneFromVData matrix {{1,0},{0,1}};
+    F = fan C1;
+    X = toricStack(beta, F);
     -----
     assert isWellDefined X
-    assert (map X == matrix {{1,0},{1,2}}
-    assert (rays X == {{1,0},{0,1}})
+    assert (map X == matrix {{1,0},{1,2}})
+    assert (rays X == {{0,1},{1,0}})
     assert (max X == {{0,1}})
     --assert (fan X ==)
     assert (isStrict X == true)
@@ -123,9 +123,9 @@ TEST ///
     X = toricStack(rayList, coneList);
     -----
     assert isWellDefined X
-    assert (map X == matrix {{1,0},{0,1}}
-    assert (rays X == {{1,0},{0,1},{-1,-1}})
-    assert (max X == {{0,1},{1,2},{0,2}})
+    assert (map X == matrix {{1,0},{0,1}})
+    assert (rays X == {{-1,-1},{0,1},{1,0}})
+    assert (set max X == set {{0,1},{1,2},{0,2}})
     --assert (fan X ==)
     assert (isStrict X == true)
     assert (dim X == 2)
@@ -140,12 +140,12 @@ TEST ///
 --------------------------------------------------------------------
 TEST ///
     X' = hirzebruch 2;
-    X = toricStack(X')
+    X = toricStack(normalToricVariety(X'));
     -----
     assert isWellDefined X
-    assert (map X == matrix {{1,0},{0,1}}
-    assert (rays X == {{1,0},{0,1},{-1,2},{0,-1}})
-    assert (max X == {{0,1},{1,2},{2,3},{3,0}})
+    assert (map X == matrix {{1,0},{0,1}})
+    assert (rays X == {{-1,2},{0,-1},{0,1},{1,0}})
+    assert ( max X == {{0,1},{0,2},{1,3},{2,3}})
     --assert (fan X ==)
     assert (isStrict X == true)
     assert( dim X == dim X')
@@ -158,15 +158,14 @@ TEST ///
 ----- STRICT
 --------------------------------------------------------------------
 --------------------------------------------------------------------
-TEST ///
+TEST /// --- SOMETHING WRONG HERE
     X' = hirzebruch 2;
-    F = fan X';
-    X = toricStack(F)
+    X = toricStack(F);
     -----
     assert isWellDefined X
-    assert (map X == matrix {{1,0},{0,1}}
-    assert (rays X == {{1,0},{0,1},{-1,2},{0,-1}})
-    assert (max X == {{0,1},{1,2},{2,3},{3,0}})
+    assert (map X == matrix {{1,0},{0,1}})
+    assert ( rays X ==  {{-1,2},{0,-1},{0,1},{1,0}})
+    assert ( max X == {{0,1},{1,2},{2,3},{3,0}})
     --assert (fan X ==)
     assert (isStrict X == true)
     assert (dim X == dim X')
@@ -184,7 +183,7 @@ TEST ///
     X = weightedProjectiveStack(1,1,1,3);
     -----
     assert isWellDefined X
-    assert (map X == matrix {{1,0},{0,1}}
+    assert (map X == matrix {{1,0},{0,1}})
     assert (rays X == {{1,0},{0,1},{-1,2},{0,-1}})
     assert (max X == {{0,1},{1,2},{2,3},{3,0}})
     --assert (fan X ==)
@@ -203,7 +202,7 @@ TEST ///
     X = weightedProjectiveStack(2,2,2,6);
     -----
     assert isWellDefined X
-    assert (map X == matrix {{1,0},{0,1}}
+    assert (map X == matrix {{1,0},{0,1}})
     assert (rays X == {{1,0},{0,1},{-1,2},{0,-1}})
     assert (max X == {{0,1},{1,2},{2,3},{3,0}})
     --assert (fan X ==)
