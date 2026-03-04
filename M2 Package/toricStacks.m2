@@ -38,7 +38,7 @@
 
 
 
-newPackage("ToricStacks",
+newPackage("ToricStacksNew",
     Version => "0.0",
     Date => "19 August 2025",
     Headline => "Working with toric stacks and related objects",
@@ -67,37 +67,33 @@ export {
     --Types
     "Stack", --docs, --test
     "ToricStack", --docs, --test
-    "ToricStackMap", --docs, --test
-    "Fantastack", --docs, --test
-    "SecondaryFan", --docs, --test
+    "DiagonalizableGroup",  --docs, --test
     -----------------------------------------
     --Methods
-    "toricStack", --docs, --test
-    "toricStackMap", --docs, --test
-    "isStrict", --docs, --test
+    "primitiveRay", --docs
+    "canonicalizeFan", --docs
+    "fanData", --docs
+    "canonicalizeMapData", --docs
+    "mapData", --docs
+    "toricStack",
+    "torusRank",  --docs, --test
+    "torsionInvariants",  --docs, --test
+    "phi",  --docs, --test
+    "characterGroup", --docs, --test
+    "diagonalizableGroup",  --docs, --test
+    "isTorus",  --docs, --test
+    "isConnected",  --docs, --test
+    "torsionOrder",  --docs, --test
+    "exponent",  --docs, --test
+    "areIsomorphic",  --docs, --test
     "weightedProjectiveStack", --docs, --test
-    --"isIsomorphism", --docs, --test
-    "rankSource", --docs, --test
-    "rankTarget", --docs, --test
-    "fanGensFromGeneralizedFan", --docs, --test
-    "toricVarietyGeneralizedFan", --docs, --test
-    "secondaryFan", --docs, --test
-    "gkzGeneralizedFan", --docs, --test
-    "tildeL", --docs, --test
-    "bettaGamma", --docs, --test
-    "gkzStack", --docs, --test
-    -----------------------------------------
+    "isStrict", --docs, --test
+    "coxGroup", --docs, --test
     --Functions
     --Symbols
-    "NonStrict",
-    "InputFan",
-    "CanonicalStack",
-    "CanonicalPhi",
-    "InputStack",
-    "gkzStacks",
-    "inputRays",
-    "galeDualMatrix",
-    "gkzGenFans"
+    "CanonicalizeLight",
+    "CanonicalizeFan",
+    "CanonicalizeMap"
     --
   }
 
@@ -106,36 +102,33 @@ export {
 ----- CODE
 --------------------------------------------------------------------
 --------------------------------------------------------------------
+load "ToricStacksNew/code/Type.m2"
+load "ToricStacksNew/code/ConstructorHelpers.m2"
+load "ToricStacksNew/code/ConstructorMain.m2"
+load "ToricStacksNew/code/ConstructorAux.m2"
+load "ToricStacksNew/code/DiagGroups.m2"
+load "ToricStacksNew/code/Basics.m2"
 
-load "ToricStacks/code/Type.m2"
-load "ToricStacks/code/Basics.m2"
-load "ToricStacks/code/ToricExtras.m2"
-load "ToricStacks/code/Constructors.m2"
-load "ToricStacks/code/Maps.m2"
-load "ToricStacks/code/CanonicalStacks.m2"
-load "ToricStacks/code/Fantastacks.m2"
-load "ToricStacks/code/SecondaryFans.m2"
+
 
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 ----- TESTS
 --------------------------------------------------------------------
 --------------------------------------------------------------------
-load "ToricStacks/tests/TypeTests.m2"
-load "ToricStacks/tests/BasicsTests.m2"
-load "ToricStacks/tests/ConstructorsTests.m2"
-load "ToricStacks/tests/MapsTests.m2"
-
+load "ToricStacksNew/tests/Basics.m2"
+load "ToricStacksNew/tests/ConstructorHelpers.m2"
+load "ToricStacksNew/tests/ConstructorMain.m2"
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 ----- DOCUMENTATION
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 beginDocumentation ()    
-load "ToricStacks/docs/TypeDoc.m2"
-load "ToricStacks/docs/BasicsDoc.m2"
-load "ToricStacks/docs/ConstructorsDoc.m2"
-load "ToricStacks/docs/MapsDoc.m2"
+--load "ToricStacks/docs/TypeDoc.m2"
+--load "ToricStacks/docs/BasicsDoc.m2"
+--load "ToricStacks/docs/ConstructorsDoc.m2"
+--load "ToricStacks/docs/MapsDoc.m2"
 
 --------------
 end
@@ -150,8 +143,8 @@ end
 ---
 ---
 restart
-uninstallPackage "ToricStacks"
+uninstallPackage "ToricStacksNew"
 restart
-debug needsPackage "ToricStacks"
-check "ToricStacks"
-installPackage "ToricStacks"
+debug needsPackage "ToricStacksNew"
+check "ToricStacksNew"
+installPackage "ToricStacksNew"
