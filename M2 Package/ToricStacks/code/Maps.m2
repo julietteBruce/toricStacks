@@ -74,6 +74,41 @@ map(ToricStack, ToricStack, ZZ) := ToricStackMap => opts -> (D2, D1, m) -> (
 ToricStack#id = D -> map(D,D,1)
 
 
+preimageCones = method()
+preimageCones(ToricStackMap, Cone) := List => (f, sigma) -> (
+    (D1, D2) := (source f, target f);
+    bigPhi := (map f)#0;
+    select(maxFacesAsCones(fan D1), tau -> contains(tau,affineImage(bigPhi, tau)))
+)
+--- might need to change this to include non maximal cones!
+
+isInjectiveOnCones = method()
+isInjectiveOnCones(ToricStackMap) := Boolean => f -> (
+    all(apply(maxFacesAsCones(fan target f),
+        tau -> length(preimageCones(f, tau)) == 1))
+)
+--- I'm implementing this because it shows up, e.g. in theorem 6.3 condition (1) for a good moduli morphism.
+
+-* EXAMPLE 6.23
+beta1 = matrix {{1,1},{0,2}};
+rayList1 = {{1,0},{0,1}};
+coneList1 = {{0,1}};
+D1 = toricStack(beta1, rayList1, coneList1);
+
+beta2 = matrix {{1,0},{0,1}};
+rayList2 = {{1,0},{1,2}};
+coneList2 = {{0,1}};
+D2 = toricStack(beta2, rayList2, coneList2);
+
+bigPhi = matrix {{1,1},{0,2}};
+littlePhi = matrix {{1,0},{0,1}};
+f = map(D2, D1, bigPhi, littlePhi)
+
+assert(isInjectiveOnCones f)
+*-
+
+
+--- must check if cok of beta and beta' are finite...
 isIsomorphism(ToricStackMap) := Boolean => f -> (
     phiList := map f;
     (D1, D2) := (source f, target f);
