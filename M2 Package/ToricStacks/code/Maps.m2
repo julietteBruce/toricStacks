@@ -107,6 +107,12 @@ f = map(D2, D1, bigPhi, littlePhi)
 assert(isInjectiveOnCones f)
 *-
 
+--TODO: Now in position to implement Theorem 6.3.
+
+--isGoodModuliMap = method()
+--isGoodModuliMap(ToricStackMap) := Boolean => f -> (
+
+
 
 --- must check if cok of beta and beta' are finite...
 isIsomorphism(ToricStackMap) := Boolean => f -> (
