@@ -9,7 +9,7 @@ coxGroup(Matrix, Matrix) := opts -> (B, Q) -> (
     phi := transpose (B|Q);
     --
     diagonalizableGroup(phi)
-    )-
+    )
 
 coxGroup(Matrix) := opts -> (B) -> (
     if not (ring B === ZZ) then error "Expected a ZZ-linear map or matrix";
@@ -30,7 +30,7 @@ coxGroup(Matrix) := opts -> (B) -> (
 coxGroup(ToricStack) := opts -> (D) -> (
     if D.cache#?CoxGroup then return D.cache#CoxGroup; 
     result := coxGroup(D.map,D.presentation);
-    D.cache#Strict = result;
+    D.cache#CoxGroup = result;
     --
     result
     )

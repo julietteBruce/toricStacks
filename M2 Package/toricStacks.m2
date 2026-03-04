@@ -93,7 +93,8 @@ export {
     --Symbols
     "CanonicalizeLight",
     "CanonicalizeFan",
-    "CanonicalizeMap"
+    "CanonicalizeMap",
+    "CoxGroup"
     --
   }
 
@@ -107,6 +108,7 @@ load "ToricStacks/code/ConstructorHelpers.m2"
 load "ToricStacks/code/ConstructorMain.m2"
 load "ToricStacks/code/ConstructorAux.m2"
 load "ToricStacks/code/DiagGroups.m2"
+load "ToricStacks/code/CoxGroups.m2"
 load "ToricStacks/code/Basics.m2"
 
 
