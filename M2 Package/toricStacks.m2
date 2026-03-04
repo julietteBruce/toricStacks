@@ -126,7 +126,7 @@ load "ToricStacks/tests/ConstructorMain.m2"
 --------------------------------------------------------------------
 beginDocumentation ()    
 --load "ToricStacks/docs/TypeDoc.m2"
---load "ToricStacks/docs/BasicsDoc.m2"
+load "ToricStacks/docs/BasicsDoc.m2"
 --load "ToricStacks/docs/ConstructorsDoc.m2"
 --load "ToricStacks/docs/MapsDoc.m2"
 
