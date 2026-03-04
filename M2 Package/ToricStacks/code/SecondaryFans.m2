@@ -76,7 +76,7 @@ secondaryFan(Matrix) := SecondaryFan => opts -> (rayInputMatrix) -> (
     -- compute the secondary fan via ccr
     F := new SecondaryFan from ccRefinement(galeRayMatrix);
     F#(symbol inputRays) = rayInputMatrix;
-    F.cache.galeDualMatrix = galeRayMatrix;
+     F.cache.galeDualMatrix = galeRayMatrix;
     if opts.gkzGenFans == true or opts.gkzStacks == true then (
 	n := numcols rayInputMatrix;
 	-- a splitting of the galeMatrix for our inputRays,
