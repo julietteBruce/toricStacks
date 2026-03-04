@@ -38,7 +38,7 @@
 
 
 
-newPackage("ToricStacksNew",
+newPackage("ToricStacks",
     Version => "0.0",
     Date => "19 August 2025",
     Headline => "Working with toric stacks and related objects",
@@ -102,12 +102,12 @@ export {
 ----- CODE
 --------------------------------------------------------------------
 --------------------------------------------------------------------
-load "ToricStacksNew/code/Type.m2"
-load "ToricStacksNew/code/ConstructorHelpers.m2"
-load "ToricStacksNew/code/ConstructorMain.m2"
-load "ToricStacksNew/code/ConstructorAux.m2"
-load "ToricStacksNew/code/DiagGroups.m2"
-load "ToricStacksNew/code/Basics.m2"
+load "ToricStacks/code/Type.m2"
+load "ToricStacks/code/ConstructorHelpers.m2"
+load "ToricStacks/code/ConstructorMain.m2"
+load "ToricStacks/code/ConstructorAux.m2"
+load "ToricStacks/code/DiagGroups.m2"
+load "ToricStacks/code/Basics.m2"
 
 
 
@@ -116,9 +116,9 @@ load "ToricStacksNew/code/Basics.m2"
 ----- TESTS
 --------------------------------------------------------------------
 --------------------------------------------------------------------
-load "ToricStacksNew/tests/Basics.m2"
-load "ToricStacksNew/tests/ConstructorHelpers.m2"
-load "ToricStacksNew/tests/ConstructorMain.m2"
+load "ToricStacks/tests/Basics.m2"
+load "ToricStacks/tests/ConstructorHelpers.m2"
+load "ToricStacks/tests/ConstructorMain.m2"
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 ----- DOCUMENTATION
@@ -143,8 +143,8 @@ end
 ---
 ---
 restart
-uninstallPackage "ToricStacksNew"
+uninstallPackage "ToricStacks"
 restart
-debug needsPackage "ToricStacksNew"
-check "ToricStacksNew"
-installPackage "ToricStacksNew"
+debug needsPackage "ToricStacks"
+check "ToricStacks"
+installPackage "ToricStacks"

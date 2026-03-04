@@ -38,7 +38,7 @@
 
 
 
-newPackage("ToricStacks",
+newPackage("ToricStacksOld",
     Version => "0.0",
     Date => "19 August 2025",
     Headline => "Working with toric stacks and related objects",
@@ -107,24 +107,24 @@ export {
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 
-load "ToricStacks/code/Type.m2"
-load "ToricStacks/code/Basics.m2"
-load "ToricStacks/code/ToricExtras.m2"
-load "ToricStacks/code/Constructors.m2"
-load "ToricStacks/code/Maps.m2"
-load "ToricStacks/code/CanonicalStacks.m2"
-load "ToricStacks/code/Fantastacks.m2"
-load "ToricStacks/code/SecondaryFans.m2"
+load "ToricStacksOld/code/Type.m2"
+load "ToricStacksOld/code/Basics.m2"
+load "ToricStacksOld/code/ToricExtras.m2"
+load "ToricStacksOld/code/Constructors.m2"
+load "ToricStacksOld/code/Maps.m2"
+load "ToricStacksOld/code/CanonicalStacks.m2"
+load "ToricStacksOld/code/Fantastacks.m2"
+load "ToricStacksOld/code/SecondaryFans.m2"
 
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 ----- TESTS
 --------------------------------------------------------------------
 --------------------------------------------------------------------
-load "ToricStacks/tests/TypeTests.m2"
-load "ToricStacks/tests/BasicsTests.m2"
-load "ToricStacks/tests/ConstructorsTests.m2"
-load "ToricStacks/tests/MapsTests.m2"
+load "ToricStacksOld/tests/TypeTests.m2"
+load "ToricStacksOld/tests/BasicsTests.m2"
+load "ToricStacksOld/tests/ConstructorsTests.m2"
+load "ToricStacksOld/tests/MapsTests.m2"
 
 --------------------------------------------------------------------
 --------------------------------------------------------------------
@@ -132,10 +132,10 @@ load "ToricStacks/tests/MapsTests.m2"
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 beginDocumentation ()    
-load "ToricStacks/docs/TypeDoc.m2"
-load "ToricStacks/docs/BasicsDoc.m2"
-load "ToricStacks/docs/ConstructorsDoc.m2"
-load "ToricStacks/docs/MapsDoc.m2"
+load "ToricStacksOld/docs/TypeDoc.m2"
+load "ToricStacksOld/docs/BasicsDoc.m2"
+load "ToricStacksOld/docs/ConstructorsDoc.m2"
+load "ToricStacksOld/docs/MapsDoc.m2"
 
 --------------
 end
