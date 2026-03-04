@@ -116,9 +116,9 @@ load "ToricStacks/code/Basics.m2"
 ----- TESTS
 --------------------------------------------------------------------
 --------------------------------------------------------------------
-load "ToricStacks/tests/Basics.m2"
-load "ToricStacks/tests/ConstructorHelpers.m2"
-load "ToricStacks/tests/ConstructorMain.m2"
+load "ToricStacks/tests/BasicsTests.m2"
+load "ToricStacks/tests/ConstructorHelpersTests.m2"
+load "ToricStacks/tests/ConstructorMainTests.m2"
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 ----- DOCUMENTATION
