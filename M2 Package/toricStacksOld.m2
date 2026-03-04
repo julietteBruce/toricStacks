@@ -108,7 +108,6 @@ export {
 --------------------------------------------------------------------
 
 load "ToricStacksOld/code/Type.m2"
-load "ToricStacksOld/code/Basics.m2"
 load "ToricStacksOld/code/ToricExtras.m2"
 load "ToricStacksOld/code/Constructors.m2"
 load "ToricStacksOld/code/Maps.m2"

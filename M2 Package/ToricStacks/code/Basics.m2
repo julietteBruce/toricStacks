@@ -36,7 +36,25 @@ isStrict(ToricStack) := Boolean => D -> (
    result
 )
 
+----------------------------------------------------------------------------
+---- Some extra tools to work with Toric Varieties
+-----------------------------------------------------------------------------
 
+--- This lists all the maximal cones of Sigma, but as cones instead of lists of indices. Somehow this is not a current method of Fan.
+maxFacesAsCones = method()
+maxFacesAsCones(Fan) := List => (Sigma) -> (
+    V := entries transpose rays Sigma;
+    (for maxCone in maxCones(Sigma) list (V_maxCone)) / transpose / matrix / coneFromVData
+)
+
+--- This checks if a map phi: Sigma1 --> Sigma2 sends cones to cones. This is a necessary condition for phi to be a morphism of toric varieties.
+mapsConestoCones = method()
+mapsConestoCones(Fan, Fan, Matrix) := Boolean => (Sigma2, Sigma1, phi) -> (
+    all(apply(maxFacesAsCones(Sigma1), sigma -> (
+        imagePhi := affineImage(phi, sigma);
+        any(apply(maxFacesAsCones(Sigma2), tau -> contains(tau, imagePhi)), bool -> bool)
+            )), bool -> bool)
+    )
 
 ----------------------------------------------------------------------------
 ---- Saturation and Direct Complement

@@ -6,9 +6,6 @@ doc ///
    Description
     Text
      We present things for toric stacks following . 
-
-
-
 ///
 
 -*
