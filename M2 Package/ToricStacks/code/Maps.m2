@@ -184,6 +184,23 @@ ToricStackMap * ToricStackMap := ToricStackMap => (f1, f2) -> (
     map(D2,D2,A)
     )
 
+-----------------------------------------------------------------------------
+---- Returns the induced map on the stacky "abelian group"
+-----------------------------------------------------------------------------
+stackyAbelianGroupMap= method()
+stackyAbelianGroupMap(ToricStackMap) := Matrix => f -> (
+    (D1, D2) := (source f, target f);
+    littlePhi := (map f)#1;
+    inducedMap(coker(D2.presentation), coker(D1.presentation), littlePhi)
+)
+
+-----------------------------------------------------------------------------
+---- Returns the map on the fan lattices
+-----------------------------------------------------------------------------
+fanLatticeMap= method()
+fanLatticeMap(ToricStackMap) := Matrix => f -> (
+    (map f)#0
+)
 
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
