@@ -119,7 +119,13 @@ isWellDefined(ToricStackMap) := Boolean => f -> (
             << "-- expected target of littlePhi be target presentation of the target stack" << endl;
         return false
         );
-    ---- NEEED TO ADD DESCENT CONDITIONS
+    --- checks if littlePhi is compatible with Q1 and Q2 to descend to a map of L1 and L2
+    if not inducesWellDefinedMap(coker(D2.presentation), coker(D1.presentation), littlePhi) then (
+	if debugLevel > 0 then
+	    << "-- expected littlePhi to descend to a map coker(Q1) ---> coker(Q2)." << endl;
+	    return false
+	);
+    --- checks that maps commute after passing to L1 and L2 FINISH
     if (D2.map)*(bigPhi) != (littlePhi)*(D1.map) then (
         if debugLevel > 0 then 
             << "-- expected maps to commute" << endl;
