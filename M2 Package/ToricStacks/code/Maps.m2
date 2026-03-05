@@ -125,8 +125,12 @@ isWellDefined(ToricStackMap) := Boolean => f -> (
 	    << "-- expected littlePhi to descend to a map coker(Q1) ---> coker(Q2)." << endl;
 	    return false
 	);
-    --- checks that maps commute after passing to L1 and L2 FINISH
-    if (D2.map)*(bigPhi) != (littlePhi)*(D1.map) then (
+    --- checks that maps commute on L1 and L2
+    --- note since littlePhi descends we only need
+    --- beta2*bigPhi == (littePhi * beta1) mod Q2
+    lhs := (D2.map)*(bigPhi);
+    rhs := inducedMap(coker(D2.presentation), source(D1.map), (littlePhi)*(D1.map));
+    if lhs != rhs then (
         if debugLevel > 0 then 
             << "-- expected maps to commute" << endl;
         return false
