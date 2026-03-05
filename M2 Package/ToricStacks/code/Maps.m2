@@ -202,6 +202,8 @@ isInjectiveOnCones(ToricStackMap) := Boolean => f -> (
 )
 --- I'm implementing this because it shows up, e.g. in theorem 6.3 condition (1) for a good moduli morphism.
 
+
+
 -* EXAMPLE 6.23
 beta1 = matrix {{1,1},{0,2}};
 rayList1 = {{1,0},{0,1}};
@@ -225,7 +227,7 @@ assert(isInjectiveOnCones f)
 --isGoodModuliMap = method()
 --isGoodModuliMap(ToricStackMap) := Boolean => f -> (
 
-
+-*
 
 --- must check if cok of beta and beta' are finite...
 isIsomorphism(ToricStackMap) := Boolean => f -> (
