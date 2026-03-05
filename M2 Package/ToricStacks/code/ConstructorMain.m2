@@ -191,7 +191,7 @@ toricStack(Fan) := opts -> (F) -> (
     )
 
 
--*
+-* THIS IS OLD AND BROKE. RIGHT VERSION IS IN CONSTRUCTORAUX
 weightedProjectiveStack = method (
     TypicalValue => ToricStack, 
     Options => {
