@@ -123,37 +123,40 @@ dim(ToricStack) := D -> (
     dimD
     )
 
--*
+
 ----------------------------------------------------------------------------
 ---- Cartesian Product 
 -----------------------------------------------------------------------------
-cartesianProduct NormalToricVariety := X -> NormalToricVariety.cartesianProduct (1 : X)
-NormalToricVariety.cartesianProduct = args -> (
-    rayList := entries transpose directSum apply(args, X -> transpose matrix rays X);
-    betaSum := directSum apply(args, X -> map X);
-    m := # rays args#0;
-    coneList := max args#0;
+
+cartesianProduct ToricStack := X -> ToricStack.cartesianProduct (1 : X)
+
+ToricStack.cartesianProduct = args -> (
+    rayList := entries transpose directSum apply(args, X -> transpose matrix(X.rays));
+    betaSum := directSum apply(args, X -> X.map);
+    presentationSum := directSum apply(args, X -> X.presentation);
+    --
+    m := #((args#0).rays);
+    coneList := (args#0).max;
+    --
     for i from 1 to #args - 1 do (
-	X := args#i;
-	cones := apply (max X, sigma -> apply (sigma, j -> j + m));
-	m = m + #rays X;
-	coneList = flatten table(coneList, cones, (sigma, tau) -> sigma | tau);
-	);
-    normalToricVariety (rayList, coneList, betaSum,
-	CoefficientRing => coefficientRing ring args#0,
-	--Variable => opts.Variable,
-	NonStrict => any(args, X -> (isStrict X)==false)
-	)
+        X := args#i;
+        cones := apply(X.max, sigma -> apply(sigma, j -> j + m));
+        m = m + #(X.rays);
+        coneList = flatten table(coneList, cones, (sigma, tau) -> sigma | tau);
+    );
+    --
+    toricStack(betaSum, presentationSum, rayList, coneList)
     )
 
 ToricStack ** ToricStack := ToricStack => (X,Y) -> (
-    cartesianProduct (X,Y))
+    cartesianProduct (X,Y)
+    )
 
-ToricStack ^** ZZ := ToricStack => (X, n) ->  (
+ToricStack ^** ZZ := ToricStack => (X, n) -> (
     if n <= 0 then error "-- expected a positive integer";
     cartesianProduct (n : X)
     )
-*-
+
 
 -* Do we still need this? This was a clever way to find the coker map quickly....
 cokerMap := (A) -> (
