@@ -207,5 +207,5 @@ TEST ///
     assert (max X == {{0,1},{1,2},{2,3},{3,0}})
     --assert (fan X ==)
     assert (isStrict X == true)
-    assert (dim X == 3) s
+    assert (dim X == 3)
 ///
