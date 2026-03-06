@@ -37,7 +37,7 @@ map(ToricStack, ToricStack, List) := ToricStackMap => opts -> (D2, D1, A) -> (
 -----------------------------------------------------------------------------
 map(ToricStack, ToricStack, Matrix, Matrix) := ToricStackMap => opts -> (D2, D1, bigPhi, littlePhi) -> (
     A := {bigPhi, littlePhi};
-    map(D2, D1, A)
+    map(D2, D1, A, opts)
     )
 
 -----------------------------------------------------------------------------
@@ -45,22 +45,18 @@ map(ToricStack, ToricStack, Matrix, Matrix) := ToricStackMap => opts -> (D2, D1,
 ---- If m != 0 the source and target lattices must be the same.
 -----------------------------------------------------------------------------
 map(ToricStack, ToricStack, ZZ) := ToricStackMap => opts -> (D2, D1, m) -> (
-    rankSource := {rank source D1.map, rank target D2.map};
-    rankTarget := {rank source D2.map, rank target D2.map};
-    if m == 0 then (
-	littlePhi := map(ZZ^(rankTarget#0), ZZ^(rankSource#0), 0);
-	bigPhi := map(ZZ^(rankTarget#1), ZZ^(rankSource#1), 0);
-	A := {bigPhi, littlePhi};
-	return map(D2, D1, A)
+    bigPhi := map(source (D2.map), source (D1.map), 0);
+    littlePhi := map(target (D2.map), target (D1.map),  0);
+    if not inducesWellDefinedMap(coker(D2.presentation), coker(D1.presentation), littlePhi) then (
+	error "Multuplication by m does not descend to a well-defined map";
 	)
-    else if rankSource == rankTarget then (
-	littlePhi = map(ZZ^(rankTarget#0), ZZ^(rankSource#0), m);
-	bigPhi = map(ZZ^(rankTarget#1), ZZ^(rankSource#1), m);
-	A = {bigPhi, littlePhi};
-	return map(D2, D1, A)
+    lhs := (D2.map)*(bigPhi);
+    rhs := inducedMap(coker(D2.presentation), source(D1.map), (littlePhi)*(D1.map));
+    if lhs != rhs then (
+	error "Multiplication by m does not commute to give a map of toric stacks.";
 	)
-    else error "source and target must have same rank or m=0"
-	)
+    map(D2,D1,{bigPhi,littlePhi}, opts)
+    )
 
 -----------------------------------------------------------------------------
 ---- isWellDefined for ToricStackMap
