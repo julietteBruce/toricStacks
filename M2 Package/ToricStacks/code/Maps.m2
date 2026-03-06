@@ -198,6 +198,41 @@ fanLatticeMap(ToricStackMap) := Matrix => f -> (
     (map f)#0
 )
 
+
+-----------------------------------------------------------------------------
+---- diagonalMap for toric stacks
+-----------------------------------------------------------------------------
+diagonalMap (ToricStack, ZZ, Array) := ToricStackMap => (D, m, A) -> (
+    --- checks
+    if m <= 0 then error "Expected a positive integer.";
+    if #A == 0 then error "Expected the array to be non-empty";
+    if not all(A, i -> member(i, toList(0 .. m-1))) then (
+	error "Expected the array to be index the factors.";
+	);
+    ---
+    Dm := D ^** m;
+    ---
+    bigId := id_(source D.map);
+    littleId := id_(target D.map);
+
+    bigPhi := transpose matrix {
+        apply(m, i -> if member(i, A) then bigId else 0 * bigId)
+        };
+
+    littlePhi := transpose matrix {
+        apply(m, i -> if member(i, A) then littleId else 0 * littleId)
+        };
+
+    map(Dm, D, bigPhi, littlePhi)
+    )
+
+diagonalMap (ToricStack, ZZ) := ToricStackMap => (D, m) -> (
+    if m <= 0 then error "Expected a positive integer.";
+    A := new Array from (0 .. m-1);
+    diagonalMap(D, m, A)
+    )
+
+diagonalMap ToricStack := ToricStackMap => D -> diagonalMap(D, 2)
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 ----------------------------- ISOMOSPHISMS --------------------------------------
