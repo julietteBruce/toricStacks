@@ -244,23 +244,25 @@ assert(isInjectiveOnCones f)
 --isGoodModuliMap = method()
 --isGoodModuliMap(ToricStackMap) := Boolean => f -> (
 
--*
+
 
 --- must check if cok of beta and beta' are finite...
 isIsomorphism(ToricStackMap) := Boolean => f -> (
     phiList := map f;
     (D1, D2) := (source f, target f);
     (bigPhi, littlePhi) := (phiList#0, phiList#1);
-
+    ---
+    beta1 = (map D1)|(presentation D2)
+    beta2 = (map D2)|(presentation D2)
     --- This uses Theorem B.3 in Geraschencko and Satriano
-    if rank((coker D1.map) ** QQ) == 0 and rank((coker D2.map) ** QQ) == 0 then (
-        condition1 := (rank littlePhi == numcols littlePhi);
+    if rank((coker beta1) ** QQ) == 0 and rank((coker beta2) ** QQ) == 0 then (
+	condition1 := isIsomorphism(stackyAbelianGroupMap(f));
         condition2 := (
-            apply(maxFacesAsCones(fan D2),
+            apply(maxFacesAsCones(D2.max),
                 tau -> class(affinePreimage(bigPhi, tau)) === Cone
             ));
         -- is this right?? I'm a little confused about the condition 2 for Theorem B.3
-        condition3 := apply(maxFacesAsCones(fan D2),
+        condition3 := apply(maxFacesAsCones(D2.max),
                 tau -> (   
                     getHilbRays affinePreimage(bigPhi, tau) == getHilbRays tau
                 ));
