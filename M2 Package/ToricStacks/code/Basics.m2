@@ -127,6 +127,7 @@ dim(ToricStack) := D -> (
 ----------------------------------------------------------------------------
 ---- Cartesian Product 
 -----------------------------------------------------------------------------
+components ToricStack := List => X -> if X.cache.?components then X.cache.components else {X}
 
 cartesianProduct ToricStack := X -> ToricStack.cartesianProduct (1 : X)
 
