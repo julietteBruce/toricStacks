@@ -16,6 +16,14 @@ presentation ToricStack := Matrix =>  D -> D.presentation
 
 
 ----------------------------------------------------------------------------
+---- Returns the fan of a toric stack.
+-----------------------------------------------------------------------------
+fan ToricStack := Fan => D -> (
+    rayMat := (transpose matrix D.rays)**QQ;
+    fan(rayMatrix, D.max)
+    )
+
+----------------------------------------------------------------------------
 ---- Tests whether a toric stack is strict.
 -----------------------------------------------------------------------------
 isStrict = method()
@@ -35,6 +43,55 @@ isStrict(ToricStack) := Boolean => D -> (
     --
    result
 )
+
+
+----------------------------------------------------------------------------
+---- dimension: dim [U/G] = dim U - dim G
+-----------------------------------------------------------------------------
+dim(ToricStack) := D -> (
+    if D.cache#?dim then return D.cache#dim;
+    dimU := #((D.rays)#0);
+    dimG := dim coxGroup(D);
+    dimD := dimU - dimG;
+    D.cache#dim = dimD;
+    dimD
+    )
+
+
+----------------------------------------------------------------------------
+---- Cartesian Product 
+-----------------------------------------------------------------------------
+components ToricStack := List => D -> if D.cache.?components then D.cache.components else {D}
+
+cartesianProduct ToricStack := D -> ToricStack.cartesianProduct (1 : D)
+
+ToricStack.cartesianProduct = args -> (
+    rayList := entries transpose directSum apply(args, D -> transpose matrix(D.rays));
+    betaSum := directSum apply(args, D -> D.map);
+    presentationSum := directSum apply(args, D -> D.presentation);
+    --
+    m := #((args#0).rays);
+    coneList := (args#0).max;
+    --
+    for i from 1 to #args - 1 do (
+        X := args#i;
+        cones := apply(X.max, sigma -> apply(sigma, j -> j + m));
+        m = m + #(X.rays);
+        coneList = flatten table(coneList, cones, (sigma, tau) -> sigma | tau);
+    );
+    --
+    toricStack(betaSum, presentationSum, rayList, coneList)
+    )
+
+ToricStack ** ToricStack := ToricStack => (D1,D2) -> (
+    cartesianProduct (D1,D2)
+    )
+
+ToricStack ^** ZZ := ToricStack => (D, n) -> (
+    if n <= 0 then error "-- expected a positive integer";
+    cartesianProduct (n : D)
+    )
+
 
 ----------------------------------------------------------------------------
 ---- Some extra tools to work with Toric Varieties
@@ -110,55 +167,6 @@ unstableCones(ToricStack) := List => D -> (
     (beta, Sigma) := (map D, fan D);
     select(maxFacesAsCones Sigma, tau -> isUnstable(D, tau))
 )
-
-----------------------------------------------------------------------------
----- dimension: dim [U/G] = dim U - dim G
------------------------------------------------------------------------------
-dim(ToricStack) := D -> (
-    if D.cache#?dim then return D.cache#dim;
-    dimU := #((D.rays)#0);
-    dimG := dim coxGroup(D);
-    dimD := dimU - dimG;
-    D.cache#dim = dimD;
-    dimD
-    )
-
-
-----------------------------------------------------------------------------
----- Cartesian Product 
------------------------------------------------------------------------------
-components ToricStack := List => X -> if X.cache.?components then X.cache.components else {X}
-
-cartesianProduct ToricStack := X -> ToricStack.cartesianProduct (1 : X)
-
-ToricStack.cartesianProduct = args -> (
-    rayList := entries transpose directSum apply(args, X -> transpose matrix(X.rays));
-    betaSum := directSum apply(args, X -> X.map);
-    presentationSum := directSum apply(args, X -> X.presentation);
-    --
-    m := #((args#0).rays);
-    coneList := (args#0).max;
-    --
-    for i from 1 to #args - 1 do (
-        X := args#i;
-        cones := apply(X.max, sigma -> apply(sigma, j -> j + m));
-        m = m + #(X.rays);
-        coneList = flatten table(coneList, cones, (sigma, tau) -> sigma | tau);
-    );
-    --
-    toricStack(betaSum, presentationSum, rayList, coneList)
-    )
-
-ToricStack ** ToricStack := ToricStack => (X,Y) -> (
-    cartesianProduct (X,Y)
-    )
-
-ToricStack ^** ZZ := ToricStack => (X, n) -> (
-    if n <= 0 then error "-- expected a positive integer";
-    cartesianProduct (n : X)
-    )
-
-
 -* Do we still need this? This was a clever way to find the coker map quickly....
 cokerMap := (A) -> (
     (prune coker A).cache.pruningMap
