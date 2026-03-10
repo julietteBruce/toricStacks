@@ -20,7 +20,7 @@ presentation ToricStack := Matrix =>  D -> D.presentation
 -----------------------------------------------------------------------------
 fan ToricStack := Fan => D -> (
     rayMat := (transpose matrix D.rays)**QQ;
-    fan(rayMatrix, D.max)
+    fan(rayMat, D.max)
     )
 
 ----------------------------------------------------------------------------
