@@ -38,12 +38,12 @@ map(ToricStack, ToricStack, ZZ) := ToricStackMap => opts -> (D2, D1, m) -> (
     littlePhi := map(target (D2.map), target (D1.map),  0);
     if not inducesWellDefinedMap(coker(D2.presentation), coker(D1.presentation), littlePhi) then (
 	error "Multuplication by m does not descend to a well-defined map";
-	)
+	);
     lhs := (D2.map)*(bigPhi);
     rhs := inducedMap(coker(D2.presentation), source(D1.map), (littlePhi)*(D1.map));
     if lhs != rhs then (
 	error "Multiplication by m does not commute to give a map of toric stacks.";
-	)
+	);
     map(D2,D1,{bigPhi,littlePhi}, opts)
     )
 
@@ -110,6 +110,7 @@ fanLatticeMap(ToricStackMap) := Matrix => f -> (
 -----------------------------------------------------------------------------
 ---- diagonalMap for toric stacks
 -----------------------------------------------------------------------------
+diagonalMap = method()
 diagonalMap (ToricStack, ZZ, Array) := ToricStackMap => (D, m, A) -> (
     --- checks
     if m <= 0 then error "Expected a positive integer.";
@@ -195,8 +196,8 @@ isIsomorphism(ToricStackMap) := Boolean => f -> (
     (D1, D2) := (source f, target f);
     (bigPhi, littlePhi) := (phiList#0, phiList#1);
     ---
-    beta1 = (map D1)|(presentation D2)
-    beta2 = (map D2)|(presentation D2)
+    beta1 := (map D1)|(presentation D2);
+    beta2 := (map D2)|(presentation D2);
     --- This uses Theorem B.3 in Geraschencko and Satriano
     if rank((coker beta1) ** QQ) == 0 and rank((coker beta2) ** QQ) == 0 then (
 	condition1 := isIsomorphism(stackyAbelianGroupMap(f));

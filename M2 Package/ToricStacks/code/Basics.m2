@@ -173,8 +173,11 @@ cokerMap := (A) -> (
     )
 *-
 
-
-
-
+getHilbRays = method()
+getHilbRays(Cone) := List => sigma -> (
+    hilbBasis := entries ((normaliz(transpose rays sigma, "integral_closure"))#"gen") ;
+    hilbRays := apply(hilbBasis, b -> coneFromVData transpose matrix{b});
+    hilbRays
+)
 
 

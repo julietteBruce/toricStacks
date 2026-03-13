@@ -110,6 +110,7 @@ load "ToricStacks/code/ConstructorAux.m2"
 load "ToricStacks/code/DiagGroups.m2"
 load "ToricStacks/code/CoxGroups.m2"
 load "ToricStacks/code/Basics.m2"
+load "ToricStacks/code/Maps.m2"
 
 
 
