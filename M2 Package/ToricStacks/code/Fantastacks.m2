@@ -8,8 +8,7 @@ fantastack = method(
     TypicalValue => Fantastack, 
     Options => {
         CoefficientRing   => QQ,
-        Variable          => getSymbol "x",
-        NonStrict         => false
+        Variable          => getSymbol "x"
     }   
 )
 -- isWellDefined is inherited from ToricStack!

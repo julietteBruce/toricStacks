@@ -94,7 +94,11 @@ export {
     "CanonicalizeLight",
     "CanonicalizeFan",
     "CanonicalizeMap",
-    "CoxGroup"
+    "CoxGroup",
+    "CanonicalStack",
+    "CanonicalPhi",
+    "InputStack",
+    "InputFan"
     --
   }
 
@@ -111,6 +115,8 @@ load "ToricStacks/code/DiagGroups.m2"
 load "ToricStacks/code/CoxGroups.m2"
 load "ToricStacks/code/Basics.m2"
 load "ToricStacks/code/Maps.m2"
+load "ToricStacks/code/CanonicalStacks.m2"
+load "ToricStacks/code/Fantastacks.m2"
 
 
 
