@@ -24,7 +24,7 @@
 --
 -- UPDATE HISTORY #0 - August 19, 2025 (AIM, Cal Tech, Pasadena, CA): Package started
 -- at AIM workshop "Homological mirror symmetry and multigraded commutative algebra".
--- Juliette Bruce owner of repo. 
+-- Juliette Bruce owner of repo. TEST
 --
 --
 -- UPDATE HISTORY #1 -
